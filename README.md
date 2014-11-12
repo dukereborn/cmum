@@ -4,9 +4,9 @@ CSP MySQL User Manager
 A set of PHP-scripts to manage users in CardserverProxy (CSP)
 
 ## Requirements
-* Apache or IIS with PHP support (or any other webserver that support PHP)
-* MySQL (version 5 or later)
-* PHP (version 5 or later)
+* Web server with PHP support (such as Apache, IIS)
+* MySQL 5.0 or newer
+* PHP 5.3.0 or newer, with session support
 * CardserverProxy (version 0.8.13 or later)
 
 ## Download
