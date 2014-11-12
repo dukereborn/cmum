@@ -109,6 +109,19 @@ Full config example for the above part, so you place it correctly
 </rmi>
 ```
 
+## FAQ - Frequently Asked Questions
+**Nothing happens when i start the installation?**
+> Check you mysql information and if your user has the correct rights to access the database
+
+**How do I get randomized usernames and password?**
+> Double click on the username and/or password field and you will get a random generated username and/or password
+
+**CSP stops fetching users when using start-date?**
+> Some versions of csp dont work with start-date. If you need them in cmum, then use genxml options to exclude it from the output to csp.
+
+**Expire-date dosnt work in CSP?***
+> Make sure you are using the ```com.bowman.cardserv.AdvXmlUserManager``` user-manager class.
+
 ## Contact me
 If you find any bugs, got an idea or just wanna say "Hi!", send me a email on dukereborn@gmail.com. You can also follow me on twitter for updates and news about the development on cmum http://www.twitter.com/dukereborn/
 
