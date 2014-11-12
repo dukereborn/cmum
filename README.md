@@ -47,10 +47,34 @@ CSP config example for use on a remote (or local) secure webserver
   </auth-config>
 </user-manager>
 ```
-Check the DOCUMENTATION file for more info about cmum setup
 
 ## Secretkey
 The secretkey is used for securing the sessions when browsing cmum, but also when encrypting the admin passwords. So if you move to another server or take a backup of your cmum installation, make sure to include the config.php. Or at least write down the secretkey, without it you won't be able to login to cmum with the admin account in the database.
+
+## Genxml options
+These options were added to manipulate the output from genxml to fit special builds of csp, or by any other reason that you would like to exclude some data in the genxml output. The usage is just like when using genxml key ```genxml.php?option=options``` to use it together with genxml key it should look like this ```genxml.php?key=genxmlkey&amp;option=options``` multiple options are separated by semicolon ';' like this ```genxml.php?key=genxmlkey&amp;option=option1;option2;option3```
+
+**IMPORTANT!!!** Remember to use ```&amp;``` and not just ```&``` between key and option if using both.
+
+Below you will find a list of available options for genxml
+```
+nousername
+nopassword
+nodisplayname
+noipmask
+noprofiles
+nomaxconnections
+noadmin
+noenabled
+nomapexclude
+nodebug
+noemail
+nostartdate
+noexpiredate
+nocustomvalues
+```
+
+The options simply does what they are called, for example nostartdate will exclude the start-date="dd-mm-yyyy" from the genxml output.
 
 ## Trouble using cmum with the latest csp version?
 This is because some changes where made to the httpd server inside csp. But there is a easy fix for that. Open your csp config-file and check under the ```<status-web>``` section. If there is a ```<ghttpd>``` section, change it to the one bellow, and if there is none, just add these lines. It's the ```<ghttpd enabled="false">``` that is the important part.
