@@ -1,0 +1,8 @@
+User-agent: *
+Disallow: /
+Disallow: /css/
+Disallow: /functions/
+Disallow: /img/
+Disallow: /includes/
+Disallow: /js/
+Disallow: /tools/

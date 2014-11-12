@@ -1,0 +1,3 @@
+<?php
+	// enjoy the silence	
+?>
