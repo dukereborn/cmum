@@ -93,5 +93,5 @@ If you like cmum and all the work I have put into it, consider donating a buck o
 ## Last words
 Please use a modern browser like Safari, Google Chrome or Firefox. If it looks like hell in Internet Explorer, well that's just the way it will be.
 
-### License
+## License
 Released under the [MIT license](http://makesites.org/licenses/MIT)
