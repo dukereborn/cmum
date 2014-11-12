@@ -1,11 +1,7 @@
 CSP MySQL User Manager
 ======================
 
-<<<<<<< HEAD
 A set of PHP-scripts to manage users in CardserverProxy (CSP)
-=======
-A set of PHP-scripts to manage users in CardserverProxy
->>>>>>> FETCH_HEAD
 
 ## Requirements
 * Apache or IIS with PHP support (or any other webserver that support PHP)
@@ -13,7 +9,6 @@ A set of PHP-scripts to manage users in CardserverProxy
 * PHP (version 5 or later)
 * CardserverProxy (version 0.8.13 or later)
 
-<<<<<<< HEAD
 ## Download
 You can download the newest release at http://github.com/dukereborn/cmum/releases/
 
@@ -21,8 +16,6 @@ If you prefer to follow the git repository, the following branch and tag names m
 * ``master`` is the current stable release
 * ``trunk`` is the development branch
 
-=======
->>>>>>> FETCH_HEAD
 ## Installation
 1. Upload all the files to your web server.
 2. Browse to the install-dir to start the installation, http://your.cmum.url/install/
@@ -31,7 +24,6 @@ If you prefer to follow the git repository, the following branch and tag names m
 5. All done!
 6. Setup csp to fetch users from cmum, described bellow
 
-<<<<<<< HEAD
 CSP config example for use on a local webserver
 ```
 <user-manager class="com.bowman.cardserv.XmlUserManager" allow-on-failure="false" log-failures="true">
@@ -56,27 +48,6 @@ CSP config example for use on a remote (or local) secure webserver
 </user-manager>
 ```
 Check the README file for more documentation about cmum
-=======
-CSP config example for use on a local webserver:
-<user-manager class="com.bowman.cardserv.XmlUserManager" allow-on-failure="false" log-failures="true">
-<auth-config>
-<update-interval>5</update-interval>
-<user-source name="genxmloutput">
-<user-file-url>http://some.webserver/genxml/genxml.php</user-file-url>
-</user-source>
-</auth-config>
-</user-manager>
-
-CSP config example for use on a remote (or local) secure webserver:
-<user-manager class="com.bowman.cardserv.XmlUserManager" allow-on-failure="false" log-failures="true">
-<auth-config>
-<update-interval>5</update-interval>
-<user-source name="genxmloutput">
-<user-file-url>http://user:password@some.safe.webserver/genxml/genxml.php</user-file-url>
-</user-source>
-</auth-config>
-</user-manager>
->>>>>>> FETCH_HEAD
 
 ## Secretkey
 The secretkey is used for securing the sessions when browsing cmum, but also when encrypting the admin passwords. So if you move to another server or take a backup of your cmum installation, make sure to include the config.php. Or at least write down the secretkey, without it you won't be able to login to cmum with the admin account in the database.
@@ -112,7 +83,6 @@ Full config example for the above part, so you place it correctly
   </status-web>
 </rmi>
 ```
-<<<<<<< HEAD
 
 ## Contact me
 If you find any bugs, got an idea or just wanna say "Hi!", send me a email on dukereborn@gmail.com. You can also follow me on twitter for updates and news about the development on cmum http://www.twitter.com/dukereborn/
@@ -125,5 +95,3 @@ Please use a modern browser like Safari, Google Chrome or Firefox. If it looks l
 
 ### License
 Released under the [MIT license](http://makesites.org/licenses/MIT)
-=======
->>>>>>> FETCH_HEAD
