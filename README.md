@@ -47,7 +47,7 @@ CSP config example for use on a remote (or local) secure webserver
   </auth-config>
 </user-manager>
 ```
-Check the README file for more documentation about cmum
+Check the DOCUMENTATION file for more info about cmum setup
 
 ## Secretkey
 The secretkey is used for securing the sessions when browsing cmum, but also when encrypting the admin passwords. So if you move to another server or take a backup of your cmum installation, make sure to include the config.php. Or at least write down the secretkey, without it you won't be able to login to cmum with the admin account in the database.
