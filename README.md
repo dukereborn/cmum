@@ -119,7 +119,7 @@ Full config example for the above part, so you place it correctly
 **CSP stops fetching users when using start-date?**
 > Some versions of csp dont work with start-date. If you need them in cmum, then use genxml options to exclude it from the output to csp.
 
-**Expire-date dosnt work in CSP?***
+**Expire-date dosnt work in CSP?**
 > Make sure you are using the ```com.bowman.cardserv.AdvXmlUserManager``` user-manager class.
 
 ## Contact me
