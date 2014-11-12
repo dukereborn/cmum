@@ -7,6 +7,7 @@ A set of PHP-scripts to manage users in CardserverProxy (CSP)
 * Web server with PHP support (such as Apache, IIS)
 * MySQL 5.0 or newer
 * PHP 5.3.0 or newer, with session support
+* A web browser with cookies and javascript enabled
 * CardserverProxy (version 0.8.13 or later)
 
 ## Download
