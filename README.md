@@ -120,3 +120,5 @@ Please use a modern browser like Safari, Google Chrome or Firefox. If it looks l
 
 ## License
 Released under the [MIT license](http://makesites.org/licenses/MIT)
+
+CSP MySQL User Manager includes several third party libraries which come under their respective licenses.
