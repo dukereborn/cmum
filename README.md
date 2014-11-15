@@ -50,7 +50,11 @@ CSP config example for use on a remote (or local) secure webserver
 ```
 
 ## Upgrading from version 2.x
-Since version 3.0.0 is a total rebuild of the whole system, you need to make a complete re-installation of cmum. Export your users using the "Export Users (CSV)" tool, then after you installed version 3.0.0, import your users using the "Import Users (CSV)" tool.
+Due to a complete re-work of the whole system and database, a complete re-installations is required if you want to upgrade from version 2.x to 3.x.
+
+1. Export your users to a csv file using the csv export tool in cmum
+2. Follow the installation steps above (note! make sure you install cmum3 into a new clean database)
+3. Import your users using the csv import tool in cmum
 
 ## Secretkey
 The secretkey is used for securing the sessions when browsing cmum, but also when encrypting the admin passwords. So if you move to another server or take a backup of your cmum installation, make sure to include the config.php. Or at least write down the secretkey, without it you won't be able to login to cmum with the admin account in the database.
