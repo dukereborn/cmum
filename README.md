@@ -50,7 +50,7 @@ CSP config example for use on a remote (or local) secure webserver
 ```
 
 ## Upgrading from version 2.x
-Due to a complete re-work of the whole system and database, a complete re-installations is required if you want to upgrade from version 2.x to 3.x.
+Due to a complete rework of the whole system and database, a complete reinstallation is required if you want to upgrade from version 2.x to 3.x.
 
 1. Export your users to a csv file using the csv export tool in cmum
 2. Follow the installation steps above (note! make sure you install cmum3 into a new clean database)
