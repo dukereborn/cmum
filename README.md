@@ -31,7 +31,7 @@ CSP config example for use on a local webserver
   <auth-config>
   <update-interval>5</update-interval>
   <user-source name="genxmloutput">
-    <user-file-url>http://some.webserver/genxml/genxml.php</user-file-url>
+    <user-file-url>http://some.webserver/genxml.php</user-file-url>
   </user-source>
   </auth-config>
 </user-manager>
@@ -43,7 +43,7 @@ CSP config example for use on a remote (or local) secure webserver
   <auth-config>
   <update-interval>5</update-interval>
   <user-source name="genxmloutput">
-    <user-file-url>http://user:password@some.safe.webserver/genxml/genxml.php</user-file-url>
+    <user-file-url>http://user:password@some.safe.webserver/genxml.php</user-file-url>
   </user-source>
   </auth-config>
 </user-manager>
