@@ -130,7 +130,7 @@ Full config example for the above part, so you place it correctly
 > Make sure you are using the ```com.bowman.cardserv.AdvXmlUserManager``` user-manager class.
 
 **The installer cant connect to MySQL server?**
-> Try using ```localhost```instead of ```127.0.0.1``` if your MySQL server is installed locally
+> Try using ```localhost``` instead of ```127.0.0.1``` if your MySQL server is installed locally
 
 ## Contact me
 If you find any bugs, got an idea or just wanna say "Hi!", send me a email on dukereborn@gmail.com. You can also follow me on twitter for updates and news about the development on cmum http://www.twitter.com/dukereborn/
