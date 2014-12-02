@@ -7,7 +7,8 @@ CSP MySQL User Manager Changelog
 
 
 3.1.0 [not yet released]
-[+] Added random genxmlkey function
+[+] Random genxmlkey function
+[+] Only log failed admin logins
 [#] Fixed broken css on text logo
 
 

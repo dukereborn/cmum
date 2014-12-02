@@ -175,6 +175,7 @@ if(mysqli_connect_errno()) {
 												<div class="controls">
 													<select name="loglogins" id="loglogins">
 														<option value="1" <?php if($setres["loglogins"]=="1") { print("selected"); } ?>>Yes</option>
+														<option value="2" <?php if($setres["loglogins"]=="2") { print("selected"); } ?>>Only failed</option>
 														<option value="0" <?php if($setres["loglogins"]=="0") { print("selected"); } ?>>No</option>
 													</select>
 												</div>
