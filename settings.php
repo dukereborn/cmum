@@ -41,6 +41,19 @@ if(mysqli_connect_errno()) {
 			<script src="js/html5shiv.js"></script>
 			<script src="js/respond.min.js"></script>
 		<![endif]-->
+		<script language="javascript" type="text/javascript">
+			function autovalue(id) {
+				var length='<?php print($setres["rndstringlength"]); ?>';
+				chars="<?php print($setres["rndstring"]); ?>";
+				pass="";
+					for(x=0;x<length;x++) {
+						i=Math.floor(Math.random() * 62);
+						pass+=chars.charAt(i);
+					}
+				oFormObject=document.forms[0];
+				oFormObject.elements[id].value=pass;
+			}
+		</script>
 	</head>
 	<body onload="<?php if(isset($notice)) { print($notice); } ?>">
 		<?php
@@ -194,9 +207,9 @@ if(mysqli_connect_errno()) {
 								<div class="row">
 									<div class="span5">
 										<div class="control-group">
-											<label class="control-label" for="genxmlkey">Genxml key</label>
+											<label class="control-label" for="genxmlkey" ondblclick="autovalue('genxmlkey');">Genxml key</label>
 												<div class="controls">
-													<input type="text" name="genxmlkey" id="genxmlkey" value="<?php print($setres["genxmlkey"]); ?>" maxlength="50">
+													<input type="text" name="genxmlkey" id="genxmlkey" value="<?php print($setres["genxmlkey"]); ?>" maxlength="50" ondblclick="autovalue('genxmlkey');">
 												</div>
 										</div>
 										<div class="control-group">
