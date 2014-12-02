@@ -1,6 +1,6 @@
 <?php
 define("CMUM_TITLE","CSP MySQL User Manager");
-define("CMUM_VERSION","3.0.0");
-define("CMUM_BUILD","");
+define("CMUM_VERSION","3.1.0");
+define("CMUM_BUILD","dev");
 define("CMUM_MOD","");
 ?>
