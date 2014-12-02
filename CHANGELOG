@@ -6,6 +6,10 @@ CSP MySQL User Manager Changelog
 [-] Bug fixed
 
 
+3.1.0 [not yet released]
+[#] Fixed broken css on text logo
+
+
 3.0.0 [2014-11-12]
 [+] New responsive design
 [+] Improved security

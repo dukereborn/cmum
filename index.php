@@ -82,7 +82,7 @@ if(isset($_POST["blogin"]) && $_POST["blogin"]=="Login") {
 							if($setres["cleanlogin"]=="1") {
 								print("<h4></h4>");
 							} else {
-								print("<h4>CSP<strong id=\"headerstrong\">MYSQL</strong>USER<strong id=\"headerstrong\">MANAGER</strong></h4>");
+								print("<h4><span id=\"headerlight\">CSP</span><span id=\"headerstrong\"><strong>MYSQL</strong></span><span id=\"headerlight\">USER</span><span id=\"headerstrong\"><strong>MANAGER</strong></span></h4>");
 							}
 						?>
 					</div>
