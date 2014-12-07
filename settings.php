@@ -218,6 +218,7 @@ if(mysqli_connect_errno()) {
 												<div class="controls">
 													<select name="genxmllogreq" id="genxmllogreq">
 														<option value="1" <?php if($setres["genxmllogreq"]=="1") { print("selected"); } ?>>Yes</option>
+														<option value="2" <?php if($setres["genxmllogreq"]=="2") { print("selected"); } ?>>Only failed</option>
 														<option value="0" <?php if($setres["genxmllogreq"]=="0") { print("selected"); } ?>>No</option>
 													</select>
 												</div>

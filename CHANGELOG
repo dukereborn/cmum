@@ -9,6 +9,7 @@ CSP MySQL User Manager Changelog
 3.1.0 [not yet released]
 [+] Random genxmlkey function
 [+] Only log failed admin logins
+[+] Only log failed genxml requests
 [#] Fixed broken css on text logo
 
 

@@ -1690,7 +1690,7 @@ function genxml($genxmlkey,$reqip,$option) {
 						$mysqli->query("INSERT INTO log_genxmlreq (status,ip,genxmlkey) VALUES ('0','".$reqip."','')");
 					}
 				} else {
-					if($setres["genxmllogreq"]=="1") {
+					if($setres["genxmllogreq"]=="1" || $setres["genxmllogreq"]=="2") {
 						$mysqli->query("INSERT INTO log_genxmlreq (status,ip,genxmlkey) VALUES ('1','".$reqip."','".$genxmlkey."')");
 					}
 				}
