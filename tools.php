@@ -89,6 +89,14 @@ if(isset($_POST["baction"]) && $_POST["baction"]=="Clear genxml request log") {
 			$notice="toastr.error('Something went wrong, try again');";
 		}
 }
+if(isset($_POST["baction"]) && $_POST["baction"]=="Clear activity log") {
+	$status=clearlog("log_activity");
+		if($status=="1") {
+			$notice="toastr.success('Activity log cleared');";
+		} else {
+			$notice="toastr.error('Something went wrong, try again');";
+		}
+}
 if(isset($_POST["bimpxml"]) && $_POST["bimpxml"]=="Import users") {
 	if(isset($_POST["createprof"]) && $_POST["createprof"]<>"") {
 		$createprof=$_POST["createprof"];
@@ -292,6 +300,7 @@ $counters=explode(";",counter());
 												<li class="sidebar-inner">
 													<a href="tools.php?menu=4&tool=401"><span>Admin Login</span></a>
 													<a href="tools.php?menu=4&tool=402"><span>Genxml Request</span></a>
+													<a href="tools.php?menu=4&tool=403"><span>Manager Activity</span></a>
 												</li>
 											</ul>
 										</li>
