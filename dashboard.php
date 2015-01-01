@@ -98,7 +98,7 @@ if(mysqli_connect_errno()) {
 									print("<h4 class=\"header\">Expired Users</h4>");
 									print("<table class=\"table table-dash table-striped table-condensed\">");
 										while($expures=$expusql->fetch_array()) {
-											print("<tr><td>".$expures["user"]."</td><td>".$expures["expiredate"]."</td><td><a href=\"edituser.php?uid=".$expures["id"]."\" class=\"btn btn-mini pull-right\"><i class=\"icon-pencil\"></i></a></td></tr>");
+											print("<tr><td>".$expures["user"]."</td><td>".$expures["expiredate"]."</td><td><a href=\"edituser.php?uid=".$expures["id"]."\" class=\"btn btn-mini pull-right\">Edit</a></td></tr>");
 										}
 									print("</table>");
 								}	
@@ -114,7 +114,7 @@ if(mysqli_connect_errno()) {
 									print("<h4 class=\"header\">Expired Users Within 30 Days</h4>");
 									print("<table class=\"table table-dash table-striped table-condensed\">");
 										while($expu30res=$expu30sql->fetch_array()) {
-											print("<tr><td>".$expu30res["user"]."</td><td>".$expu30res["expiredate"]."</td><td><a href=\"edituser.php?uid=".$expu30res["id"]."\" class=\"btn btn-mini pull-right\"><i class=\"icon-pencil\"></i></a></td></tr>");
+											print("<tr><td>".$expu30res["user"]."</td><td>".$expu30res["expiredate"]."</td><td><a href=\"edituser.php?uid=".$expu30res["id"]."\" class=\"btn btn-mini pull-right\">Edit</a></td></tr>");
 										}
 									print("</table>");
 								}

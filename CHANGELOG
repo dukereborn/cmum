@@ -12,6 +12,7 @@ CSP MySQL User Manager Changelog
 [#] Only log failed admin logins
 [#] Only log failed genxml requests
 [#] Fixed broken css on text logo
+[#] Changed pencil icon on dashboard buttons to text
 
 
 3.0.0 [2014-11-12]
