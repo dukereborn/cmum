@@ -827,7 +827,7 @@ function logactivity($act,$aid,$alvl,$uid) {
 //
 // settings functions
 //
-function updatesettings($servername,$timeout,$rndstring,$rndstringlength,$loglogins,$logactivity,$cleanlogin,$genxmlkey,$genxmllogreq,$genxmlusrgrp,$genxmldateformat,$def_autoload,$def_ipmask,$def_profiles,$def_maxconn,$def_admin,$def_enabled,$def_mapexc,$def_debug,$def_custcspval,$def_ecmrate,$fetchcsp,$cspsrv_ip,$cspsrv_port,$cspsrv_user,$cspsrv_pass,$cspsrv_protocol,$comptables,$extrausrtbl) {
+function updatesettings($servername,$timeout,$rndstring,$rndstringlength,$loglogins,$logactivity,$cleanlogin,$genxmlkey,$genxmllogreq,$genxmlusrgrp,$genxmldateformat,$genxmlintstrexp,$def_autoload,$def_ipmask,$def_profiles,$def_maxconn,$def_admin,$def_enabled,$def_mapexc,$def_debug,$def_custcspval,$def_ecmrate,$fetchcsp,$cspsrv_ip,$cspsrv_port,$cspsrv_user,$cspsrv_pass,$cspsrv_protocol,$comptables,$extrausrtbl) {
 	if(file_exists("config.php")) {
 		require("config.php");
 	} else {
@@ -839,7 +839,7 @@ function updatesettings($servername,$timeout,$rndstring,$rndstringlength,$loglog
 			} else {
 				$def_profiles=serialize($def_profiles);
 			}
-			$mysqli->query("UPDATE settings SET servername='".stripslashes(trim($servername))."',timeout='".stripslashes(trim($timeout))."',rndstring='".stripslashes(trim($rndstring))."',rndstringlength='".stripslashes(trim($rndstringlength))."',loglogins='".stripslashes(trim($loglogins))."',logactivity='".stripslashes(trim($logactivity))."',cleanlogin='".stripslashes(trim($cleanlogin))."',genxmlkey='".stripslashes(trim($genxmlkey))."',genxmllogreq='".stripslashes(trim($genxmllogreq))."',genxmlusrgrp='".stripslashes(trim($genxmlusrgrp))."',genxmldateformat='".stripslashes(trim($genxmldateformat))."',def_autoload='".stripslashes(trim($def_autoload))."',def_ipmask='".stripslashes(trim($def_ipmask))."',def_profiles='".$def_profiles."',def_maxconn='".stripslashes(trim($def_maxconn))."',def_admin='".stripslashes(trim($def_admin))."',def_enabled='".stripslashes(trim($def_enabled))."',def_mapexc='".stripslashes(trim($def_mapexc))."',def_debug='".stripslashes(trim($def_debug))."',def_custcspval='".$mysqli->real_escape_string(trim($def_custcspval))."',def_ecmrate='".stripslashes(trim($def_ecmrate))."',fetchcsp='".stripslashes(trim($fetchcsp))."',cspsrv_ip='".stripslashes(trim($cspsrv_ip))."',cspsrv_port='".stripslashes(trim($cspsrv_port))."',cspsrv_user='".stripslashes(trim($cspsrv_user))."',cspsrv_pass='".stripslashes(trim($cspsrv_pass))."',cspsrv_protocol='".stripslashes(trim($cspsrv_protocol))."',comptables='".stripslashes(trim($comptables))."',extrausrtbl='".stripslashes(trim($extrausrtbl))."' WHERE id='1'");
+			$mysqli->query("UPDATE settings SET servername='".stripslashes(trim($servername))."',timeout='".stripslashes(trim($timeout))."',rndstring='".stripslashes(trim($rndstring))."',rndstringlength='".stripslashes(trim($rndstringlength))."',loglogins='".stripslashes(trim($loglogins))."',logactivity='".stripslashes(trim($logactivity))."',cleanlogin='".stripslashes(trim($cleanlogin))."',genxmlkey='".stripslashes(trim($genxmlkey))."',genxmllogreq='".stripslashes(trim($genxmllogreq))."',genxmlusrgrp='".stripslashes(trim($genxmlusrgrp))."',genxmldateformat='".stripslashes(trim($genxmldateformat))."',genxmlintstrexp='".stripslashes(trim($genxmlintstrexp))."',def_autoload='".stripslashes(trim($def_autoload))."',def_ipmask='".stripslashes(trim($def_ipmask))."',def_profiles='".$def_profiles."',def_maxconn='".stripslashes(trim($def_maxconn))."',def_admin='".stripslashes(trim($def_admin))."',def_enabled='".stripslashes(trim($def_enabled))."',def_mapexc='".stripslashes(trim($def_mapexc))."',def_debug='".stripslashes(trim($def_debug))."',def_custcspval='".$mysqli->real_escape_string(trim($def_custcspval))."',def_ecmrate='".stripslashes(trim($def_ecmrate))."',fetchcsp='".stripslashes(trim($fetchcsp))."',cspsrv_ip='".stripslashes(trim($cspsrv_ip))."',cspsrv_port='".stripslashes(trim($cspsrv_port))."',cspsrv_user='".stripslashes(trim($cspsrv_user))."',cspsrv_pass='".stripslashes(trim($cspsrv_pass))."',cspsrv_protocol='".stripslashes(trim($cspsrv_protocol))."',comptables='".stripslashes(trim($comptables))."',extrausrtbl='".stripslashes(trim($extrausrtbl))."' WHERE id='1'");
 		mysqli_close($mysqli);
 			@session_start();
 				$_SESSION[$secretkey."timeout"]=$timeout;
@@ -1769,6 +1769,7 @@ function genxml($genxmlkey,$reqip,$option) {
 				}
 			}
 			if($dogen=="1") {
+				$intstrexp=checksetting("genxmlintstrexp");
 				$xmlout="<xml-user-manager ver=\"1.0\">\n";
 				$profvalues="";
 					$usql=$mysqli->query("SELECT user,password,displayname,ipmask,profiles,maxconn,admin,enabled,mapexclude,debug,email,customvalues,ecmrate,startdate,expiredate,usrgroup FROM users");
@@ -1832,7 +1833,31 @@ function genxml($genxmlkey,$reqip,$option) {
 					if(in_array("noenabled",$opts)) {
 						$enabled="";
 					} else {
-						$enabled=xmloutformat("enabled",numbertotf($usrdata["enabled"]));
+						if($intstrexp=="1") {
+							if($usrdata["startdate"]<>"0000-00-00" && $usrdata["expiredate"]<>"0000-00-00") {
+								if(time()>=strtotime($usrdata["startdate"]) && time()<=strtotime($usrdata["expiredate"]) && $usrdata["enabled"]<>"0") {
+									$enabled=xmloutformat("enabled","true");
+								} else {
+									$enabled=xmloutformat("enabled","false");
+								}
+							} elseif($usrdata["startdate"]<>"0000-00-00" && $usrdata["expiredate"]=="0000-00-00") {
+								if(time()>=strtotime($usrdata["startdate"]) && $usrdata["enabled"]<>"0") {
+									$enabled=xmloutformat("enabled","true");
+								} else {
+									$enabled=xmloutformat("enabled","false");
+								}
+							} elseif($usrdata["startdate"]=="0000-00-00" && $usrdata["expiredate"]<>"0000-00-00") {
+								if(time()<=strtotime($usrdata["expiredate"]) && $usrdata["enabled"]<>"0") {
+									$enabled=xmloutformat("enabled","true");
+								} else {
+									$enabled=xmloutformat("enabled","false");
+								}
+							} elseif($usrdata["startdate"]=="0000-00-00" && $usrdata["expiredate"]=="0000-00-00") {
+								$enabled=xmloutformat("enabled",numbertotf($usrdata["enabled"]));
+							}
+						} else {
+							$enabled=xmloutformat("enabled",numbertotf($usrdata["enabled"]));	
+						}
 					}
 					if(in_array("nomapexclude",$opts)) {
 						$mapexclude="";
@@ -1849,12 +1874,12 @@ function genxml($genxmlkey,$reqip,$option) {
 					} else {
 						$email=xmloutformat("email-address",$usrdata["email"]);
 					}
-					if(in_array("nostartdate",$opts)) {
+					if(in_array("nostartdate",$opts) || $intstrexp=="1") {
 						$startdate="";
 					} else {
 						$startdate=xmloutformat("start-date",formatdate($setres["genxmldateformat"],$usrdata["startdate"]));
 					}
-					if(in_array("noexpiredate",$opts)) {
+					if(in_array("noexpiredate",$opts) || $intstrexp=="1") {
 						$expiredate="";
 					} else {
 						$expiredate=xmloutformat("expire-date",formatdate($setres["genxmldateformat"],$usrdata["expiredate"]));

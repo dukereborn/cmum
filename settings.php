@@ -11,7 +11,7 @@ if(isset($_POST["bsave"]) && $_POST["bsave"]=="Save Changes") {
 	} else {
 		$def_profiles=$_POST["def_profiles"];
 	}
-	$updnotice=updatesettings($_POST["servername"],$_POST["timeout"],$_POST["rndstring"],$_POST["rndstringlength"],$_POST["loglogins"],$_POST["logactivity"],$_POST["cleanlogin"],$_POST["genxmlkey"],$_POST["genxmllogreq"],$_POST["genxmlusrgrp"],$_POST["genxmldateformat"],$_POST["def_autoload"],$_POST["def_ipmask"],$def_profiles,$_POST["def_maxconn"],$_POST["def_admin"],$_POST["def_enabled"],$_POST["def_mapexc"],$_POST["def_debug"],$_POST["def_custcspval"],$_POST["def_ecmrate"],$_POST["fetchcsp"],$_POST["cspsrv_ip"],$_POST["cspsrv_port"],$_POST["cspsrv_user"],$_POST["cspsrv_pass"],$_POST["cspsrv_protocol"],$_POST["comptables"],$_POST["extrausrtbl"]);
+	$updnotice=updatesettings($_POST["servername"],$_POST["timeout"],$_POST["rndstring"],$_POST["rndstringlength"],$_POST["loglogins"],$_POST["logactivity"],$_POST["cleanlogin"],$_POST["genxmlkey"],$_POST["genxmllogreq"],$_POST["genxmlusrgrp"],$_POST["genxmldateformat"],$_POST["genxmlintstrexp"],$_POST["def_autoload"],$_POST["def_ipmask"],$def_profiles,$_POST["def_maxconn"],$_POST["def_admin"],$_POST["def_enabled"],$_POST["def_mapexc"],$_POST["def_debug"],$_POST["def_custcspval"],$_POST["def_ecmrate"],$_POST["fetchcsp"],$_POST["cspsrv_ip"],$_POST["cspsrv_port"],$_POST["cspsrv_user"],$_POST["cspsrv_pass"],$_POST["cspsrv_protocol"],$_POST["comptables"],$_POST["extrausrtbl"]);
 		if($updnotice=="0") {
 			$notice="toastr.success('Settings saved successfully');";
 		}
@@ -249,6 +249,15 @@ if(mysqli_connect_errno()) {
 														<option value="d/m/Y" <?php if($setres["genxmldateformat"]=="d/m/Y") { print("selected"); } ?>>dd/mm/yyyy</option>
 														<option value="Y-m-d" <?php if($setres["genxmldateformat"]=="Y-m-d") { print("selected"); } ?>>yyyy-mm-dd</option>
 														<option value="Y/m/d" <?php if($setres["genxmldateformat"]=="Y/m/d") { print("selected"); } ?>>yyyy/mm/dd</option>
+													</select>
+												</div>
+										</div>
+										<div class="control-group">
+											<label class="control-label" for="genxmlintstrexp">Internal start-/expiredate</label>
+												<div class="controls">
+													<select name="genxmlintstrexp" id="genxmlintstrexp">
+														<option value="1" <?php if($setres["genxmlintstrexp"]=="1") { print("selected"); } ?>>Yes</option>
+														<option value="0" <?php if($setres["genxmlintstrexp"]=="0") { print("selected"); } ?>>No</option>
 													</select>
 												</div>
 										</div>
