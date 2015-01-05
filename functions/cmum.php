@@ -786,6 +786,22 @@ function cleanprofile($pid) {
 		mysqli_close($mysqli);
 }
 
+function getprofiles() {
+	if(file_exists("config.php")) {
+		require("config.php");
+	} else {
+		require("../config.php");
+	}
+		$mysqli=new mysqli($dbhost,$dbuser,$dbpass,$dbname);
+        	$psql=$mysqli->query("SELECT id,cspvalue FROM profiles");
+				$profiles=array();
+				while($pdata=$psql->fetch_array()) {
+					$profiles[$pdata["id"]]=$pdata["cspvalue"];
+				}
+		mysqli_close($mysqli);
+return($profiles);
+}
+
 //
 // security functions
 //
@@ -1762,11 +1778,10 @@ function genxml($genxmlkey,$reqip,$option) {
 						$profres="";
 					} else {
 						$dbprof=unserialize($usrdata["profiles"]);
+						$profdata=getprofiles();
 							if($dbprof<>"" && $dbprof<>"N;") {
 								foreach($dbprof as $useprof) {
-									$psql=$mysqli->query("SELECT cspvalue FROM profiles WHERE id='".$useprof."'");
-									$profdata=$psql->fetch_array();
-									$profvalues.=$profdata["cspvalue"]." ";
+									$profvalues.=$profdata[$useprof]." ";
 								}
 								$profres=trim($profvalues);
 								$profdata="";

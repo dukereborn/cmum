@@ -13,6 +13,7 @@ CSP MySQL User Manager Changelog
 [#] Only log failed genxml requests
 [#] Fixed broken css on text logo
 [#] Changed pencil icon on dashboard buttons to text
+[#] Improved profile handling in genxml function
 
 
 3.0.0 [2014-11-12]
