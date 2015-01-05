@@ -162,7 +162,9 @@ if(isset($_GET["edit"]) && $_GET["edit"]=="1") {
 												$sql="";
 											}
 												while($res=$sql->fetch_array()) {
-													if($res["expiredate"]<>"0000-00-00" && time()>strtotime($res["expiredate"])) {
+													if($res["startdate"]<>"0000-00-00" && time()<=strtotime($res["startdate"])) {
+														$usrexp="2";
+													} elseif($res["expiredate"]<>"0000-00-00" && time()>=strtotime($res["expiredate"])) {
 														$usrexp="1";
 													} else {
 														$usrexp="0";
@@ -186,8 +188,9 @@ if(isset($_GET["edit"]) && $_GET["edit"]=="1") {
 														print("<td>".idtogrp($res["usrgroup"])."</td>");
 															if($usrexp=="1") {
 																print("<td><a id=\"usrlnkenabled-".$res["id"]."\" href=\"javascript:void(0);\" onclick=\"enableuser('".$res["id"]."','".$_SESSION[$secretkey."userlvl"]."','".$_SESSION[$secretkey."usergrp"]."','".$_SESSION[$secretkey."userid"]."');\"><div id=\"usrenabled-".$res["id"]."\"><span class=\"label label-warning\">Expired</span></div></a></td>");
-															}
-															elseif($res["enabled"]=="1" && $usrexp=="0" || $res["enabled"]=="" && $usrexp=="0") {
+															} elseif($usrexp=="2") {
+																print("<td><a id=\"usrlnkenabled-".$res["id"]."\" href=\"javascript:void(0);\" onclick=\"enableuser('".$res["id"]."','".$_SESSION[$secretkey."userlvl"]."','".$_SESSION[$secretkey."usergrp"]."','".$_SESSION[$secretkey."userid"]."');\"><div id=\"usrenabled-".$res["id"]."\"><span class=\"label label-warning\">Disabled</span></div></a></td>");
+															} elseif($res["enabled"]=="1" && $usrexp=="0" || $res["enabled"]=="" && $usrexp=="0") {
 																print("<td><a id=\"usrlnkenabled-".$res["id"]."\" href=\"javascript:void(0);\" onclick=\"disableuser('".$res["id"]."','".$_SESSION[$secretkey."userlvl"]."','".$_SESSION[$secretkey."usergrp"]."','".$_SESSION[$secretkey."userid"]."');\"><div id=\"usrenabled-".$res["id"]."\"><span class=\"label label-success\">Enabled</span></div></a></td>");
 															} elseif($res["enabled"]=="0" && $usrexp=="0") {
 																print("<td><a id=\"usrlnkenabled-".$res["id"]."\" href=\"javascript:void(0);\" onclick=\"enableuser('".$res["id"]."','".$_SESSION[$secretkey."userlvl"]."','".$_SESSION[$secretkey."usergrp"]."','".$_SESSION[$secretkey."userid"]."');\"><div id=\"usrenabled-".$res["id"]."\"><span class=\"label label-important\">Disabled</span></div></a></td>");
