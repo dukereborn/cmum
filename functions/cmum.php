@@ -393,6 +393,28 @@ function cspsendosd($user,$message) {
 return($status);
 }
 
+function cspsendosdtoall($message) {
+	if(file_exists("config.php")) {
+		require("config.php");
+	} else {
+		require("../config.php");
+	}
+	$cmdresult="cmd-result";
+		$mysqli=new mysqli($dbhost,$dbuser,$dbpass,$dbname);
+			$setsql=$mysqli->query("SELECT cspsrv_ip,cspsrv_port,cspsrv_user,cspsrv_pass,cspsrv_protocol FROM settings WHERE id='1'");
+			$setdata=$setsql->fetch_array();
+		mysqli_close($mysqli);
+			$url=simplexml_load_file(valuetohttpprotocol($setdata["cspsrv_protocol"])."://".$setdata["cspsrv_user"].":".$setdata["cspsrv_pass"]."@".$setdata["cspsrv_ip"].":".$setdata["cspsrv_port"]."/xmlHandler?command=osd-message&name=all&text=".urlencode($message));
+			if((string)$url->$cmdresult->attributes()->success=="true") {
+				$status="1;".(string)$url->$cmdresult->attributes()->data;
+			} elseif((string)$url->$cmdresult->attributes()->success=="false") {
+				$status="2;0";
+			} else {
+				$status="0;0";
+			}
+return($status);
+}
+
 function cspgetuserinfo($user) {
 	// Return structure
 	// loginfailures;sessions;host;id;count;profile;clientid;protocol;context;connected;duration;ecmcount;emmcount;pendingcount;keepalivecount;lasttransaction;lastzap;idletime;flags;avgecminterval;session-id;session-cdata;session-name
@@ -878,6 +900,7 @@ function includetool($toolid) {
 		"204"=>"tools/expusrcsv.php",
 		"205"=>"tools/impcspprof.php",
 		"301"=>"tools/cspupdusers.php",
+		"302"=>"tools/cspsendosdtoall.php",
 		"401"=>"tools/logadminlogin.php",
 		"402"=>"tools/loggenxmlreq.php",
 		"403"=>"tools/logactivity.php",

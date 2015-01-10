@@ -136,6 +136,19 @@ if(isset($_POST["baction"]) && $_POST["baction"]=="Update CSP Users") {
 			$notice="toastr.error('Something went wrong, try again');";
 		}
 }
+if(isset($_POST["baction"]) && $_POST["baction"]=="Send OSD") {
+	$status=cspsendosdtoall($_POST["osdmsg"]);
+		$status=explode(";",$status);
+		if($status["0"]=="1") {
+			$notice="toastr.success('Message sent to ".$status["1"]." active and compatible newcamd sessions');";
+		} elseif($status["0"]=="2") {
+			$notice="toastr.error('No active/compatible newcamd sessions found');";
+		} elseif($status["0"]=="0") {
+			$notice="toastr.error('Message not sent, please try again');";
+		} else {
+			$notice="toastr.error('Something went wrong, try again');";
+		}
+}
 if(isset($_POST["baction"]) && $_POST["baction"]=="Check Tables") {
 	$status=checktables();
 		if($status=="1") {
@@ -289,6 +302,7 @@ $counters=explode(";",counter());
 												print("<ul>");
 													print("<li class=\"sidebar-inner\">");
 														print("<a href=\"tools.php?menu=3&tool=301\"><span>Update CSP Users</span></a>");
+														print("<a href=\"tools.php?menu=3&tool=302\"><span>Send OSD To All Users</span></a>");
 													print("</li>");
 												print("</ul>");
 											print("</li>");

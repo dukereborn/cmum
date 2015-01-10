@@ -10,6 +10,7 @@ CSP MySQL User Manager Changelog
 [+] Random genxmlkey function
 [+] Manager activity logging
 [+] Internal start-/expiredate handling
+[+] Send osd to all connected users
 [#] Only log failed admin logins
 [#] Only log failed genxml requests
 [#] Fixed broken css on text logo

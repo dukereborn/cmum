@@ -13,8 +13,6 @@
 // 11 = kick csp user
 // 12 = send csp osd message
 // 13 = get csp user info
-// 14 = install mysql check
-// 15 = install cmum db
 
 require("../config.php");
 require("cmum.php");
