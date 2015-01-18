@@ -490,7 +490,44 @@ function cspgetuseripinfo($user) {
 				}
 			$usrip=(string)$xmldata->$proxyusers->user[$i]->session[$actsess]->attributes()->host;
 			$data=json_decode(file_get_contents("http://www.telize.com/geoip/".$usrip),true);
-		$status=$data["ip"].";".gethostbyaddr($data["ip"]).";".$data["continent_code"].";".$data["country"]." (".$data["country_code"].");".$data["region"].";".$data["city"].";".$data["timezone"].";".$data["isp"];
+				if(isset($data["ip"])) {
+					$ip_ip=$data["ip"];
+					$ip_hostname=gethostbyaddr($data["ip"]);
+				} else {
+					$ip_ip="";
+					$ip_hostname="";
+				}
+				if(isset($data["continent_code"])) {
+					$ip_continent=$data["continent_code"];
+				} else {
+					$ip_continent="";
+				}
+				if(isset($data["country"])) {
+					$ip_country=$data["country"]." (".$data["country_code"].")";
+				} else {
+					$ip_country="";
+				}
+				if(isset($data["region"])) {
+					$ip_region=$data["region"];
+				} else {
+					$ip_region="";
+				}
+				if(isset($data["city"])) {
+					$ip_city=$data["city"];
+				} else {
+					$ip_city="";
+				}
+				if(isset($data["timezone"])) {
+					$ip_timezone=$data["timezone"];
+				} else {
+					$ip_timezone="";
+				}
+				if(isset($data["isp"])) {
+					$ip_isp=$data["isp"];
+				} else {
+					$ip_isp="";
+				}
+		$status=$ip_ip.";".$ip_hostname.";".$ip_continent.";".$ip_country.";".$ip_region.";".$ip_city.";".$ip_timezone.";".$ip_isp;
 return($status);
 }
 
