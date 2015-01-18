@@ -461,6 +461,39 @@ function cspgetuserinfo($user) {
 return($status);
 }
 
+function cspgetuseripinfo($user) {
+	// Return structure
+	// ip;hostname;continent;country;region;city;timezone;isp
+	if(file_exists("config.php")) {
+		require("config.php");
+	} else {
+		require("../config.php");
+	}
+	$i=0;
+	$proxyusers="proxy-users";
+	$actsess=0;
+	$actusr="0";
+		$mysqli=new mysqli($dbhost,$dbuser,$dbpass,$dbname);
+			$setsql=$mysqli->query("SELECT cspsrv_ip,cspsrv_port,cspsrv_user,cspsrv_pass,cspsrv_protocol FROM settings WHERE id='1'");
+			$setdata=$setsql->fetch_array();
+		mysqli_close($mysqli);
+			$xmldata=simplexml_load_file(valuetohttpprotocol($setdata["cspsrv_protocol"])."://".$setdata["cspsrv_user"].":".$setdata["cspsrv_pass"]."@".$setdata["cspsrv_ip"].":".$setdata["cspsrv_port"]."/xmlHandler?command=proxy-users&name=".$user);
+				foreach($xmldata->$proxyusers->user as $xmlusr) {
+					$y=0;
+					foreach($xmldata->$proxyusers->user[$i]->session as $active) {
+						if ((string)$xmldata->$proxyusers->user[$i]->session[$y]->attributes()->active=="true") {
+							$actsess=$y;
+							$actusr="1";
+						}
+						$y++;
+					}
+				}
+			$usrip=(string)$xmldata->$proxyusers->user[$i]->session[$actsess]->attributes()->host;
+			$data=json_decode(file_get_contents("http://www.telize.com/geoip/".$usrip),true);
+		$status=$data["ip"].";".gethostbyaddr($data["ip"]).";".$data["continent_code"].";".$data["country"]." (".$data["country_code"].");".$data["region"].";".$data["city"].";".$data["timezone"].";".$data["isp"];
+return($status);
+}
+
 function cspgetsrvinfo() {
 	// Return structure
 	// name;state;version;started;uptime;connectors;sessions;esttotalcapacity;ecmtotal;ecmforwards;ecmcachehits;ecmdenied;ecmfiltered;ecmfailures;emmtotal;javavm;os;heap;tc;fd

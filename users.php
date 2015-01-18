@@ -213,7 +213,7 @@ if(isset($_GET["edit"]) && $_GET["edit"]=="1") {
 																print("<button data-toggle=\"dropdown\" class=\"btn btn-small\">Actions <span class=\"caret\"></span></button>");
 																print("<ul class=\"dropdown-menu\">");
 																	if($_SESSION[$secretkey."fetchcsp"]=="1" && $cspconnstatus=="1" && isset($cspuserlist[$res["user"]])) {
-																		$cspmenu="<a href=\"javascript:void(0);\" onclick=\"cspgetuserinfo('".$res["user"]."');\">Get info</a><a href=\"javascript:void(0);\" onclick=\"csploadsendosd('".$res["user"]."');\">Send message</a><a href=\"javascript:void(0);\" onclick=\"cspkickuser('".$res["user"]."');\">Kick</a>";
+																		$cspmenu="<a href=\"javascript:void(0);\" onclick=\"cspgetuserinfo('".$res["user"]."');\">Get info</a><a href=\"javascript:void(0);\" onclick=\"cspgetuseripinfo('".$res["user"]."');\">Get ip info</a><a href=\"javascript:void(0);\" onclick=\"csploadsendosd('".$res["user"]."');\">Send message</a><a href=\"javascript:void(0);\" onclick=\"cspkickuser('".$res["user"]."');\">Kick</a>";
 																	} else {
 																		$cspmenu="";
 																	}
@@ -241,6 +241,7 @@ if(isset($_GET["edit"]) && $_GET["edit"]=="1") {
 			require("includes/modal-deluser.php");
 			require("includes/modal-cspsendosd.php");
 			require("includes/modal-cspuserinfo.php");
+			require("includes/modal-cspuseripinfo.php");
 			require("includes/footer.php");
 		?>
 		<script src="js/jquery.js"></script>

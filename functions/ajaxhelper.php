@@ -91,4 +91,9 @@ if(isset($_POST["function"]) && $_POST["function"]=="13" && $_POST["username"]<>
 	$status=cspgetuserinfo($_POST["username"]);
 echo $status;
 }
+
+if(isset($_POST["function"]) && $_POST["function"]=="14" && $_POST["username"]<>"") {	
+	$status=cspgetuseripinfo($_POST["username"]);
+echo $status;
+}
 ?>
