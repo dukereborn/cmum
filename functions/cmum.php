@@ -29,12 +29,13 @@ return($u_sql->num_rows.";".$g_sql->num_rows.";".$p_sql->num_rows.";".$a_sql->nu
 }
 
 function errorpage($errortitle,$errortext,$charset,$title,$uribase,$ver,$build,$mod) {
+	$newuribase=substr($uribase,0,strrpos($uribase,"/")+1);
 	$file=file_get_contents("includes/error.php");
 	$file=str_replace("%errortitle%",$errortitle,$file);
 	$file=str_replace("%errortext%",$errortext,$file);
 	$file=str_replace("%charset%",$charset,$file);
 	$file=str_replace("%title%",$title,$file);
-	$file=str_replace("%uribase%",$uribase,$file);
+	$file=str_replace("%uribase%",$newuribase,$file);
 	if($build<>"" && $mod=="") {
 		$file=str_replace("%version%",$ver."-".$build,$file);
 	} elseif($build<>"" && $mod<>"") {
