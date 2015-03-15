@@ -1785,6 +1785,60 @@ function disableuser($uid,$admlvl,$admgrp,$admid) {
 return($status);
 }
 
+function checkuserstartexpire($start,$expire,$enabled) {
+	// return codes
+	// 0 = disabled
+	// 1 = enabled
+	// 2 = not started
+	// 3 = expired
+	if($start<>"0000-00-00" && $expire<>"0000-00-00") {
+		if(time()>=strtotime($start) && time()<=strtotime($expire) && $enabled<>"0") {
+			$status="1";
+		} elseif(time()<=strtotime($start) && $enabled<>"0") {
+			$status="2";
+		} elseif(time()>=strtotime($expire) && $enabled<>"0") {
+			$status="3";
+		} else {
+			if($enabled=="1" || $enabled=="") {
+				$status="1";
+			} else {
+				$status="0";
+			}
+		}
+	} elseif($start<>"0000-00-00" && $expire=="0000-00-00") {
+		if(time()>=strtotime($start) && $enabled<>"0") {
+			$status="1";
+		} elseif(time()<=strtotime($start) && $enabled<>"0") {
+			$status="2";
+		} else {
+			if($enabled=="1" || $enabled=="") {
+				$status="1";
+			} else {
+				$status="0";
+			}
+		}
+	} elseif($start=="0000-00-00" && $expire<>"0000-00-00") {
+		if(time()<=strtotime($expire) && $enabled<>"0") {
+			$status="1";
+		} elseif(time()>=strtotime($expire) && $enabled<>"0") {
+			$status="3";
+		} else {
+			if($enabled=="1" || $enabled=="") {
+				$status="1";
+			} else {
+				$status="0";
+			}
+		}
+	} elseif($start=="0000-00-00" && $expire=="0000-00-00") {
+		if($enabled=="1" || $enabled=="") {
+			$status="1";
+		} else {
+			$status="0";
+		}
+	}
+return($status);
+}
+
 function usertoid($username) {
 	if(file_exists("config.php")) {
 		require("config.php");
@@ -1928,29 +1982,18 @@ function genxml($genxmlkey,$reqip,$option) {
 						$enabled="";
 					} else {
 						if($intstrexp=="1") {
-							if($usrdata["startdate"]<>"0000-00-00" && $usrdata["expiredate"]<>"0000-00-00") {
-								if(time()>=strtotime($usrdata["startdate"]) && time()<=strtotime($usrdata["expiredate"]) && $usrdata["enabled"]<>"0") {
-									$enabled=xmloutformat("enabled","true");
-								} else {
+							$usrexp=checkuserstartexpire($usrdata["startdate"],$usrdata["expiredate"],$usrdata["enabled"]);
+								if($usrexp=="0") {
 									$enabled=xmloutformat("enabled","false");
-								}
-							} elseif($usrdata["startdate"]<>"0000-00-00" && $usrdata["expiredate"]=="0000-00-00") {
-								if(time()>=strtotime($usrdata["startdate"]) && $usrdata["enabled"]<>"0") {
+								} elseif($usrexp=="1") {
 									$enabled=xmloutformat("enabled","true");
-								} else {
+								} elseif($usrexp=="2") {
 									$enabled=xmloutformat("enabled","false");
-								}
-							} elseif($usrdata["startdate"]=="0000-00-00" && $usrdata["expiredate"]<>"0000-00-00") {
-								if(time()<=strtotime($usrdata["expiredate"]) && $usrdata["enabled"]<>"0") {
-									$enabled=xmloutformat("enabled","true");
-								} else {
+								} elseif($usrexp=="3") {
 									$enabled=xmloutformat("enabled","false");
+								} else {
+									$enabled=xmloutformat("enabled",numbertotf($usrdata["enabled"]));
 								}
-							} elseif($usrdata["startdate"]=="0000-00-00" && $usrdata["expiredate"]=="0000-00-00") {
-								$enabled=xmloutformat("enabled",numbertotf($usrdata["enabled"]));
-							}
-						} else {
-							$enabled=xmloutformat("enabled",numbertotf($usrdata["enabled"]));	
 						}
 					}
 					if(in_array("nomapexclude",$opts)) {

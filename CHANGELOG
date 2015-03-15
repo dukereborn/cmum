@@ -18,6 +18,7 @@ CSP MySQL User Manager Changelog
 [#] Changed pencil icon on dashboard buttons to text
 [#] Improved profile handling in genxml function
 [#] Improved start/expired user listing
+[#] Improved start-/expiredate handling
 [-] Fixed improper error page
 
 
