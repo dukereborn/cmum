@@ -162,7 +162,7 @@ if(isset($_GET["edit"]) && $_GET["edit"]=="1") {
 												$sql="";
 											}
 												while($res=$sql->fetch_array()) {
-													$usrexp=checkuserstartexpire($res["startdate"],$res["expiredate"],$res["enabled"]);
+													$usrexp=checkstartexpire($res["startdate"],$res["expiredate"],$res["enabled"]);
 													print("<tr>");
 														if($res["admin"]=="1") {
 															print("<td>".$res["user"]." <span class=\"label label-warning\">A</span></td>");	

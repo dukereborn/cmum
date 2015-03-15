@@ -19,6 +19,7 @@ CSP MySQL User Manager Changelog
 [#] Improved profile handling in genxml function
 [#] Improved start/expired user listing
 [#] Improved start-/expiredate handling
+[#] Improved quick enabled for not started and expired users
 [-] Fixed improper error page
 
 

@@ -1734,12 +1734,15 @@ function enableuser($uid,$admlvl,$admgrp,$admid) {
 		$admgrp=$_SESSION[$secretkey."usergrp"];
 	}
 		$mysqli=new mysqli($dbhost,$dbuser,$dbpass,$dbname);
-			$sql=$mysqli->query("SELECT usrgroup,expiredate FROM users WHERE id='".$uid."'");
+			$sql=$mysqli->query("SELECT usrgroup FROM users WHERE id='".$uid."'");
 			$delres=$sql->fetch_array();
 				if($admlvl=="2" && $admgrp<>$delres["usrgroup"]) {
 					$status="1";
 				} else {
-					if($delres["expiredate"]<>"0000-00-00" && time()>strtotime($delres["expiredate"])) {
+					$usrexp=checkuserstartexpire($uid);
+					if($usrexp=="2") {
+						$mysqli->query("UPDATE users SET enabled='1',startdate='0000-00-00',changed='".date('Y-m-d H:i:s')."',changedby='".$admid."' WHERE id='".$uid."'");
+					} elseif($usrexp=="3") {
 						$mysqli->query("UPDATE users SET enabled='1',expiredate='0000-00-00',changed='".date('Y-m-d H:i:s')."',changedby='".$admid."' WHERE id='".$uid."'");
 					} else {
 						$mysqli->query("UPDATE users SET enabled='1',changed='".date('Y-m-d H:i:s')."',changedby='".$admid."' WHERE id='".$uid."'");
@@ -1785,7 +1788,7 @@ function disableuser($uid,$admlvl,$admgrp,$admid) {
 return($status);
 }
 
-function checkuserstartexpire($start,$expire,$enabled) {
+function checkstartexpire($start,$expire,$enabled) {
 	// return codes
 	// 0 = disabled
 	// 1 = enabled
@@ -1836,6 +1839,24 @@ function checkuserstartexpire($start,$expire,$enabled) {
 			$status="0";
 		}
 	}
+return($status);
+}
+
+function checkuserstartexpire($uid) {
+	if(file_exists("config.php")) {
+		require("config.php");
+	} else {
+		require("../config.php");
+	}
+		if($uid=="") {
+			$status="";
+		} else {
+			$mysqliu=new mysqli($dbhost,$dbuser,$dbpass,$dbname);
+				$u_sql=$mysqliu->query("SELECT enabled,startdate,expiredate FROM users WHERE id='".$uid."'");
+				$u_res=$u_sql->fetch_array();
+			mysqli_close($mysqliu);
+			$status=checkstartexpire($u_res["startdate"],$u_res["expiredate"],$u_res["enabled"]);
+		}
 return($status);
 }
 
@@ -1982,7 +2003,7 @@ function genxml($genxmlkey,$reqip,$option) {
 						$enabled="";
 					} else {
 						if($intstrexp=="1") {
-							$usrexp=checkuserstartexpire($usrdata["startdate"],$usrdata["expiredate"],$usrdata["enabled"]);
+							$usrexp=checkstartexpire($usrdata["startdate"],$usrdata["expiredate"],$usrdata["enabled"]);
 								if($usrexp=="0") {
 									$enabled=xmloutformat("enabled","false");
 								} elseif($usrexp=="1") {
