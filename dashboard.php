@@ -88,9 +88,9 @@ if(mysqli_connect_errno()) {
 						
 						<?php
 							if($_SESSION[$secretkey."userlvl"]=="0" ||  $_SESSION[$secretkey."userlvl"]=="1") {
-								$expusql=$mysqli->query("SELECT id,user,expiredate FROM users WHERE expiredate<='".date("Y-m-d")."' AND expiredate<>'0000-00-00' ORDER BY expiredate ASC");
+								$expusql=$mysqli->query("SELECT id,user,expiredate FROM users WHERE expiredate<='".date("Y-m-d")."' AND expiredate<>'0000-00-00' ORDER BY expiredate ".checksetting("expusrorder"));
 							} elseif($_SESSION[$secretkey."userlvl"]=="2" && $_SESSION[$secretkey."usergrp"]<>"0") {
-								$expusql=$mysqli->query("SELECT id,user,expiredate FROM users WHERE expiredate<='".date("Y-m-d")."' AND expiredate<>'0000-00-00' AND usrgroup='".$mysqli->real_escape_string($_SESSION[$secretkey."usergrp"])."' ORDER BY expiredate ASC");
+								$expusql=$mysqli->query("SELECT id,user,expiredate FROM users WHERE expiredate<='".date("Y-m-d")."' AND expiredate<>'0000-00-00' AND usrgroup='".$mysqli->real_escape_string($_SESSION[$secretkey."usergrp"])."' ORDER BY expiredate ".checksetting("expusrorder"));
 							} else {
 								$expusql="";
 							}
@@ -104,9 +104,9 @@ if(mysqli_connect_errno()) {
 								}	
 							$day30p=date("Y-m-d",strtotime("+30 days"));
 							if($_SESSION[$secretkey."userlvl"]=="0" ||  $_SESSION[$secretkey."userlvl"]=="1") {
-								$expu30sql=$mysqli->query("SELECT id,user,expiredate FROM users WHERE expiredate<='".$day30p."' AND expiredate>'".date("Y-m-d")."' AND expiredate<>'0000-00-00' ORDER BY expiredate ASC");
+								$expu30sql=$mysqli->query("SELECT id,user,expiredate FROM users WHERE expiredate<='".$day30p."' AND expiredate>'".date("Y-m-d")."' AND expiredate<>'0000-00-00' ORDER BY expiredate ".checksetting("soonexpusrorder"));
 							} elseif($_SESSION[$secretkey."userlvl"]=="2" && $_SESSION[$secretkey."usergrp"]<>"0") {
-								$expu30sql=$mysqli->query("SELECT id,user,expiredate FROM users WHERE expiredate<='".$day30p."' AND expiredate>'".date("Y-m-d")."' AND expiredate<>'0000-00-00' AND usrgroup='".$mysqli->real_escape_string($_SESSION[$secretkey."usergrp"])."' ORDER BY expiredate ASC");
+								$expu30sql=$mysqli->query("SELECT id,user,expiredate FROM users WHERE expiredate<='".$day30p."' AND expiredate>'".date("Y-m-d")."' AND expiredate<>'0000-00-00' AND usrgroup='".$mysqli->real_escape_string($_SESSION[$secretkey."usergrp"])."' ORDER BY expiredate ".checksetting("soonexpusrorder"));
 							} else {
 								$expu30sql="";
 							}
