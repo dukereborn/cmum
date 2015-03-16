@@ -13,6 +13,7 @@ CSP MySQL User Manager Changelog
 [+] Send osd to all connected users
 [+] IP lookup on connected users (requires internet access)
 [+] Change sort order of expired/soon expired users on dashboard
+[+] Listing not started users on dashboard
 [#] Only log failed admin logins
 [#] Only log failed genxml requests
 [#] Fixed broken css on text logo

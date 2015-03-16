@@ -88,6 +88,22 @@ if(mysqli_connect_errno()) {
 						
 						<?php
 							if($_SESSION[$secretkey."userlvl"]=="0" ||  $_SESSION[$secretkey."userlvl"]=="1") {
+								$nstrusql=$mysqli->query("SELECT id,user,startdate FROM users WHERE startdate>'".date("Y-m-d")."' AND startdate<>'0000-00-00' ORDER BY startdate ".checksetting("notstartusrorder"));
+							} elseif($_SESSION[$secretkey."userlvl"]=="2" && $_SESSION[$secretkey."usergrp"]<>"0") {
+								$nstrusql=$mysqli->query("SELECT id,user,startdate FROM users WHERE startdate>'".date("Y-m-d")."' AND startdate<>'0000-00-00' AND usrgroup='".$mysqli->real_escape_string($_SESSION[$secretkey."usergrp"])."' ORDER BY startdate ".checksetting("notstartusrorder"));
+							} else {
+								$nstrusql="";
+							}
+								if($nstrusql->num_rows<>"0") {
+									print("<h4 class=\"header\">Not Started Users</h4>");
+									print("<table class=\"table table-dash table-striped table-condensed\">");
+										while($nstrres=$nstrusql->fetch_array()) {
+											print("<tr><td width=\"50%\">".$nstrres["user"]."</td><td width=\"40%\">".$nstrres["startdate"]."</td><td width=\"10%\"><a href=\"edituser.php?uid=".$nstrres["id"]."\" class=\"btn btn-mini pull-right\">Edit</a></td></tr>");
+										}
+									print("</table>");
+								}
+							
+							if($_SESSION[$secretkey."userlvl"]=="0" ||  $_SESSION[$secretkey."userlvl"]=="1") {
 								$expusql=$mysqli->query("SELECT id,user,expiredate FROM users WHERE expiredate<='".date("Y-m-d")."' AND expiredate<>'0000-00-00' ORDER BY expiredate ".checksetting("expusrorder"));
 							} elseif($_SESSION[$secretkey."userlvl"]=="2" && $_SESSION[$secretkey."usergrp"]<>"0") {
 								$expusql=$mysqli->query("SELECT id,user,expiredate FROM users WHERE expiredate<='".date("Y-m-d")."' AND expiredate<>'0000-00-00' AND usrgroup='".$mysqli->real_escape_string($_SESSION[$secretkey."usergrp"])."' ORDER BY expiredate ".checksetting("expusrorder"));
@@ -98,7 +114,7 @@ if(mysqli_connect_errno()) {
 									print("<h4 class=\"header\">Expired Users</h4>");
 									print("<table class=\"table table-dash table-striped table-condensed\">");
 										while($expures=$expusql->fetch_array()) {
-											print("<tr><td>".$expures["user"]."</td><td>".$expures["expiredate"]."</td><td><a href=\"edituser.php?uid=".$expures["id"]."\" class=\"btn btn-mini pull-right\">Edit</a></td></tr>");
+											print("<tr><td width=\"50%\">".$expures["user"]."</td><td width=\"40%\">".$expures["expiredate"]."</td><td width=\"10%\"><a href=\"edituser.php?uid=".$expures["id"]."\" class=\"btn btn-mini pull-right\">Edit</a></td></tr>");
 										}
 									print("</table>");
 								}	
@@ -114,7 +130,7 @@ if(mysqli_connect_errno()) {
 									print("<h4 class=\"header\">Expired Users Within 30 Days</h4>");
 									print("<table class=\"table table-dash table-striped table-condensed\">");
 										while($expu30res=$expu30sql->fetch_array()) {
-											print("<tr><td>".$expu30res["user"]."</td><td>".$expu30res["expiredate"]."</td><td><a href=\"edituser.php?uid=".$expu30res["id"]."\" class=\"btn btn-mini pull-right\">Edit</a></td></tr>");
+											print("<tr><td width=\"50%\">".$expu30res["user"]."</td><td width=\"40%\">".$expu30res["expiredate"]."</td><td width=\"10%\"><a href=\"edituser.php?uid=".$expu30res["id"]."\" class=\"btn btn-mini pull-right\">Edit</a></td></tr>");
 										}
 									print("</table>");
 								}
