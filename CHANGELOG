@@ -23,6 +23,7 @@ CSP MySQL User Manager Changelog
 [#] Improved start-/expiredate handling
 [#] Improved quick enabled for not started and expired users
 [#] Improved install script
+[#] Changed MySQL engine to InnoDB for better performance
 [-] Fixed improper error page
 
 
