@@ -22,6 +22,7 @@ CSP MySQL User Manager Changelog
 [#] Improved start/expired user listing
 [#] Improved start-/expiredate handling
 [#] Improved quick enabled for not started and expired users
+[#] Improved install script
 [-] Fixed improper error page
 
 
