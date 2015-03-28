@@ -1741,7 +1741,7 @@ function enableuser($uid,$admlvl,$admgrp,$admid) {
 				} else {
 					$usrexp=checkuserstartexpire($uid);
 					if($usrexp=="2") {
-						$mysqli->query("UPDATE users SET enabled='1',startdate='0000-00-00',changed='".date('Y-m-d H:i:s')."',changedby='".$admid."' WHERE id='".$uid."'");
+						$mysqli->query("UPDATE users SET enabled='1',startdate='".date('Y-m-d')."',changed='".date('Y-m-d H:i:s')."',changedby='".$admid."' WHERE id='".$uid."'");
 					} elseif($usrexp=="3") {
 						$mysqli->query("UPDATE users SET enabled='1',expiredate='0000-00-00',changed='".date('Y-m-d H:i:s')."',changedby='".$admid."' WHERE id='".$uid."'");
 					} else {
