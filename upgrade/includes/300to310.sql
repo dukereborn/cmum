@@ -1,0 +1,16 @@
+ALTER TABLE `admins` ENGINE=InnoDB;
+ALTER TABLE `groups` ENGINE=InnoDB;
+ALTER TABLE `log_genxmlreq` ENGINE=InnoDB;
+ALTER TABLE `log_login` ENGINE=InnoDB;
+ALTER TABLE `profiles` ENGINE=InnoDB;
+ALTER TABLE `settings` ENGINE=InnoDB;
+ALTER TABLE `users` ENGINE=InnoDB;
+CREATE TABLE IF NOT EXISTS `log_activity` (`id` int(11) NOT NULL,`activity` tinyint(1) DEFAULT NULL,`adminid` int(11) DEFAULT NULL,`userid` int(11) DEFAULT NULL,`timestamp` timestamp NULL DEFAULT CURRENT_TIMESTAMP) ENGINE=InnoDB DEFAULT CHARSET=%charset% AUTO_INCREMENT=1 ;
+ALTER TABLE `log_activity` ADD PRIMARY KEY (`id`), ADD UNIQUE KEY `id` (`id`);
+ALTER TABLE `log_activity` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `settings` ADD `logactivity` tinyint(1) DEFAULT NULL AFTER `loglogins`;
+ALTER TABLE `settings` ADD `genxmlintstrexp` tinyint(1) DEFAULT NULL AFTER `genxmldateformat`;
+ALTER TABLE `settings` ADD `notstartusrorder` varchar(4) DEFAULT NULL AFTER `extrausrtbl`;
+ALTER TABLE `settings` ADD `expusrorder` varchar(4) DEFAULT NULL AFTER `notstartusrorder`;
+ALTER TABLE `settings` ADD `soonexpusrorder` varchar(4) DEFAULT NULL AFTER `expusrorder`;
+UPDATE `settings` SET `cmumversion`='3.1.0', `dbversion`='3.1.0', `logactivity`='0', `genxmlintstrexp`='0', `notstartusrorder`='asc', `expusrorder`='asc', `soonexpusrorder`='asc' WHERE `id`=1;
