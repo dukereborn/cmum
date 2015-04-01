@@ -15,6 +15,11 @@ if(file_exists("install/")) {
 	exit;
 }
 
+if(file_exists("upgrade/")) {
+	errorpage("UPGRADE INCOMPLETE","Please delete the upgrade dir from your www-root after you completed the upgrade!","utf-8",CMUM_TITLE,$_SERVER["REQUEST_URI"],CMUM_VERSION,CMUM_BUILD,CMUM_MOD);
+	exit;
+}
+
 if($dbhost=="" || $dbname=="" || $dbuser=="" || $dbpass=="" || $charset=="" || $secretkey=="") {
 	errorpage("CONFIGURATION INCOMPLETE","Please check your configuration file and make sure no values are empty!",$charset,CMUM_TITLE,$_SERVER["REQUEST_URI"],CMUM_VERSION,CMUM_BUILD,CMUM_MOD);
 	exit;
