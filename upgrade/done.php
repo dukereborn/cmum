@@ -48,12 +48,13 @@ if(isset($_POST["bupg"]) && $_POST["bupg"]=="Start upgrade") {
 					<div class="login">
 						<form class="form-horizontal">
 							<div class="control-group">
-								<div class="controls">
-									<h4>Upgrade completed!</h4>
-								</div>
-								<div class="controls">
-									Please remove the upgrade directory to complete the upgrade.
-								</div>
+								<?php
+									if($upgstatus=="1") {
+										print("<div class=\"controls\"><h4>Upgrade completed!</h4></div><div class=\"controls\">Please remove the upgrade directory to complete the upgrade.</div>");
+									} else {
+										print("<div class=\"controls\"><h4>Something went wrong!</h4></div><div class=\"controls\">The upgrade failed to complete, check your settings and try again.</div>");
+									}
+								?>
 							</div>
 						</form>
 					</div>
