@@ -1618,6 +1618,28 @@ return($status);
 }
 
 //
+// version functions
+//
+function checkversion($currver) {
+	if(file_exists("config.php")) {
+		require("config.php");
+	} else {
+		require("../config.php");
+	}
+	$mysqli=new mysqli($dbhost,$dbuser,$dbpass,$dbname);
+		$versql=$mysqli->query("SELECT cmumversion FROM settings WHERE id='1' LIMIT 1");
+		$verres=$versql->fetch_array();
+			if($currver>$verres["cmumversion"]) {
+				$status="0";
+			} else {
+				$status="1";
+			}
+	mysqli_close($mysqli);
+return($status);
+}
+
+
+//
 // user functions
 //
 function adduser($user,$password,$displayname,$email,$ipmask,$maxconn,$ecmrate,$customvalues,$usrgroup,$admin,$enabled,$mapexclude,$debug,$startdate,$expiredate,$profiles,$boxtype,$macaddress,$serialnumber,$comment) {

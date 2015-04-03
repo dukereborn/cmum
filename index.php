@@ -15,6 +15,11 @@ if(file_exists("install/")) {
 	exit;
 }
 
+if(checkversion(CMUM_VERSION)=="0") {
+	errorpage("VERSION MISMATCH","Please run the upgrade tool to upgrade your installation!<br><br>Click <a href=\"\upgrade\">here</a> to run the upgrade tool","utf-8",CMUM_TITLE,$_SERVER["REQUEST_URI"],CMUM_VERSION,CMUM_BUILD,CMUM_MOD);
+	exit;
+}
+
 if(file_exists("upgrade/")) {
 	errorpage("UPGRADE INCOMPLETE","Please delete the upgrade dir from your www-root after you completed the upgrade!","utf-8",CMUM_TITLE,$_SERVER["REQUEST_URI"],CMUM_VERSION,CMUM_BUILD,CMUM_MOD);
 	exit;
