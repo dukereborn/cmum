@@ -49,6 +49,12 @@ CSP config example for use on a remote (or local) secure webserver
 </user-manager>
 ```
 
+## Upgrading from version 3.x
+1. Delete all files (except config.php) from your cmum www-folder
+2. Upload the new files into your cmum www-folder
+3. Open cmum in your browser and you will get a notice to upgrade your installation
+4. Remove the upgrade-dir from your cmum www-folder
+
 ## Upgrading from version 2.x
 Due to a complete rework of the whole system and database, a complete reinstallation is required if you want to upgrade from version 2.x to 3.x.
 
