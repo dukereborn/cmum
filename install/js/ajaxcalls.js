@@ -17,6 +17,7 @@ function checkinstall() {
 				url: 'functions/install.php',
 				data: 'function=dbcheck&host='+mysql_host+'&user='+mysql_user+'&pass='+mysql_pass,
 				cache: false,
+				timeout: 8000,
 				success: function(response) {
 					if(response==0) {
 						toastr.error('Error connecting to MySQL server');
@@ -26,15 +27,31 @@ function checkinstall() {
 						jQuery.ajax({
 							type: 'post',
 							url: 'functions/install.php',
-							data: 'function=dbinstall&host='+mysql_host+'&name='+mysql_name+'&user='+mysql_user+'&pass='+mysql_pass+'&charset='+inst_charset+'&aname='+admin_name+'&apass='+admin_pass+'&skey='+inst_seckey,
+							data: 'function=tblcheck&host='+mysql_host+'&user='+mysql_user+'&pass='+mysql_pass+'&name='+mysql_name,
 							cache: false,
+							timeout: 8000,
 							success: function(response2) {
-								if(response2==1) {
-									$('#install').trigger('submit', true);
-								} else {
-									toastr.error('Something went wrong, try again');
+								if(response2==0) {
+									toastr.error('Database allready exists');
+									install.mysql_host.focus();
 								}
-								
+								if(response2==1) {
+									jQuery.ajax({
+										type: 'post',
+										url: 'functions/install.php',
+										data: 'function=dbinstall&host='+mysql_host+'&name='+mysql_name+'&user='+mysql_user+'&pass='+mysql_pass+'&charset='+inst_charset+'&aname='+admin_name+'&apass='+admin_pass+'&skey='+inst_seckey,
+										cache: false,
+										timeout: 8000,
+										success: function(response3) {
+											if(response3==1) {
+												$('#install').trigger('submit', true);
+											} else {
+												toastr.error('Something went wrong, try again');
+											}
+											
+										}
+									});
+								}
 							}
 						});
 					}

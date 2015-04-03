@@ -11,7 +11,7 @@ if(isset($_POST["bsave"]) && $_POST["bsave"]=="Save Changes") {
 	} else {
 		$def_profiles=$_POST["def_profiles"];
 	}
-	$updnotice=updatesettings($_POST["servername"],$_POST["timeout"],$_POST["rndstring"],$_POST["rndstringlength"],$_POST["loglogins"],$_POST["cleanlogin"],$_POST["genxmlkey"],$_POST["genxmllogreq"],$_POST["genxmlusrgrp"],$_POST["genxmldateformat"],$_POST["def_autoload"],$_POST["def_ipmask"],$def_profiles,$_POST["def_maxconn"],$_POST["def_admin"],$_POST["def_enabled"],$_POST["def_mapexc"],$_POST["def_debug"],$_POST["def_custcspval"],$_POST["def_ecmrate"],$_POST["fetchcsp"],$_POST["cspsrv_ip"],$_POST["cspsrv_port"],$_POST["cspsrv_user"],$_POST["cspsrv_pass"],$_POST["cspsrv_protocol"],$_POST["comptables"],$_POST["extrausrtbl"]);
+	$updnotice=updatesettings($_POST["servername"],$_POST["timeout"],$_POST["rndstring"],$_POST["rndstringlength"],$_POST["loglogins"],$_POST["logactivity"],$_POST["cleanlogin"],$_POST["genxmlkey"],$_POST["genxmllogreq"],$_POST["genxmlusrgrp"],$_POST["genxmldateformat"],$_POST["genxmlintstrexp"],$_POST["def_autoload"],$_POST["def_ipmask"],$def_profiles,$_POST["def_maxconn"],$_POST["def_admin"],$_POST["def_enabled"],$_POST["def_mapexc"],$_POST["def_debug"],$_POST["def_custcspval"],$_POST["def_ecmrate"],$_POST["fetchcsp"],$_POST["cspsrv_ip"],$_POST["cspsrv_port"],$_POST["cspsrv_user"],$_POST["cspsrv_pass"],$_POST["cspsrv_protocol"],$_POST["comptables"],$_POST["extrausrtbl"],$_POST["notstartusrorder"],$_POST["expusrorder"],$_POST["soonexpusrorder"]);
 		if($updnotice=="0") {
 			$notice="toastr.success('Settings saved successfully');";
 		}
@@ -41,6 +41,19 @@ if(mysqli_connect_errno()) {
 			<script src="js/html5shiv.js"></script>
 			<script src="js/respond.min.js"></script>
 		<![endif]-->
+		<script language="javascript" type="text/javascript">
+			function autovalue(id) {
+				var length='<?php print($setres["rndstringlength"]); ?>';
+				chars="<?php print($setres["rndstring"]); ?>";
+				pass="";
+					for(x=0;x<length;x++) {
+						i=Math.floor(Math.random() * 62);
+						pass+=chars.charAt(i);
+					}
+				oFormObject=document.forms[0];
+				oFormObject.elements[id].value=pass;
+			}
+		</script>
 	</head>
 	<body onload="<?php if(isset($notice)) { print($notice); } ?>">
 		<?php
@@ -115,6 +128,51 @@ if(mysqli_connect_errno()) {
 								<div class="row">
 									<div class="span9">&nbsp;</div>
 								</div>
+							<h4 class="header">Dashboard</h4>
+								<div class="row">
+									<div class="span5">
+										<div class="control-group">
+											<label class="control-label" for="notstartusrorder">Not started user order</label>
+												<div class="controls">
+													<select name="notstartusrorder" id="notstartusrorder">
+														<option value="asc" <?php if($setres["notstartusrorder"]=="asc") { print("selected"); } ?>>Ascending</option>
+														<option value="desc" <?php if($setres["notstartusrorder"]=="desc") { print("selected"); } ?>>Descending</option>
+													</select>
+												</div>
+										</div>
+										<div class="control-group">
+											<label class="control-label" for="expusrorder">Expired user order</label>
+												<div class="controls">
+													<select name="expusrorder" id="expusrorder">
+														<option value="asc" <?php if($setres["expusrorder"]=="asc") { print("selected"); } ?>>Ascending</option>
+														<option value="desc" <?php if($setres["expusrorder"]=="desc") { print("selected"); } ?>>Descending</option>
+													</select>
+												</div>
+										</div>
+										<div class="control-group">
+											<label class="control-label" for="soonexpusrorder">Soon expired user order</label>
+												<div class="controls">
+													<select name="soonexpusrorder" id="soonexpusrorder">
+														<option value="asc" <?php if($setres["soonexpusrorder"]=="asc") { print("selected"); } ?>>Ascending</option>
+														<option value="desc" <?php if($setres["soonexpusrorder"]=="desc") { print("selected"); } ?>>Descending</option>
+													</select>
+												</div>
+										</div>										
+										<div class="control-group">
+											<div class="controls">
+												<input type="submit" name="bsave" value="Save Changes" class="btn">
+											</div>
+										</div>
+									</div>
+									<div class="span6">
+										<p>
+											&nbsp;
+										</p>								
+									</div>
+								</div>
+								<div class="row">
+									<div class="span9">&nbsp;</div>
+								</div>
 							<h4 class="header">Layout</h4>
 								<div class="row">
 									<div class="span5">
@@ -162,7 +220,17 @@ if(mysqli_connect_errno()) {
 												<div class="controls">
 													<select name="loglogins" id="loglogins">
 														<option value="1" <?php if($setres["loglogins"]=="1") { print("selected"); } ?>>Yes</option>
+														<option value="2" <?php if($setres["loglogins"]=="2") { print("selected"); } ?>>Only failed</option>
 														<option value="0" <?php if($setres["loglogins"]=="0") { print("selected"); } ?>>No</option>
+													</select>
+												</div>
+										</div>
+										<div class="control-group">
+											<label class="control-label" for="logactivity">Log manager activity</label>
+												<div class="controls">
+													<select name="logactivity" id="logactivity">
+														<option value="1" <?php if($setres["logactivity"]=="1") { print("selected"); } ?>>Yes</option>
+														<option value="0" <?php if($setres["logactivity"]=="0") { print("selected"); } ?>>No</option>
 													</select>
 												</div>
 										</div>
@@ -194,9 +262,9 @@ if(mysqli_connect_errno()) {
 								<div class="row">
 									<div class="span5">
 										<div class="control-group">
-											<label class="control-label" for="genxmlkey">Genxml key</label>
+											<label class="control-label" for="genxmlkey" ondblclick="autovalue('genxmlkey');">Genxml key</label>
 												<div class="controls">
-													<input type="text" name="genxmlkey" id="genxmlkey" value="<?php print($setres["genxmlkey"]); ?>" maxlength="50">
+													<input type="text" name="genxmlkey" id="genxmlkey" value="<?php print($setres["genxmlkey"]); ?>" maxlength="50" ondblclick="autovalue('genxmlkey');">
 												</div>
 										</div>
 										<div class="control-group">
@@ -204,6 +272,7 @@ if(mysqli_connect_errno()) {
 												<div class="controls">
 													<select name="genxmllogreq" id="genxmllogreq">
 														<option value="1" <?php if($setres["genxmllogreq"]=="1") { print("selected"); } ?>>Yes</option>
+														<option value="2" <?php if($setres["genxmllogreq"]=="2") { print("selected"); } ?>>Only failed</option>
 														<option value="0" <?php if($setres["genxmllogreq"]=="0") { print("selected"); } ?>>No</option>
 													</select>
 												</div>
@@ -225,6 +294,15 @@ if(mysqli_connect_errno()) {
 														<option value="d/m/Y" <?php if($setres["genxmldateformat"]=="d/m/Y") { print("selected"); } ?>>dd/mm/yyyy</option>
 														<option value="Y-m-d" <?php if($setres["genxmldateformat"]=="Y-m-d") { print("selected"); } ?>>yyyy-mm-dd</option>
 														<option value="Y/m/d" <?php if($setres["genxmldateformat"]=="Y/m/d") { print("selected"); } ?>>yyyy/mm/dd</option>
+													</select>
+												</div>
+										</div>
+										<div class="control-group">
+											<label class="control-label" for="genxmlintstrexp">Internal start-/expiredate</label>
+												<div class="controls">
+													<select name="genxmlintstrexp" id="genxmlintstrexp">
+														<option value="1" <?php if($setres["genxmlintstrexp"]=="1") { print("selected"); } ?>>Yes</option>
+														<option value="0" <?php if($setres["genxmlintstrexp"]=="0") { print("selected"); } ?>>No</option>
 													</select>
 												</div>
 										</div>

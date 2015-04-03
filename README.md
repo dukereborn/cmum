@@ -18,12 +18,11 @@ If you prefer to follow the git repository, the following branch and tag names m
 * ``trunk`` is the development branch
 
 ## Installation
-1. Upload all the files to your web server.
+1. Upload all the files to your web server
 2. Browse to the install-dir to start the installation, http://your.cmum.url/install/
 3. Download the generated config.php and place in the root of you cmum dir
 4. Remove the install dir from the cmum dir
-5. All done!
-6. Setup csp to fetch users from cmum, described bellow
+5. Setup csp to fetch users from cmum, described bellow
 
 CSP config example for use on a local webserver
 ```
@@ -48,6 +47,12 @@ CSP config example for use on a remote (or local) secure webserver
   </auth-config>
 </user-manager>
 ```
+
+## Upgrading from version 3.x
+1. Delete all files (except config.php) from your cmum dir
+2. Upload the new files into your cmum dir
+3. Open cmum in your browser and you will get a notice to upgrade your installation
+4. Remove the upgrade-dir from your cmum dir
 
 ## Upgrading from version 2.x
 Due to a complete rework of the whole system and database, a complete reinstallation is required if you want to upgrade from version 2.x to 3.x.

@@ -495,7 +495,35 @@ function cspgetuserinfo(username) {
 						$('#cspusr-sessionname').html(ifempty(cspdata[22]));
 					$('#modalCspUserInfo').modal({ show: true });
 				} else {
-					toastr.error('Something went wrong');
+					toastr.error('Something went wrong, please try again');
+				}
+			}
+		});
+	}
+}
+
+function cspgetuseripinfo(username) {
+	if(username!="") {
+		jQuery.ajax({
+			type: 'post',
+			url: 'functions/ajaxhelper.php',
+			data: 'function=14&username='+username,
+			cache: false,
+			success: function(response) {
+				if(response!="") {
+					var cspdata=response.split(";");
+						$('#cspusrip-headusr').html('CSP User IP Info - '+username);
+						$('#cspusrip-ip').html(ifempty(cspdata[0]));
+						$('#cspusrip-hostname').html(ifempty(cspdata[1]));
+						$('#cspusrip-continent').html(ifempty(cspdata[2]));
+						$('#cspusrip-country').html(ifempty(cspdata[3]));
+						$('#cspusrip-region').html(ifempty(cspdata[4]));
+						$('#cspusrip-city').html(ifempty(cspdata[5]));
+						$('#cspusrip-timezone').html(ifempty(cspdata[6]));
+						$('#cspusrip-isp').html(ifempty(cspdata[7]));
+					$('#modalCspUserIpInfo').modal({ show: true });
+				} else {
+					toastr.error('Something went wrong, please try again');
 				}
 			}
 		});

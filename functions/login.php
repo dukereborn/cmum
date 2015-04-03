@@ -22,7 +22,7 @@ function login($user,$pass) {
 					$line=$sql->fetch_array();
 				if ($rowcheck==1) {
 					if($line["enabled"]=="0") {
-						if($sline["loglogins"]=="1") {
+						if($sline["loglogins"]=="1" || $sline["loglogins"]=="2") {
 							$mysqli->query("INSERT INTO log_login (status,ip,user,pass) VALUES ('2','".$_SERVER["REMOTE_ADDR"]."','".$loginuser."','')");
 						}
 						mysqli_close($mysqli);
@@ -45,7 +45,7 @@ function login($user,$pass) {
 						$status="0";	
 					}
 				} else {
-					if($sline["loglogins"]=="1") {
+					if($sline["loglogins"]=="1" || $sline["loglogins"]=="2") {
 						$mysqli->query("INSERT INTO log_login (status,ip,user,pass) VALUES ('1','".$_SERVER["REMOTE_ADDR"]."','".$loginuser."','".$loginpass."')");
 					}
 					mysqli_close($mysqli);

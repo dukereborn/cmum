@@ -29,12 +29,13 @@ return($u_sql->num_rows.";".$g_sql->num_rows.";".$p_sql->num_rows.";".$a_sql->nu
 }
 
 function errorpage($errortitle,$errortext,$charset,$title,$uribase,$ver,$build,$mod) {
+	$newuribase=substr($uribase,0,strrpos($uribase,"/")+1);
 	$file=file_get_contents("includes/error.php");
 	$file=str_replace("%errortitle%",$errortitle,$file);
 	$file=str_replace("%errortext%",$errortext,$file);
 	$file=str_replace("%charset%",$charset,$file);
 	$file=str_replace("%title%",$title,$file);
-	$file=str_replace("%uribase%",$uribase,$file);
+	$file=str_replace("%uribase%",$newuribase,$file);
 	if($build<>"" && $mod=="") {
 		$file=str_replace("%version%",$ver."-".$build,$file);
 	} elseif($build<>"" && $mod<>"") {
@@ -204,6 +205,19 @@ function chpassadmin($uid,$pass1,$pass2) {
 return($status);
 }
 
+function deleteadmin($uid) {
+	if(file_exists("config.php")) {
+		require("config.php");
+	} else {
+		require("../config.php");
+	}
+		$mysqli=new mysqli($dbhost,$dbuser,$dbpass,$dbname);
+			$mysqli->query("DELETE FROM admins WHERE id='".$uid."'");
+		mysqli_close($mysqli);
+		$status="0";
+return($status);
+}
+
 function enableadmin($uid) {
 	if(file_exists("config.php")) {
 		require("config.php");
@@ -225,19 +239,6 @@ function disableadmin($uid) {
 	}
 		$mysqli=new mysqli($dbhost,$dbuser,$dbpass,$dbname);
 			$mysqli->query("UPDATE admins SET enabled='0' WHERE id='".$uid."'");
-		mysqli_close($mysqli);
-		$status="0";
-return($status);
-}
-
-function deleteadmin($uid) {
-	if(file_exists("config.php")) {
-		require("config.php");
-	} else {
-		require("../config.php");
-	}
-		$mysqli=new mysqli($dbhost,$dbuser,$dbpass,$dbname);
-			$mysqli->query("DELETE FROM admins WHERE id='".$uid."'");
 		mysqli_close($mysqli);
 		$status="0";
 return($status);
@@ -393,6 +394,28 @@ function cspsendosd($user,$message) {
 return($status);
 }
 
+function cspsendosdtoall($message) {
+	if(file_exists("config.php")) {
+		require("config.php");
+	} else {
+		require("../config.php");
+	}
+	$cmdresult="cmd-result";
+		$mysqli=new mysqli($dbhost,$dbuser,$dbpass,$dbname);
+			$setsql=$mysqli->query("SELECT cspsrv_ip,cspsrv_port,cspsrv_user,cspsrv_pass,cspsrv_protocol FROM settings WHERE id='1'");
+			$setdata=$setsql->fetch_array();
+		mysqli_close($mysqli);
+			$url=simplexml_load_file(valuetohttpprotocol($setdata["cspsrv_protocol"])."://".$setdata["cspsrv_user"].":".$setdata["cspsrv_pass"]."@".$setdata["cspsrv_ip"].":".$setdata["cspsrv_port"]."/xmlHandler?command=osd-message&name=all&text=".urlencode($message));
+			if((string)$url->$cmdresult->attributes()->success=="true") {
+				$status="1;".(string)$url->$cmdresult->attributes()->data;
+			} elseif((string)$url->$cmdresult->attributes()->success=="false") {
+				$status="2;0";
+			} else {
+				$status="0;0";
+			}
+return($status);
+}
+
 function cspgetuserinfo($user) {
 	// Return structure
 	// loginfailures;sessions;host;id;count;profile;clientid;protocol;context;connected;duration;ecmcount;emmcount;pendingcount;keepalivecount;lasttransaction;lastzap;idletime;flags;avgecminterval;session-id;session-cdata;session-name
@@ -436,6 +459,76 @@ function cspgetuserinfo($user) {
 				$usrsession=";";
 			}
 			$status=(string)$xmldata->$proxyusers->attributes()->$loginfailures.";".(string)$xmldata->$proxyusers->user[$i]->attributes()->sessions.";".(string)$xmldata->$proxyusers->user[$i]->session[$actsess]->attributes()->host.";".(string)$xmldata->$proxyusers->user[$i]->session[$actsess]->attributes()->id.";".(string)$xmldata->$proxyusers->user[$i]->session[$actsess]->attributes()->count.";".(string)$xmldata->$proxyusers->user[$i]->session[$actsess]->attributes()->profile.";".(string)$xmldata->$proxyusers->user[$i]->session[$actsess]->attributes()->$clientid.";".(string)$xmldata->$proxyusers->user[$i]->session[$actsess]->attributes()->protocol.";".(string)$xmldata->$proxyusers->user[$i]->session[$actsess]->attributes()->context.";".date("Y-m-d H:i:s", strtotime((string)$xmldata->$proxyusers->user[$i]->session[$actsess]->attributes()->connected)).";".(string)$xmldata->$proxyusers->user[$i]->session[$actsess]->attributes()->duration.";".(string)$xmldata->$proxyusers->user[$i]->session[$actsess]->attributes()->$ecmcount.";".(string)$xmldata->$proxyusers->user[$i]->session[$actsess]->attributes()->$emmcount.";".(string)$xmldata->$proxyusers->user[$i]->session[$actsess]->attributes()->$pendingcount.";".(string)$xmldata->$proxyusers->user[$i]->session[$actsess]->attributes()->$keepalivecount.";".(string)$xmldata->$proxyusers->user[$i]->session[$actsess]->attributes()->$lasttransaction.";".(string)$xmldata->$proxyusers->user[$i]->session[$actsess]->attributes()->$lastzap.";".(string)$xmldata->$proxyusers->user[$i]->session[$actsess]->attributes()->$idletime.";".(string)$xmldata->$proxyusers->user[$i]->session[$actsess]->attributes()->flags.";".(string)$xmldata->$proxyusers->user[$i]->session[$actsess]->attributes()->$avgecminterval.";".$usrsession;
+return($status);
+}
+
+function cspgetuseripinfo($user) {
+	// Return structure
+	// ip;hostname;continent;country;region;city;timezone;isp
+	if(file_exists("config.php")) {
+		require("config.php");
+	} else {
+		require("../config.php");
+	}
+	$i=0;
+	$proxyusers="proxy-users";
+	$actsess=0;
+	$actusr="0";
+		$mysqli=new mysqli($dbhost,$dbuser,$dbpass,$dbname);
+			$setsql=$mysqli->query("SELECT cspsrv_ip,cspsrv_port,cspsrv_user,cspsrv_pass,cspsrv_protocol FROM settings WHERE id='1'");
+			$setdata=$setsql->fetch_array();
+		mysqli_close($mysqli);
+			$xmldata=simplexml_load_file(valuetohttpprotocol($setdata["cspsrv_protocol"])."://".$setdata["cspsrv_user"].":".$setdata["cspsrv_pass"]."@".$setdata["cspsrv_ip"].":".$setdata["cspsrv_port"]."/xmlHandler?command=proxy-users&name=".$user);
+				foreach($xmldata->$proxyusers->user as $xmlusr) {
+					$y=0;
+					foreach($xmldata->$proxyusers->user[$i]->session as $active) {
+						if ((string)$xmldata->$proxyusers->user[$i]->session[$y]->attributes()->active=="true") {
+							$actsess=$y;
+							$actusr="1";
+						}
+						$y++;
+					}
+				}
+			$usrip=(string)$xmldata->$proxyusers->user[$i]->session[$actsess]->attributes()->host;
+			$data=json_decode(file_get_contents("http://www.telize.com/geoip/".$usrip),true);
+				if(isset($data["ip"])) {
+					$ip_ip=$data["ip"];
+					$ip_hostname=gethostbyaddr($data["ip"]);
+				} else {
+					$ip_ip="";
+					$ip_hostname="";
+				}
+				if(isset($data["continent_code"])) {
+					$ip_continent=$data["continent_code"];
+				} else {
+					$ip_continent="";
+				}
+				if(isset($data["country"])) {
+					$ip_country=$data["country"]." (".$data["country_code"].")";
+				} else {
+					$ip_country="";
+				}
+				if(isset($data["region"])) {
+					$ip_region=$data["region"];
+				} else {
+					$ip_region="";
+				}
+				if(isset($data["city"])) {
+					$ip_city=$data["city"];
+				} else {
+					$ip_city="";
+				}
+				if(isset($data["timezone"])) {
+					$ip_timezone=$data["timezone"];
+				} else {
+					$ip_timezone="";
+				}
+				if(isset($data["isp"])) {
+					$ip_isp=$data["isp"];
+				} else {
+					$ip_isp="";
+				}
+		$status=$ip_ip.";".$ip_hostname.";".$ip_continent.";".$ip_country.";".$ip_region.";".$ip_city.";".$ip_timezone.";".$ip_isp;
 return($status);
 }
 
@@ -786,10 +879,48 @@ function cleanprofile($pid) {
 		mysqli_close($mysqli);
 }
 
+function getprofiles() {
+	if(file_exists("config.php")) {
+		require("config.php");
+	} else {
+		require("../config.php");
+	}
+		$mysqli=new mysqli($dbhost,$dbuser,$dbpass,$dbname);
+        	$psql=$mysqli->query("SELECT id,cspvalue FROM profiles");
+				$profiles=array();
+				while($pdata=$psql->fetch_array()) {
+					$profiles[$pdata["id"]]=$pdata["cspvalue"];
+				}
+		mysqli_close($mysqli);
+return($profiles);
+}
+
+//
+// security functions
+//
+function logactivity($act,$aid,$alvl,$uid) {
+	// activity codes
+	// 1 = add user
+	// 2 = edit user
+	// 3 = del user
+	// 4 = enable user
+	// 5 = disable user
+	if($alvl<>"0") {
+		if(file_exists("config.php")) {
+			require("config.php");
+		} else {
+			require("../config.php");
+		}
+			$mysqli=new mysqli($dbhost,$dbuser,$dbpass,$dbname);
+				$mysqli->query("INSERT INTO log_activity (activity,adminid,userid) VALUES ('".trim($act)."','".trim($aid)."','".trim($uid)."')");
+			mysqli_close($mysqli);
+	}
+}
+
 //
 // settings functions
 //
-function updatesettings($servername,$timeout,$rndstring,$rndstringlength,$loglogins,$cleanlogin,$genxmlkey,$genxmllogreq,$genxmlusrgrp,$genxmldateformat,$def_autoload,$def_ipmask,$def_profiles,$def_maxconn,$def_admin,$def_enabled,$def_mapexc,$def_debug,$def_custcspval,$def_ecmrate,$fetchcsp,$cspsrv_ip,$cspsrv_port,$cspsrv_user,$cspsrv_pass,$cspsrv_protocol,$comptables,$extrausrtbl) {
+function updatesettings($servername,$timeout,$rndstring,$rndstringlength,$loglogins,$logactivity,$cleanlogin,$genxmlkey,$genxmllogreq,$genxmlusrgrp,$genxmldateformat,$genxmlintstrexp,$def_autoload,$def_ipmask,$def_profiles,$def_maxconn,$def_admin,$def_enabled,$def_mapexc,$def_debug,$def_custcspval,$def_ecmrate,$fetchcsp,$cspsrv_ip,$cspsrv_port,$cspsrv_user,$cspsrv_pass,$cspsrv_protocol,$comptables,$extrausrtbl,$notstartusrorder,$expusrorder,$soonexpusrorder) {
 	if(file_exists("config.php")) {
 		require("config.php");
 	} else {
@@ -801,7 +932,7 @@ function updatesettings($servername,$timeout,$rndstring,$rndstringlength,$loglog
 			} else {
 				$def_profiles=serialize($def_profiles);
 			}
-			$mysqli->query("UPDATE settings SET servername='".stripslashes(trim($servername))."',timeout='".stripslashes(trim($timeout))."',rndstring='".stripslashes(trim($rndstring))."',rndstringlength='".stripslashes(trim($rndstringlength))."',loglogins='".stripslashes(trim($loglogins))."',cleanlogin='".stripslashes(trim($cleanlogin))."',genxmlkey='".stripslashes(trim($genxmlkey))."',genxmllogreq='".stripslashes(trim($genxmllogreq))."',genxmlusrgrp='".stripslashes(trim($genxmlusrgrp))."',genxmldateformat='".stripslashes(trim($genxmldateformat))."',def_autoload='".stripslashes(trim($def_autoload))."',def_ipmask='".stripslashes(trim($def_ipmask))."',def_profiles='".$def_profiles."',def_maxconn='".stripslashes(trim($def_maxconn))."',def_admin='".stripslashes(trim($def_admin))."',def_enabled='".stripslashes(trim($def_enabled))."',def_mapexc='".stripslashes(trim($def_mapexc))."',def_debug='".stripslashes(trim($def_debug))."',def_custcspval='".$mysqli->real_escape_string(trim($def_custcspval))."',def_ecmrate='".stripslashes(trim($def_ecmrate))."',fetchcsp='".stripslashes(trim($fetchcsp))."',cspsrv_ip='".stripslashes(trim($cspsrv_ip))."',cspsrv_port='".stripslashes(trim($cspsrv_port))."',cspsrv_user='".stripslashes(trim($cspsrv_user))."',cspsrv_pass='".stripslashes(trim($cspsrv_pass))."',cspsrv_protocol='".stripslashes(trim($cspsrv_protocol))."',comptables='".stripslashes(trim($comptables))."',extrausrtbl='".stripslashes(trim($extrausrtbl))."' WHERE id='1'");
+			$mysqli->query("UPDATE settings SET servername='".stripslashes(trim($servername))."',timeout='".stripslashes(trim($timeout))."',rndstring='".stripslashes(trim($rndstring))."',rndstringlength='".stripslashes(trim($rndstringlength))."',loglogins='".stripslashes(trim($loglogins))."',logactivity='".stripslashes(trim($logactivity))."',cleanlogin='".stripslashes(trim($cleanlogin))."',genxmlkey='".stripslashes(trim($genxmlkey))."',genxmllogreq='".stripslashes(trim($genxmllogreq))."',genxmlusrgrp='".stripslashes(trim($genxmlusrgrp))."',genxmldateformat='".stripslashes(trim($genxmldateformat))."',genxmlintstrexp='".stripslashes(trim($genxmlintstrexp))."',def_autoload='".stripslashes(trim($def_autoload))."',def_ipmask='".stripslashes(trim($def_ipmask))."',def_profiles='".$def_profiles."',def_maxconn='".stripslashes(trim($def_maxconn))."',def_admin='".stripslashes(trim($def_admin))."',def_enabled='".stripslashes(trim($def_enabled))."',def_mapexc='".stripslashes(trim($def_mapexc))."',def_debug='".stripslashes(trim($def_debug))."',def_custcspval='".$mysqli->real_escape_string(trim($def_custcspval))."',def_ecmrate='".stripslashes(trim($def_ecmrate))."',fetchcsp='".stripslashes(trim($fetchcsp))."',cspsrv_ip='".stripslashes(trim($cspsrv_ip))."',cspsrv_port='".stripslashes(trim($cspsrv_port))."',cspsrv_user='".stripslashes(trim($cspsrv_user))."',cspsrv_pass='".stripslashes(trim($cspsrv_pass))."',cspsrv_protocol='".stripslashes(trim($cspsrv_protocol))."',comptables='".stripslashes(trim($comptables))."',extrausrtbl='".stripslashes(trim($extrausrtbl))."',notstartusrorder='".stripslashes(trim($notstartusrorder))."',expusrorder='".stripslashes(trim($expusrorder))."',soonexpusrorder='".stripslashes(trim($soonexpusrorder))."' WHERE id='1'");
 		mysqli_close($mysqli);
 			@session_start();
 				$_SESSION[$secretkey."timeout"]=$timeout;
@@ -809,6 +940,19 @@ function updatesettings($servername,$timeout,$rndstring,$rndstringlength,$loglog
 				$_SESSION[$secretkey."fetchcsp"]=$fetchcsp;
 		$status="0";
 return($status);
+}
+
+function checksetting($setting) {
+	if(file_exists("config.php")) {
+		require("config.php");
+	} else {
+		require("../config.php");
+	}
+		$mysqli=new mysqli($dbhost,$dbuser,$dbpass,$dbname);
+			$sql=$mysqli->query("SELECT ".$setting." FROM settings WHERE id='1'");
+			$rdata=$sql->fetch_array();
+		mysqli_close($mysqli);
+return($rdata[$setting]);
 }
 
 //
@@ -827,8 +971,10 @@ function includetool($toolid) {
 		"204"=>"tools/expusrcsv.php",
 		"205"=>"tools/impcspprof.php",
 		"301"=>"tools/cspupdusers.php",
+		"302"=>"tools/cspsendosdtoall.php",
 		"401"=>"tools/logadminlogin.php",
 		"402"=>"tools/loggenxmlreq.php",
+		"403"=>"tools/logactivity.php",
 		"501"=>"tools/emptygdb.php",
 		"502"=>"tools/emptypdb.php",
 		"601"=>"tools/dbmaint.php",
@@ -1472,6 +1618,28 @@ return($status);
 }
 
 //
+// version functions
+//
+function checkversion($currver) {
+	if(file_exists("config.php")) {
+		require("config.php");
+	} else {
+		require("../config.php");
+	}
+	$mysqli=new mysqli($dbhost,$dbuser,$dbpass,$dbname);
+		$versql=$mysqli->query("SELECT cmumversion FROM settings WHERE id='1' LIMIT 1");
+		$verres=$versql->fetch_array();
+			if($currver>$verres["cmumversion"]) {
+				$status="0";
+			} else {
+				$status="1";
+			}
+	mysqli_close($mysqli);
+return($status);
+}
+
+
+//
 // user functions
 //
 function adduser($user,$password,$displayname,$email,$ipmask,$maxconn,$ecmrate,$customvalues,$usrgroup,$admin,$enabled,$mapexclude,$debug,$startdate,$expiredate,$profiles,$boxtype,$macaddress,$serialnumber,$comment) {
@@ -1502,9 +1670,13 @@ function adduser($user,$password,$displayname,$email,$ipmask,$maxconn,$ecmrate,$
 					$expiredate="";
 				}
 				$mysqli->query("INSERT INTO users (user,password,displayname,ipmask,profiles,maxconn,admin,enabled,mapexclude,debug,comment,email,customvalues,ecmrate,startdate,expiredate,usrgroup,boxtype,macaddress,serialnumber,addedby,changed,changedby) VALUES ('".stripslashes(trim($user))."','".stripslashes(trim($password))."','".stripslashes(trim($displayname))."','".stripslashes(trim($ipmask))."','".$profiles."','".stripslashes(trim($maxconn))."','".trim($admin)."','".trim($enabled)."','".trim($mapexclude)."','".trim($debug)."','".stripslashes(trim($comment))."','".stripslashes(trim($email))."','".$mysqli->real_escape_string(trim($customvalues))."','".stripslashes(trim($ecmrate))."','".$startdate."','".$expiredate."','".trim($usrgroup)."','".stripslashes(trim($boxtype))."','".stripslashes(trim($macaddress))."','".stripslashes(trim($serialnumber))."','".$_SESSION[$secretkey."userid"]."','','')");
-				mysqli_close($mysqli);
+				$newuid=$mysqli->insert_id;
+				if(checksetting("logactivity")=="1") {
+					logactivity("1",$_SESSION[$secretkey."userid"],$_SESSION[$secretkey."userlvl"],$newuid);
+				}
 				$status="0";
-		}
+			}
+		mysqli_close($mysqli);
 return($status);
 }
 
@@ -1536,9 +1708,12 @@ function edituser($uid,$user,$password,$displayname,$email,$ipmask,$maxconn,$ecm
 					$expiredate="";
 				}
 				$mysqli->query("UPDATE users SET user='".stripslashes(trim($user))."',password='".stripslashes(trim($password))."',displayname='".stripslashes(trim($displayname))."',ipmask='".stripslashes(trim($ipmask))."',profiles='".$profiles."',maxconn='".trim($maxconn)."',admin='".trim($admin)."',enabled='".trim($enabled)."',mapexclude='".trim($mapexclude)."',debug='".trim($debug)."',user='".stripslashes(trim($user))."',comment='".stripslashes(trim($comment))."',email='".stripslashes(trim($email))."',customvalues='".$mysqli->real_escape_string(trim($customvalues))."',ecmrate='".stripslashes(trim($ecmrate))."',startdate='".$startdate."',expiredate='".$expiredate."',usrgroup='".trim($usrgroup)."',boxtype='".stripslashes(trim($boxtype))."',macaddress='".stripslashes(trim($macaddress))."',serialnumber='".stripslashes(trim($serialnumber))."',changed='".date('Y-m-d H:i:s')."',changedby='".$_SESSION[$secretkey."userid"]."' WHERE id='".$uid."'");
-				mysqli_close($mysqli);
+				if(checksetting("logactivity")=="1") {
+					logactivity("2",$_SESSION[$secretkey."userid"],$_SESSION[$secretkey."userlvl"],$uid);
+				}
 				$status="0";
-		}
+			}
+		mysqli_close($mysqli);
 return($status);
 }
 
@@ -1555,6 +1730,9 @@ function deleteuser($uid) {
 					$status="1";
 				} else {
 					$mysqli->query("DELETE FROM users WHERE id='".$uid."'");
+					if(checksetting("logactivity")=="1") {
+						logactivity("3",$_SESSION[$secretkey."userid"],$_SESSION[$secretkey."userlvl"],$uid);
+					}
 					$status="0";
 				}
 		mysqli_close($mysqli);
@@ -1578,15 +1756,21 @@ function enableuser($uid,$admlvl,$admgrp,$admid) {
 		$admgrp=$_SESSION[$secretkey."usergrp"];
 	}
 		$mysqli=new mysqli($dbhost,$dbuser,$dbpass,$dbname);
-			$sql=$mysqli->query("SELECT usrgroup,expiredate FROM users WHERE id='".$uid."'");
+			$sql=$mysqli->query("SELECT usrgroup FROM users WHERE id='".$uid."'");
 			$delres=$sql->fetch_array();
 				if($admlvl=="2" && $admgrp<>$delres["usrgroup"]) {
 					$status="1";
 				} else {
-					if($delres["expiredate"]<>"0000-00-00" && time()>strtotime($delres["expiredate"])) {
+					$usrexp=checkuserstartexpire($uid);
+					if($usrexp=="2") {
+						$mysqli->query("UPDATE users SET enabled='1',startdate='".date('Y-m-d')."',changed='".date('Y-m-d H:i:s')."',changedby='".$admid."' WHERE id='".$uid."'");
+					} elseif($usrexp=="3") {
 						$mysqli->query("UPDATE users SET enabled='1',expiredate='0000-00-00',changed='".date('Y-m-d H:i:s')."',changedby='".$admid."' WHERE id='".$uid."'");
 					} else {
 						$mysqli->query("UPDATE users SET enabled='1',changed='".date('Y-m-d H:i:s')."',changedby='".$admid."' WHERE id='".$uid."'");
+					}
+					if(checksetting("logactivity")=="1") {
+						logactivity("4",$admid,$admlvl,$uid);
 					}
 					$status="0";
 				}
@@ -1617,9 +1801,84 @@ function disableuser($uid,$admlvl,$admgrp,$admid) {
 					$status="1";
 				} else {
 					$mysqli->query("UPDATE users SET enabled='0',changed='".date('Y-m-d H:i:s')."',changedby='".$admid."' WHERE id='".$uid."'");
+					if(checksetting("logactivity")=="1") {
+						logactivity("5",$admid,$admlvl,$uid);
+					}
 					$status="0";
 				}
 		mysqli_close($mysqli);
+return($status);
+}
+
+function checkstartexpire($start,$expire,$enabled) {
+	// return codes
+	// 0 = disabled
+	// 1 = enabled
+	// 2 = not started
+	// 3 = expired
+	if($start<>"0000-00-00" && $expire<>"0000-00-00") {
+		if(time()>=strtotime($start) && time()<=strtotime($expire) && $enabled<>"0") {
+			$status="1";
+		} elseif(time()<=strtotime($start) && $enabled<>"0") {
+			$status="2";
+		} elseif(time()>=strtotime($expire) && $enabled<>"0") {
+			$status="3";
+		} else {
+			if($enabled=="1" || $enabled=="") {
+				$status="1";
+			} else {
+				$status="0";
+			}
+		}
+	} elseif($start<>"0000-00-00" && $expire=="0000-00-00") {
+		if(time()>=strtotime($start) && $enabled<>"0") {
+			$status="1";
+		} elseif(time()<=strtotime($start) && $enabled<>"0") {
+			$status="2";
+		} else {
+			if($enabled=="1" || $enabled=="") {
+				$status="1";
+			} else {
+				$status="0";
+			}
+		}
+	} elseif($start=="0000-00-00" && $expire<>"0000-00-00") {
+		if(time()<=strtotime($expire) && $enabled<>"0") {
+			$status="1";
+		} elseif(time()>=strtotime($expire) && $enabled<>"0") {
+			$status="3";
+		} else {
+			if($enabled=="1" || $enabled=="") {
+				$status="1";
+			} else {
+				$status="0";
+			}
+		}
+	} elseif($start=="0000-00-00" && $expire=="0000-00-00") {
+		if($enabled=="1" || $enabled=="") {
+			$status="1";
+		} else {
+			$status="0";
+		}
+	}
+return($status);
+}
+
+function checkuserstartexpire($uid) {
+	if(file_exists("config.php")) {
+		require("config.php");
+	} else {
+		require("../config.php");
+	}
+		if($uid=="") {
+			$status="";
+		} else {
+			$mysqliu=new mysqli($dbhost,$dbuser,$dbpass,$dbname);
+				$u_sql=$mysqliu->query("SELECT enabled,startdate,expiredate FROM users WHERE id='".$uid."'");
+				$u_res=$u_sql->fetch_array();
+			mysqli_close($mysqliu);
+			$status=checkstartexpire($u_res["startdate"],$u_res["expiredate"],$u_res["enabled"]);
+		}
 return($status);
 }
 
@@ -1690,7 +1949,7 @@ function genxml($genxmlkey,$reqip,$option) {
 						$mysqli->query("INSERT INTO log_genxmlreq (status,ip,genxmlkey) VALUES ('0','".$reqip."','')");
 					}
 				} else {
-					if($setres["genxmllogreq"]=="1") {
+					if($setres["genxmllogreq"]=="1" || $setres["genxmllogreq"]=="2") {
 						$mysqli->query("INSERT INTO log_genxmlreq (status,ip,genxmlkey) VALUES ('1','".$reqip."','".$genxmlkey."')");
 					}
 				}
@@ -1701,6 +1960,7 @@ function genxml($genxmlkey,$reqip,$option) {
 				}
 			}
 			if($dogen=="1") {
+				$intstrexp=checksetting("genxmlintstrexp");
 				$xmlout="<xml-user-manager ver=\"1.0\">\n";
 				$profvalues="";
 					$usql=$mysqli->query("SELECT user,password,displayname,ipmask,profiles,maxconn,admin,enabled,mapexclude,debug,email,customvalues,ecmrate,startdate,expiredate,usrgroup FROM users");
@@ -1710,11 +1970,10 @@ function genxml($genxmlkey,$reqip,$option) {
 						$profres="";
 					} else {
 						$dbprof=unserialize($usrdata["profiles"]);
+						$profdata=getprofiles();
 							if($dbprof<>"" && $dbprof<>"N;") {
 								foreach($dbprof as $useprof) {
-									$psql=$mysqli->query("SELECT cspvalue FROM profiles WHERE id='".$useprof."'");
-									$profdata=$psql->fetch_array();
-									$profvalues.=$profdata["cspvalue"]." ";
+									$profvalues.=$profdata[$useprof]." ";
 								}
 								$profres=trim($profvalues);
 								$profdata="";
@@ -1765,7 +2024,20 @@ function genxml($genxmlkey,$reqip,$option) {
 					if(in_array("noenabled",$opts)) {
 						$enabled="";
 					} else {
-						$enabled=xmloutformat("enabled",numbertotf($usrdata["enabled"]));
+						if($intstrexp=="1") {
+							$usrexp=checkstartexpire($usrdata["startdate"],$usrdata["expiredate"],$usrdata["enabled"]);
+								if($usrexp=="0") {
+									$enabled=xmloutformat("enabled","false");
+								} elseif($usrexp=="1") {
+									$enabled=xmloutformat("enabled","true");
+								} elseif($usrexp=="2") {
+									$enabled=xmloutformat("enabled","false");
+								} elseif($usrexp=="3") {
+									$enabled=xmloutformat("enabled","false");
+								} else {
+									$enabled=xmloutformat("enabled",numbertotf($usrdata["enabled"]));
+								}
+						}
 					}
 					if(in_array("nomapexclude",$opts)) {
 						$mapexclude="";
@@ -1782,12 +2054,12 @@ function genxml($genxmlkey,$reqip,$option) {
 					} else {
 						$email=xmloutformat("email-address",$usrdata["email"]);
 					}
-					if(in_array("nostartdate",$opts)) {
+					if(in_array("nostartdate",$opts) || $intstrexp=="1") {
 						$startdate="";
 					} else {
 						$startdate=xmloutformat("start-date",formatdate($setres["genxmldateformat"],$usrdata["startdate"]));
 					}
-					if(in_array("noexpiredate",$opts)) {
+					if(in_array("noexpiredate",$opts) || $intstrexp=="1") {
 						$expiredate="";
 					} else {
 						$expiredate=xmloutformat("expire-date",formatdate($setres["genxmldateformat"],$usrdata["expiredate"]));

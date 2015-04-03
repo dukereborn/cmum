@@ -8,8 +8,12 @@ body {
     text-transform: uppercase;
     font-weight: 300; }
     
+#headerlight {
+    font-weight: 200;
+}
 #headerstrong {
-	font-weight: 500; }
+    font-weight: 400;
+}
 	
 .cspuserinfobox {
 	margin-bottom: 9px;

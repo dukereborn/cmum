@@ -20,7 +20,7 @@
 			<div class="container">
 				<div class="row">
 					<div class="span12">
-						<h4>CSP<strong id="headerstrong">MYSQL</strong>USER<strong id="headerstrong">MANAGER</strong></h4>
+						<h4><span id="headerlight">CSP</span><span id="headerstrong"><strong>MYSQL</strong></span><span id="headerlight">USER</span><span id="headerstrong"><strong>MANAGER</strong></span></h4>
 					</div>
 				</div>
 			</div>

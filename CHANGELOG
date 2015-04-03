@@ -6,6 +6,27 @@ CSP MySQL User Manager Changelog
 [-] Bug fixed
 
 
+3.1.0 [2015-04-03]
+[+] Random genxmlkey function
+[+] Manager activity logging
+[+] Internal start-/expiredate handling
+[+] Send osd to all connected users
+[+] IP lookup on connected users (requires internet access)
+[+] Change sort order of expired/soon expired users on dashboard
+[+] Listing not started users on dashboard
+[#] Only log failed admin logins
+[#] Only log failed genxml requests
+[#] Fixed broken css on text logo
+[#] Changed pencil icon on dashboard buttons to text
+[#] Improved profile handling in genxml function
+[#] Improved start/expired user listing
+[#] Improved start-/expiredate handling
+[#] Improved quick enabled for not started and expired users
+[#] Improved install script
+[#] Changed MySQL engine to InnoDB for better performance
+[-] Fixed improper error page
+
+
 3.0.0 [2014-11-12]
 [+] New responsive design
 [+] Improved security

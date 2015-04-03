@@ -89,6 +89,14 @@ if(isset($_POST["baction"]) && $_POST["baction"]=="Clear genxml request log") {
 			$notice="toastr.error('Something went wrong, try again');";
 		}
 }
+if(isset($_POST["baction"]) && $_POST["baction"]=="Clear activity log") {
+	$status=clearlog("log_activity");
+		if($status=="1") {
+			$notice="toastr.success('Activity log cleared');";
+		} else {
+			$notice="toastr.error('Something went wrong, try again');";
+		}
+}
 if(isset($_POST["bimpxml"]) && $_POST["bimpxml"]=="Import users") {
 	if(isset($_POST["createprof"]) && $_POST["createprof"]<>"") {
 		$createprof=$_POST["createprof"];
@@ -124,6 +132,19 @@ if(isset($_POST["baction"]) && $_POST["baction"]=="Update CSP Users") {
 	$status=cspupdateusers();
 		if($status=="1") {
 			$notice="toastr.success('Updated performed');";
+		} else {
+			$notice="toastr.error('Something went wrong, try again');";
+		}
+}
+if(isset($_POST["baction"]) && $_POST["baction"]=="Send OSD") {
+	$status=cspsendosdtoall($_POST["osdmsg"]);
+		$status=explode(";",$status);
+		if($status["0"]=="1") {
+			$notice="toastr.success('Message sent to ".$status["1"]." active and compatible newcamd sessions');";
+		} elseif($status["0"]=="2") {
+			$notice="toastr.error('No active/compatible newcamd sessions found');";
+		} elseif($status["0"]=="0") {
+			$notice="toastr.error('Message not sent, please try again');";
 		} else {
 			$notice="toastr.error('Something went wrong, try again');";
 		}
@@ -281,6 +302,7 @@ $counters=explode(";",counter());
 												print("<ul>");
 													print("<li class=\"sidebar-inner\">");
 														print("<a href=\"tools.php?menu=3&tool=301\"><span>Update CSP Users</span></a>");
+														print("<a href=\"tools.php?menu=3&tool=302\"><span>Send OSD To All Users</span></a>");
 													print("</li>");
 												print("</ul>");
 											print("</li>");
@@ -292,6 +314,7 @@ $counters=explode(";",counter());
 												<li class="sidebar-inner">
 													<a href="tools.php?menu=4&tool=401"><span>Admin Login</span></a>
 													<a href="tools.php?menu=4&tool=402"><span>Genxml Request</span></a>
+													<a href="tools.php?menu=4&tool=403"><span>Manager Activity</span></a>
 												</li>
 											</ul>
 										</li>

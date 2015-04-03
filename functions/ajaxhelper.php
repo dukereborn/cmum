@@ -13,8 +13,6 @@
 // 11 = kick csp user
 // 12 = send csp osd message
 // 13 = get csp user info
-// 14 = install mysql check
-// 15 = install cmum db
 
 require("../config.php");
 require("cmum.php");
@@ -91,6 +89,11 @@ echo $status;
 
 if(isset($_POST["function"]) && $_POST["function"]=="13" && $_POST["username"]<>"") {	
 	$status=cspgetuserinfo($_POST["username"]);
+echo $status;
+}
+
+if(isset($_POST["function"]) && $_POST["function"]=="14" && $_POST["username"]<>"") {	
+	$status=cspgetuseripinfo($_POST["username"]);
 echo $status;
 }
 ?>

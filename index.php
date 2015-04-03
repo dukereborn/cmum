@@ -15,6 +15,16 @@ if(file_exists("install/")) {
 	exit;
 }
 
+if(checkversion(CMUM_VERSION)=="0") {
+	errorpage("VERSION MISMATCH","Please run the upgrade tool to upgrade your installation!<br><br>Click <a href=\"\upgrade\">here</a> to run the upgrade tool","utf-8",CMUM_TITLE,$_SERVER["REQUEST_URI"],CMUM_VERSION,CMUM_BUILD,CMUM_MOD);
+	exit;
+}
+
+if(file_exists("upgrade/")) {
+	errorpage("UPGRADE INCOMPLETE","Please delete the upgrade dir from your www-root after you completed the upgrade!","utf-8",CMUM_TITLE,$_SERVER["REQUEST_URI"],CMUM_VERSION,CMUM_BUILD,CMUM_MOD);
+	exit;
+}
+
 if($dbhost=="" || $dbname=="" || $dbuser=="" || $dbpass=="" || $charset=="" || $secretkey=="") {
 	errorpage("CONFIGURATION INCOMPLETE","Please check your configuration file and make sure no values are empty!",$charset,CMUM_TITLE,$_SERVER["REQUEST_URI"],CMUM_VERSION,CMUM_BUILD,CMUM_MOD);
 	exit;
@@ -82,7 +92,7 @@ if(isset($_POST["blogin"]) && $_POST["blogin"]=="Login") {
 							if($setres["cleanlogin"]=="1") {
 								print("<h4></h4>");
 							} else {
-								print("<h4>CSP<strong id=\"headerstrong\">MYSQL</strong>USER<strong id=\"headerstrong\">MANAGER</strong></h4>");
+								print("<h4><span id=\"headerlight\">CSP</span><span id=\"headerstrong\"><strong>MYSQL</strong></span><span id=\"headerlight\">USER</span><span id=\"headerstrong\"><strong>MANAGER</strong></span></h4>");
 							}
 						?>
 					</div>
