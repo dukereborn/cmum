@@ -380,6 +380,44 @@ function disableadmin(aid) {
 	}
 }
 
+function enablegroup(gid) {
+	if(gid!="") {
+		jQuery.ajax({
+			type: 'post',
+			url: 'functions/ajaxhelper.php',
+			data: 'function=15&gid='+gid,
+			cache: false,
+			success: function(response) {
+				if(response==0) {
+					$('#grpenabled-'+gid).html('<span class=\"label label-success\">Enabled</span>');
+					$('#grplnkenabled-'+gid).attr('onclick','disablegroup(\''+gid+'\');');
+					$('#agrpenabled-'+gid).html('Disable');
+					$('#agrpenabled-'+gid).attr('onclick','disablegroup(\''+gid+'\');');
+				}
+			}
+		});
+	}
+}
+
+function disablegroup(gid) {
+	if(gid!="") {
+		jQuery.ajax({
+			type: 'post',
+			url: 'functions/ajaxhelper.php',
+			data: 'function=16&gid='+gid,
+			cache: false,
+			success: function(response) {
+				if(response==0) {
+					$('#grpenabled-'+gid).html('<span class=\"label label-important\">Disabled</span>');
+					$('#grplnkenabled-'+gid).attr('onclick','enablegroup(\''+gid+'\');');
+					$('#agrpenabled-'+gid).html('Enable');
+					$('#agrpenabled-'+gid).attr('onclick','enablegroup(\''+gid+'\');');
+				}
+			}
+		});
+	}
+}
+
 function checkquickedit() {
 	var username=$('#newsearch input[name=quickedit]').val();
 		if(username=="") {

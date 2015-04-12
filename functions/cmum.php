@@ -663,7 +663,7 @@ function addgroup($name,$comment) {
 					mysqli_close($mysqli);
 					$status="2";
 				} else {
-					$mysqli->query("INSERT INTO groups (name,comment) VALUES ('".trim($name)."','".trim($comment)."')");
+					$mysqli->query("INSERT INTO groups (name,comment,enabled) VALUES ('".trim($name)."','".trim($comment)."','1')");
 					mysqli_close($mysqli);
 					$status="0";
 				}
@@ -700,6 +700,32 @@ function editgroup($gid,$name,$comment) {
 						}
 				}
 		}
+return($status);
+}
+
+function enablegroup($gid) {
+	if(file_exists("config.php")) {
+		require("config.php");
+	} else {
+		require("../config.php");
+	}
+		$mysqli=new mysqli($dbhost,$dbuser,$dbpass,$dbname);
+			$mysqli->query("UPDATE groups SET enabled='1' WHERE id='".$gid."'");
+		mysqli_close($mysqli);
+		$status="0";
+return($status);
+}
+
+function disablegroup($gid) {
+	if(file_exists("config.php")) {
+		require("config.php");
+	} else {
+		require("../config.php");
+	}
+		$mysqli=new mysqli($dbhost,$dbuser,$dbpass,$dbname);
+			$mysqli->query("UPDATE groups SET enabled='0' WHERE id='".$gid."'");
+		mysqli_close($mysqli);
+		$status="0";
 return($status);
 }
 
@@ -778,6 +804,23 @@ function grptoid($grp) {
 			mysqli_close($mysqlig);
 		}
 return($status);
+}
+
+function enabledgroups() {
+	if(file_exists("config.php")) {
+		require("config.php");
+	} else {
+		require("../config.php");
+	}
+		$enabledgroups=array();
+		array_push($enabledgroups,"");
+		$mysqlig=new mysqli($dbhost,$dbuser,$dbpass,$dbname);
+			$gsql=$mysqlig->query("SELECT id FROM groups WHERE enabled='1'");
+			while($gres=$gsql->fetch_array()) {
+				array_push($enabledgroups,$gres["id"]);	
+			}
+		mysqli_close($mysqlig);
+return($enabledgroups);
 }
 
 //
@@ -1960,6 +2003,7 @@ function genxml($genxmlkey,$reqip,$option) {
 				}
 			}
 			if($dogen=="1") {
+				$enabledgroups=enabledgroups();
 				$intstrexp=checksetting("genxmlintstrexp");
 				$xmlout="<xml-user-manager ver=\"1.0\">\n";
 				$profvalues="";
@@ -2024,7 +2068,9 @@ function genxml($genxmlkey,$reqip,$option) {
 					if(in_array("noenabled",$opts)) {
 						$enabled="";
 					} else {
-						if($intstrexp=="1") {
+						if(!in_array($usrdata["usrgroup"],$enabledgroups)) {
+							$enabled=xmloutformat("enabled","false");
+						} elseif($intstrexp=="1") {
 							$usrexp=checkstartexpire($usrdata["startdate"],$usrdata["expiredate"],$usrdata["enabled"]);
 								if($usrexp=="0") {
 									$enabled=xmloutformat("enabled","false");
@@ -2037,6 +2083,8 @@ function genxml($genxmlkey,$reqip,$option) {
 								} else {
 									$enabled=xmloutformat("enabled",numbertotf($usrdata["enabled"]));
 								}
+						} else {
+							$enabled=xmloutformat("enabled",numbertotf($usrdata["enabled"]));
 						}
 					}
 					if(in_array("nomapexclude",$opts)) {
