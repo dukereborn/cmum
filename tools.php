@@ -149,7 +149,7 @@ if(isset($_POST["baction"]) && $_POST["baction"]=="Send OSD") {
 			$notice="toastr.error('Something went wrong, try again');";
 		}
 }
-if(isset($_POST["baction"]) && $_POST["baction"]=="Check Tables") {
+if(isset($_POST["baction"]) && $_POST["baction"]=="Check tables") {
 	$status=checktables();
 		if($status=="1") {
 			$notice="toastr.success('Database tables checked successfully');";
@@ -157,7 +157,7 @@ if(isset($_POST["baction"]) && $_POST["baction"]=="Check Tables") {
 			$notice="toastr.error('Something went wrong, try again');";
 		}
 }
-if(isset($_POST["baction"]) && $_POST["baction"]=="Analyze Tables") {
+if(isset($_POST["baction"]) && $_POST["baction"]=="Analyze tables") {
 	$status=analyzetables();
 		if($status=="1") {
 			$notice="toastr.success('Database tables analyzed successfully');";
@@ -165,7 +165,7 @@ if(isset($_POST["baction"]) && $_POST["baction"]=="Analyze Tables") {
 			$notice="toastr.error('Something went wrong, try again');";
 		}
 }
-if(isset($_POST["baction"]) && $_POST["baction"]=="Repair Tables") {
+if(isset($_POST["baction"]) && $_POST["baction"]=="Repair tables") {
 	$status=repairtables();
 		if($status=="1") {
 			$notice="toastr.success('Database tables repaired successfully');";
@@ -173,7 +173,7 @@ if(isset($_POST["baction"]) && $_POST["baction"]=="Repair Tables") {
 			$notice="toastr.error('Something went wrong, try again');";
 		}
 }
-if(isset($_POST["baction"]) && $_POST["baction"]=="Optimize Tables") {
+if(isset($_POST["baction"]) && $_POST["baction"]=="Optimize tables") {
 	$status=optimizetables();
 		if($status=="1") {
 			$notice="toastr.success('Database tables optimized successfully');";

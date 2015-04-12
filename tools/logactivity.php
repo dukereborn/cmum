@@ -19,7 +19,7 @@
 						?>
 					</select>
 						&nbsp;&nbsp;
-					<input type="submit" name="bclractlog" id="bclractlog" value="Clear log" class="btn">
+					<input type="submit" name="bclractlog" value="Clear log" class="btn">
 				</div>
 		</div>
 		<div class="control-group">
