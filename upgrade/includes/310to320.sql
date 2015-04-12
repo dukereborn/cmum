@@ -1,0 +1,1 @@
+UPDATE `settings` SET `cmumversion`='3.2.0', `dbversion`='3.2.0' WHERE `id`=1;
