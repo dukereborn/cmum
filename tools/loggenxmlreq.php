@@ -9,7 +9,7 @@
 						<option value="1" <?php if(isset($_POST["logfilter"]) && $_POST["logfilter"]=="1") { print("selected"); } ?>>Failed</option>
 					</select>
 						&nbsp;&nbsp;
-					<input type="submit" name="baction" value="Clear genxml request log" class="btn">
+					<input type="submit" name="bclrgxlog" id="bclrgxlog" value="Clear log" class="btn">
 				</div>
 		</div>
 		<div class="control-group">

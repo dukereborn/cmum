@@ -73,7 +73,7 @@ if(isset($_POST["baction"]) && $_POST["baction"]=="Empty profile database") {
 			$notice="toastr.error('Something went wrong, try again');";
 		}
 }
-if(isset($_POST["baction"]) && $_POST["baction"]=="Clear admin login log") {
+if(isset($_POST["bclradmlog"]) && $_POST["bclradmlog"]=="Clear log") {
 	$status=clearlog("log_login");
 		if($status=="1") {
 			$notice="toastr.success('Admin login log cleared');";
@@ -81,7 +81,7 @@ if(isset($_POST["baction"]) && $_POST["baction"]=="Clear admin login log") {
 			$notice="toastr.error('Something went wrong, try again');";
 		}
 }
-if(isset($_POST["baction"]) && $_POST["baction"]=="Clear genxml request log") {
+if(isset($_POST["bclrgxlog"]) && $_POST["bclrgxlog"]=="Clear log") {
 	$status=clearlog("log_genxmlreq");
 		if($status=="1") {
 			$notice="toastr.success('Genxml request log cleared');";
@@ -89,7 +89,7 @@ if(isset($_POST["baction"]) && $_POST["baction"]=="Clear genxml request log") {
 			$notice="toastr.error('Something went wrong, try again');";
 		}
 }
-if(isset($_POST["baction"]) && $_POST["baction"]=="Clear activity log") {
+if(isset($_POST["bclractlog"]) && $_POST["bclractlog"]=="Clear log") {
 	$status=clearlog("log_activity");
 		if($status=="1") {
 			$notice="toastr.success('Activity log cleared');";
