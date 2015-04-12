@@ -22,6 +22,15 @@ function upgradecmumdb($sqlhost,$sqluser,$sqlpass,$sqlname,$cmumversion,$charset
 					foreach($datalines as $i => $value) {
 						$mysqli->query($datalines[$i]);	
 					}
+				$fh=fopen("includes/310to311.sql","r");
+					$data=fread($fh,filesize("includes/310to311.sql"));
+					$charset=str_replace("-","",$charset);
+					$data=str_replace("%charset%",$charset,$data);
+				fclose($fh);
+				$datalines=preg_split("/\r\n|[\r\n]/",$data);
+					foreach($datalines as $i => $value) {
+						$mysqli->query($datalines[$i]);	
+					}
 				$fh=fopen("includes/310to320.sql","r");
 					$data=fread($fh,filesize("includes/310to320.sql"));
 					$charset=str_replace("-","",$charset);
@@ -34,7 +43,28 @@ function upgradecmumdb($sqlhost,$sqluser,$sqlpass,$sqlname,$cmumversion,$charset
 				$status="1";
 			}
 			if($cmumversion=="3.1.0") {
+				$fh=fopen("includes/310to311.sql","r");
+					$data=fread($fh,filesize("includes/310to311.sql"));
+					$charset=str_replace("-","",$charset);
+					$data=str_replace("%charset%",$charset,$data);
+				fclose($fh);
+				$datalines=preg_split("/\r\n|[\r\n]/",$data);
+					foreach($datalines as $i => $value) {
+						$mysqli->query($datalines[$i]);	
+					}
 				$fh=fopen("includes/310to320.sql","r");
+					$data=fread($fh,filesize("includes/310to320.sql"));
+					$charset=str_replace("-","",$charset);
+					$data=str_replace("%charset%",$charset,$data);
+				fclose($fh);
+				$datalines=preg_split("/\r\n|[\r\n]/",$data);
+					foreach($datalines as $i => $value) {
+						$mysqli->query($datalines[$i]);	
+					}
+				$status="1";
+			}
+			if($cmumversion=="3.1.1") {
+				$fh=fopen("includes/311to320.sql","r");
 					$data=fread($fh,filesize("includes/310to320.sql"));
 					$charset=str_replace("-","",$charset);
 					$data=str_replace("%charset%",$charset,$data);
