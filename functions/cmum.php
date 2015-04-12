@@ -2037,6 +2037,8 @@ function genxml($genxmlkey,$reqip,$option) {
 								} else {
 									$enabled=xmloutformat("enabled",numbertotf($usrdata["enabled"]));
 								}
+						} else {
+							$enabled=xmloutformat("enabled",numbertotf($usrdata["enabled"]));
 						}
 					}
 					if(in_array("nomapexclude",$opts)) {

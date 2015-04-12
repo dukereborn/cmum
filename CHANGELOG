@@ -5,6 +5,9 @@ CSP MySQL User Manager Changelog
 [#] Improved/changed feature
 [-] Bug fixed
 
+3.1.1 [2015-04-12]
+[-] Fixed a critical bug in the internal start-/expiredate
+
 
 3.1.0 [2015-04-03]
 [+] Random genxmlkey function
