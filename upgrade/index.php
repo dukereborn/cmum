@@ -11,7 +11,11 @@ if(file_exists("config.php")) {
 require("../includes/settings.php");
 require("functions/upgrade.php");
 
-$currver=getversion($dbhost,$dbuser,$dbpass,$dbname);
+if(isset($_GET["override"]) && $_GET["override"]=="yes") {
+	$currver="3.0.0";
+} else {
+	$currver=getversion($dbhost,$dbuser,$dbpass,$dbname);
+}
 ?>
 <html>
 	<head>
