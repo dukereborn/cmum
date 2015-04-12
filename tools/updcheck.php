@@ -15,7 +15,7 @@
 						if($upd[0]=="0") {
 							$updnotice="<div class=\"alert alert-success\">CMUM ".CMUM_VERSION." is currently the newest version available</div>";
 						} elseif($upd[0]=="1") {
-							$updnotice="<div class=\"alert alert-info\">There is a new version of CMUM available<br><br>Installed version: ".CMUM_VERSION."<br>Latest version: ".$upd[1]."<br><br>Visit <a href=\"http://github.com/dukereborn/cmum/\" target=\"_blank\">http://github.com/dukereborn/cmum/</a> to download the latest version</div>";
+							$updnotice="<div class=\"alert alert-info\">There is a new version of CMUM available<br><br>Installed version: ".CMUM_VERSION."<br>Latest version: ".$upd[1]."<br><br>Visit <a href=\"http://github.com/dukereborn/cmum/releases/\" target=\"_blank\">http://github.com/dukereborn/cmum/releases/</a> to download the latest version</div>";
 						} elseif($upd[0]=="2") {
 							$updnotice="<div class=\"alert alert-error\">Can't connect to the update server</div>";
 						}
