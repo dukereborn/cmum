@@ -10,6 +10,7 @@ CSP MySQL User Manager Changelog
 [+] Enable/disable groups
 [+] Override and force database upgrade
 [#] Changed update check url for new releases
+[#] Removed cmum dbversion from database
 
 
 3.1.1 [2015-04-12]
