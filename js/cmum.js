@@ -55,3 +55,12 @@ function checksearch(e) {
 			}
 	}
 }
+
+function alphanumeric(inputtxt) { 
+	var letters = /^[0-9a-zA-Z]+$/;
+		if (letters.test(inputtxt)) {
+			return true;
+		} else {
+			return false;
+		}
+}

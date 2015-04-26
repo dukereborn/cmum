@@ -8,6 +8,14 @@ function checkusername() {
 				} else if(password=="") {
 					newuser.password.focus();
 				}
+		} else if(alphanumeric(username)==false || alphanumeric(password)==false) {
+			if(alphanumeric(username)==false) {
+				toastr.error('Username contains invalid characters');
+				newuser.user.focus();
+			} else if(alphanumeric(password)==false) {
+				toastr.error('Password contains invalid characters');
+				newuser.password.focus();
+			}
 		} else {
 			jQuery.ajax({
 				type: 'post',
@@ -38,6 +46,14 @@ function checkeditusername() {
 				if(username=="") {
 					edituser.user.focus();
 				}
+		} else if(alphanumeric(username)==false || alphanumeric(password)==false) {
+			if(alphanumeric(username)==false) {
+				toastr.error('Username contains invalid characters');
+				newuser.user.focus();
+			} else if(alphanumeric(password)==false) {
+				toastr.error('Password contains invalid characters');
+				newuser.password.focus();
+			}
 		} else {
 			if(username!=rusername) {
 				jQuery.ajax({
