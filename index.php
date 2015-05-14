@@ -55,6 +55,7 @@ if(isset($_POST["blogin"]) && $_POST["blogin"]=="Login") {
 	$login=login($_POST["user"],$_POST["pass"]);
 		if($login=="0") {
 			header("Location:dashboard.php");
+			exit;
 		} elseif($login=="1") {
 			$notice="toastr.error('Unknown username or bad password');";
 		} elseif($login=="2") {
