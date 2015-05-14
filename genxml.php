@@ -14,6 +14,7 @@
 		if($xmldata<>"") {
 			header("Content-type: text/xml; charset=".$charset);
 				print($xmldata);
+			exit;
 		} else {
 			header('HTTP/1.0 404 Not Found');
 				print("<h1>404 Not Found</h1>");
