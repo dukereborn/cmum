@@ -11,6 +11,13 @@
 		} else {
 			$xmldata=genxml("",$_SERVER["REMOTE_ADDR"],$option);
 		}
+		if($xmldata<>"") {
 			header("Content-type: text/xml; charset=".$charset);
 				print($xmldata);
+		} else {
+			header('HTTP/1.0 404 Not Found');
+				print("<h1>404 Not Found</h1>");
+				print("The page that you have requested could not be found.");
+			exit();
+		}			
 ?>

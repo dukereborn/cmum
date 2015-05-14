@@ -11,6 +11,7 @@ CSP MySQL User Manager Changelog
 [+] Ability to override and force database upgrade
 [+] Check for invalid characters in username and password
 [+] Auto update check
+[+] Wrong genxml key gives 404 error
 [#] Changed update check url for new releases
 [#] Removed cmum dbversion from database
 [-] Empty input fields in modals if cancelled
