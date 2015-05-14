@@ -206,6 +206,10 @@ mysqli_close($mysqli);
 		<script src="js/modal.js"></script>
 		<script language="javascript" type="text/javascript">
 			$(".sortable").tablesorter();
+			
+			$('#modalNewGroup').on('hidden', function () {
+				cleanmodalNewGroup();
+			});
 		</script>
 	</body>
 </html>

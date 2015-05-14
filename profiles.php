@@ -193,6 +193,10 @@ mysqli_close($mysqli);
 		<script src="js/modal.js"></script>
 		<script language="javascript" type="text/javascript">
 			$(".sortable").tablesorter();
+			
+			$('#modalNewProfile').on('hidden', function () {
+				cleanmodalNewProfile();
+			});
 		</script>
 	</body>
 </html>
