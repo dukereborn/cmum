@@ -43,6 +43,6 @@
 	</form>
 		<div class="modal-footer">
 			<button class="btn btn-success pull-right" name="baddadm" value="Add" onclick="checkadminname();">Add</button>
-			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>&nbsp;&nbsp;
+			<button class="btn" data-dismiss="modal" aria-hidden="true" onclick="cleanmodalNewAdmin();">Cancel</button>&nbsp;&nbsp;
 		</div>
 </div>
