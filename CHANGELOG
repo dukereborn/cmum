@@ -10,6 +10,7 @@ CSP MySQL User Manager Changelog
 [+] Enable/disable groups
 [+] Ability to override and force database upgrade
 [+] Check for invalid characters in username and password
+[+] Auto update check
 [#] Changed update check url for new releases
 [#] Removed cmum dbversion from database
 
