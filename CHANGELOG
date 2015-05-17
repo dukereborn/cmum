@@ -14,6 +14,7 @@ CSP MySQL User Manager Changelog
 [+] Wrong genxml key gives 404 error
 [#] Changed update check url for new releases
 [#] Removed cmum dbversion from database
+[#] Hide csp server tools when csp connection check fails
 [-] Empty input fields in modals if cancelled
 [-] Fixed some possible header exploits
 

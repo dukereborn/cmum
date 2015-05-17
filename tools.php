@@ -284,7 +284,7 @@ $counters=explode(";",counter());
 													<a href="tools.php?menu=2&tool=203"><span>Export Users (CSP XML)</span></a>
 													<a href="tools.php?menu=2&tool=204"><span>Export Users (CSV)</span></a>
 													<?php
-														if($setres["fetchcsp"]=="1") {
+														if($setres["fetchcsp"]=="1" && $cspconnstatus=="1") {
 															print("<a href=\"tools.php?menu=2&tool=205\"><span>Import Profiles (CSP Server)</span></a>");
 														}	
 													?>
@@ -292,7 +292,7 @@ $counters=explode(";",counter());
 											</ul>
 										</li>
 									<?php
-										if($setres["fetchcsp"]=="1") {
+										if($setres["fetchcsp"]=="1" && $cspconnstatus=="1") {
 											print("<li class=\"sidebar-header\"><a href=\"#csp\" data-toggle=\"collapse\" class=\"accordion-toggle\">CSP Server</a></li>");
 												if(isset($_GET["menu"]) && $_GET["menu"]=="3") {
 													print("<li id=\"csp\" class=\"in collapse\">");
