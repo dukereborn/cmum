@@ -149,6 +149,14 @@ if(isset($_POST["baction"]) && $_POST["baction"]=="Send OSD") {
 			$notice="toastr.error('Something went wrong, try again');";
 		}
 }
+if(isset($_POST["baction"]) && $_POST["baction"]=="Shutdown CSP Server") {
+	$status=cspshutdown();
+		if($status=="1") {
+			$notice="toastr.success('Shutdown initiated');";
+		} else {
+			$notice="toastr.error('Something went wrong, try again');";
+		}
+}
 if(isset($_POST["baction"]) && $_POST["baction"]=="Check tables") {
 	$status=checktables();
 		if($status=="1") {
@@ -303,6 +311,7 @@ $counters=explode(";",counter());
 													print("<li class=\"sidebar-inner\">");
 														print("<a href=\"tools.php?menu=3&tool=301\"><span>Update CSP Users</span></a>");
 														print("<a href=\"tools.php?menu=3&tool=302\"><span>Send OSD To All Users</span></a>");
+														print("<a href=\"tools.php?menu=3&tool=303\"><span>Shutdown CSP Server</span></a>");
 													print("</li>");
 												print("</ul>");
 											print("</li>");

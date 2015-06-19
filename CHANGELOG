@@ -12,6 +12,7 @@ CSP MySQL User Manager Changelog
 [+] Check for invalid characters in username and password
 [+] Auto update check
 [+] Wrong genxml key gives 404 error
+[+] Ability to shutdown csp server
 [#] Changed update check url for new releases
 [#] Removed cmum dbversion from database
 [#] Hide csp server tools when csp connection check fails

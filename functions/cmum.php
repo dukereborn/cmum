@@ -565,6 +565,26 @@ function cspgetsrvinfo() {
 return($status);
 }
 
+function cspshutdown() {
+	if(file_exists("config.php")) {
+		require("config.php");
+	} else {
+		require("../config.php");
+	}
+	$cmdresult="cmd-result";
+		$mysqli=new mysqli($dbhost,$dbuser,$dbpass,$dbname);
+			$setsql=$mysqli->query("SELECT cspsrv_ip,cspsrv_port,cspsrv_user,cspsrv_pass,cspsrv_protocol FROM settings WHERE id='1'");
+			$setdata=$setsql->fetch_array();
+		mysqli_close($mysqli);
+			$url=simplexml_load_file(valuetohttpprotocol($setdata["cspsrv_protocol"])."://".$setdata["cspsrv_user"].":".$setdata["cspsrv_pass"]."@".$setdata["cspsrv_ip"].":".$setdata["cspsrv_port"]."/xmlHandler?command=shutdown");
+			if((string)$url->$cmdresult->attributes()->success=="true") {
+				$status="1";
+			} else {
+				$status="0";
+			}
+return($status);
+}
+
 //
 // dashboard functions
 //
@@ -1015,6 +1035,7 @@ function includetool($toolid) {
 		"205"=>"tools/impcspprof.php",
 		"301"=>"tools/cspupdusers.php",
 		"302"=>"tools/cspsendosdtoall.php",
+		"303"=>"tools/cspshutdown.php",
 		"401"=>"tools/logadminlogin.php",
 		"402"=>"tools/loggenxmlreq.php",
 		"403"=>"tools/logactivity.php",
