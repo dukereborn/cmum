@@ -17,6 +17,7 @@ CSP MySQL User Manager Changelog
 [#] Hide csp server tools when csp connection check fails
 [-] Empty input fields in modals if cancelled
 [-] Fixed some possible header exploits
+[-] Removed php closing tags to avoid header errors
 
 
 3.1.1 [2015-04-12]

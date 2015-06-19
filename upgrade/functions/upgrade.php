@@ -78,5 +78,4 @@ function upgradecmumdb($sqlhost,$sqluser,$sqlpass,$sqlname,$cmumversion,$charset
 		}
 	mysqli_close($mysqli);
 return($status);
-}	
-?>
+}

@@ -109,4 +109,3 @@ if(isset($_POST["function"]) && $_POST["function"]=="16" && $_POST["gid"]<>"") {
 	$status=disablegroup($_POST["gid"]);
 echo $status;
 }
-?>

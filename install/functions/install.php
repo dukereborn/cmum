@@ -85,4 +85,3 @@ if(isset($_POST["function"]) && $_POST["function"]=="dbinstall" && $_POST["host"
 	$status=installcmumdb($_POST["host"],$_POST["name"],$_POST["user"],$_POST["pass"],$_POST["charset"],$_POST["aname"],$_POST["apass"],$_POST["skey"]);
 echo $status;
 }
-?>

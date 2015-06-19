@@ -2124,4 +2124,3 @@ function genxml($genxmlkey,$reqip,$option) {
 	mysqli_close($mysqli);
 return($xmlout);
 }
-?>
