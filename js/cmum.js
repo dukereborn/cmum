@@ -8,7 +8,7 @@ return retvalue;
 }
 
 function rhtmlspecialchars(str) {
-	if (typeof(str)=="string") {
+	if(typeof(str)=="string") {
 		str=str.replace(/&gt;/ig, ">");
 		str=str.replace(/&lt;/ig, "<");
 		str=str.replace(/&#039;/g, "'");
@@ -31,12 +31,12 @@ return true;
 checked=false;
 function checkedallprof(value) {
 	var aa=document.getElementById(value);
-		if (checked==false) {
+		if(checked==false) {
 			checked=true
 		} else {
 			checked=false
 		}
-		for (var i=0; i < aa.elements.length; i++) {
+		for(var i=0; i < aa.elements.length; i++) {
 			aa.elements[i].checked = checked;
 		}
 }
@@ -58,7 +58,7 @@ function checksearch(e) {
 
 function alphanumeric(inputtxt) { 
 	var letters = /^[0-9a-zA-Z]+$/;
-		if (letters.test(inputtxt)) {
+		if(letters.test(inputtxt)) {
 			return true;
 		} else {
 			return false;

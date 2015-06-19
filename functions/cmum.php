@@ -326,7 +326,7 @@ function cspgetuserlist() {
 					$y=0;
 					$usrstate="0";
 					foreach($xmldata->$proxyusers->user[$i]->session as $active) {
-						if ((string)$xmldata->$proxyusers->user[$i]->session[$y]->attributes()->active=="true") {
+						if((string)$xmldata->$proxyusers->user[$i]->session[$y]->attributes()->active=="true") {
 							$usrstate="1";
 						}
 						$y++;
@@ -446,7 +446,7 @@ function cspgetuserinfo($user) {
 				foreach($xmldata->$proxyusers->user as $xmlusr) {
 					$y=0;
 					foreach($xmldata->$proxyusers->user[$i]->session as $active) {
-						if ((string)$xmldata->$proxyusers->user[$i]->session[$y]->attributes()->active=="true") {
+						if((string)$xmldata->$proxyusers->user[$i]->session[$y]->attributes()->active=="true") {
 							$actsess=$y;
 							$actusr="1";
 						}
@@ -482,7 +482,7 @@ function cspgetuseripinfo($user) {
 				foreach($xmldata->$proxyusers->user as $xmlusr) {
 					$y=0;
 					foreach($xmldata->$proxyusers->user[$i]->session as $active) {
-						if ((string)$xmldata->$proxyusers->user[$i]->session[$y]->attributes()->active=="true") {
+						if((string)$xmldata->$proxyusers->user[$i]->session[$y]->attributes()->active=="true") {
 							$actsess=$y;
 							$actusr="1";
 						}
@@ -1342,7 +1342,7 @@ function impusrcsv($csv,$creategrp,$createprof,$cmumcsvver) {
 			$impgroups="";
 				foreach ($csv as $i => $value) {
 					$csvuser=explode(";", $csv[$i]);
-						if ($csvuser[0]=="" || $csvuser[1]=="") {
+						if($csvuser[0]=="" || $csvuser[1]=="") {
 							$y++;
 						} else {
 							$sql=$mysqli->query("SELECT id FROM users WHERE user='".$csvuser[0]."'");

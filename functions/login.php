@@ -20,7 +20,7 @@ function login($user,$pass) {
 				$sql=$mysqli->query("SELECT id,enabled,admlvl,ugroup FROM admins WHERE user='".$loginuser."' AND pass='".hash("sha256",$loginpass.$secretkey)."'");
 					$rowcheck=$sql->num_rows;
 					$line=$sql->fetch_array();
-				if ($rowcheck==1) {
+				if($rowcheck==1) {
 					if($line["enabled"]=="0") {
 						if($sline["loglogins"]=="1" || $sline["loglogins"]=="2") {
 							$mysqli->query("INSERT INTO log_login (status,ip,user,pass) VALUES ('2','".$_SERVER["REMOTE_ADDR"]."','".$loginuser."','')");
