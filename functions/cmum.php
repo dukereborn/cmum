@@ -961,7 +961,7 @@ return($profiles);
 //
 // security functions
 //
-function logactivity($act,$aid,$alvl,$uid) {
+function logactivity($act,$aid,$alvl,$uid,$data) {
 	// activity codes
 	// 1 = add user
 	// 2 = edit user
@@ -975,7 +975,7 @@ function logactivity($act,$aid,$alvl,$uid) {
 			require("../config.php");
 		}
 			$mysqli=new mysqli($dbhost,$dbuser,$dbpass,$dbname);
-				$mysqli->query("INSERT INTO log_activity (activity,adminid,userid) VALUES ('".trim($act)."','".trim($aid)."','".trim($uid)."')");
+				$mysqli->query("INSERT INTO log_activity (activity,adminid,userid,data) VALUES ('".trim($act)."','".trim($aid)."','".trim($uid)."','".trim($data)."')");
 			mysqli_close($mysqli);
 	}
 }
@@ -1736,7 +1736,7 @@ function adduser($user,$password,$displayname,$email,$ipmask,$maxconn,$ecmrate,$
 				$mysqli->query("INSERT INTO users (user,password,displayname,ipmask,profiles,maxconn,admin,enabled,mapexclude,debug,comment,email,customvalues,ecmrate,startdate,expiredate,usrgroup,boxtype,macaddress,serialnumber,addedby,changed,changedby) VALUES ('".stripslashes(trim($user))."','".stripslashes(trim($password))."','".stripslashes(trim($displayname))."','".stripslashes(trim($ipmask))."','".$profiles."','".stripslashes(trim($maxconn))."','".trim($admin)."','".trim($enabled)."','".trim($mapexclude)."','".trim($debug)."','".stripslashes(trim($comment))."','".stripslashes(trim($email))."','".$mysqli->real_escape_string(trim($customvalues))."','".stripslashes(trim($ecmrate))."','".$startdate."','".$expiredate."','".trim($usrgroup)."','".stripslashes(trim($boxtype))."','".stripslashes(trim($macaddress))."','".stripslashes(trim($serialnumber))."','".$_SESSION[$secretkey."userid"]."','','')");
 				$newuid=$mysqli->insert_id;
 				if(checksetting("logactivity")=="1") {
-					logactivity("1",$_SESSION[$secretkey."userid"],$_SESSION[$secretkey."userlvl"],$newuid);
+					logactivity("1",$_SESSION[$secretkey."userid"],$_SESSION[$secretkey."userlvl"],$newuid,$user);
 				}
 				$status="0";
 			}
@@ -1773,7 +1773,7 @@ function edituser($uid,$user,$password,$displayname,$email,$ipmask,$maxconn,$ecm
 				}
 				$mysqli->query("UPDATE users SET user='".stripslashes(trim($user))."',password='".stripslashes(trim($password))."',displayname='".stripslashes(trim($displayname))."',ipmask='".stripslashes(trim($ipmask))."',profiles='".$profiles."',maxconn='".trim($maxconn)."',admin='".trim($admin)."',enabled='".trim($enabled)."',mapexclude='".trim($mapexclude)."',debug='".trim($debug)."',user='".stripslashes(trim($user))."',comment='".stripslashes(trim($comment))."',email='".stripslashes(trim($email))."',customvalues='".$mysqli->real_escape_string(trim($customvalues))."',ecmrate='".stripslashes(trim($ecmrate))."',startdate='".$startdate."',expiredate='".$expiredate."',usrgroup='".trim($usrgroup)."',boxtype='".stripslashes(trim($boxtype))."',macaddress='".stripslashes(trim($macaddress))."',serialnumber='".stripslashes(trim($serialnumber))."',changed='".date('Y-m-d H:i:s')."',changedby='".$_SESSION[$secretkey."userid"]."' WHERE id='".$uid."'");
 				if(checksetting("logactivity")=="1") {
-					logactivity("2",$_SESSION[$secretkey."userid"],$_SESSION[$secretkey."userlvl"],$uid);
+					logactivity("2",$_SESSION[$secretkey."userid"],$_SESSION[$secretkey."userlvl"],$uid,$user);
 				}
 				$status="0";
 			}
@@ -1793,9 +1793,10 @@ function deleteuser($uid) {
 				if($_SESSION[$secretkey."userlvl"]=="2" && $_SESSION[$secretkey."usergrp"]<>$delres["usrgroup"]) {
 					$status="1";
 				} else {
+					$username=idtouser($uid);
 					$mysqli->query("DELETE FROM users WHERE id='".$uid."'");
 					if(checksetting("logactivity")=="1") {
-						logactivity("3",$_SESSION[$secretkey."userid"],$_SESSION[$secretkey."userlvl"],$uid);
+						logactivity("3",$_SESSION[$secretkey."userid"],$_SESSION[$secretkey."userlvl"],$uid,$username);
 					}
 					$status="0";
 				}
@@ -1834,7 +1835,7 @@ function enableuser($uid,$admlvl,$admgrp,$admid) {
 						$mysqli->query("UPDATE users SET enabled='1',changed='".date('Y-m-d H:i:s')."',changedby='".$admid."' WHERE id='".$uid."'");
 					}
 					if(checksetting("logactivity")=="1") {
-						logactivity("4",$admid,$admlvl,$uid);
+						logactivity("4",$admid,$admlvl,$uid,idtouser($uid));
 					}
 					$status="0";
 				}
@@ -1866,7 +1867,7 @@ function disableuser($uid,$admlvl,$admgrp,$admid) {
 				} else {
 					$mysqli->query("UPDATE users SET enabled='0',changed='".date('Y-m-d H:i:s')."',changedby='".$admid."' WHERE id='".$uid."'");
 					if(checksetting("logactivity")=="1") {
-						logactivity("5",$admid,$admlvl,$uid);
+						logactivity("5",$admid,$admlvl,$uid,idtouser($uid));
 					}
 					$status="0";
 				}

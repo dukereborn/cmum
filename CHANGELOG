@@ -16,6 +16,7 @@ CSP MySQL User Manager Changelog
 [#] Changed update check url for new releases
 [#] Removed cmum dbversion from database
 [#] Hide csp server tools when csp connection check fails
+[#] Improved manager activity log
 [-] Empty input fields in modals if cancelled
 [-] Fixed some possible header exploits
 [-] Removed php closing tags to avoid header errors
