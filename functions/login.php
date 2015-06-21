@@ -56,9 +56,15 @@ return($status);
 }
 
 function logout() {
-	@session_start();
-		session_unset(); 
-		session_destroy();
-	header("Location:index.php?logout=1");
-	exit;
+	require("functions/cmum.php");
+		if(checksetting("fetchcsp")=="1") {
+			if(checkcspconn()=="1") {
+				cspupdateusers();
+			}
+		}
+		@session_start();
+			session_unset(); 
+			session_destroy();
+		header("Location:index.php?logout=1");
+		exit;
 }

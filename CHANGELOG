@@ -14,6 +14,7 @@ CSP MySQL User Manager Changelog
 [+] Wrong genxml key gives 404 error
 [+] Ability to shutdown csp server
 [+] Setting to set default user order
+[+] Update-users command is sent to csp server on logout
 [#] Changed update check url for new releases
 [#] Removed cmum dbversion from database
 [#] Hide csp server tools when csp connection check fails
