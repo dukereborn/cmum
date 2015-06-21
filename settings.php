@@ -11,7 +11,7 @@ if(isset($_POST["bsave"]) && $_POST["bsave"]=="Save Changes") {
 	} else {
 		$def_profiles=$_POST["def_profiles"];
 	}
-	$updnotice=updatesettings($_POST["servername"],$_POST["timeout"],$_POST["rndstring"],$_POST["rndstringlength"],$_POST["loglogins"],$_POST["logactivity"],$_POST["cleanlogin"],$_POST["genxmlkey"],$_POST["genxmllogreq"],$_POST["genxmlusrgrp"],$_POST["genxmldateformat"],$_POST["genxmlintstrexp"],$_POST["def_autoload"],$_POST["def_ipmask"],$def_profiles,$_POST["def_maxconn"],$_POST["def_admin"],$_POST["def_enabled"],$_POST["def_mapexc"],$_POST["def_debug"],$_POST["def_custcspval"],$_POST["def_ecmrate"],$_POST["fetchcsp"],$_POST["cspsrv_ip"],$_POST["cspsrv_port"],$_POST["cspsrv_user"],$_POST["cspsrv_pass"],$_POST["cspsrv_protocol"],$_POST["comptables"],$_POST["extrausrtbl"],$_POST["notstartusrorder"],$_POST["expusrorder"],$_POST["soonexpusrorder"],$_POST["autoupdcheck"]);
+	$updnotice=updatesettings($_POST["servername"],$_POST["timeout"],$_POST["rndstring"],$_POST["rndstringlength"],$_POST["loglogins"],$_POST["logactivity"],$_POST["cleanlogin"],$_POST["genxmlkey"],$_POST["genxmllogreq"],$_POST["genxmlusrgrp"],$_POST["genxmldateformat"],$_POST["genxmlintstrexp"],$_POST["def_autoload"],$_POST["def_ipmask"],$def_profiles,$_POST["def_maxconn"],$_POST["def_admin"],$_POST["def_enabled"],$_POST["def_mapexc"],$_POST["def_debug"],$_POST["def_custcspval"],$_POST["def_ecmrate"],$_POST["fetchcsp"],$_POST["cspsrv_ip"],$_POST["cspsrv_port"],$_POST["cspsrv_user"],$_POST["cspsrv_pass"],$_POST["cspsrv_protocol"],$_POST["comptables"],$_POST["extrausrtbl"],$_POST["notstartusrorder"],$_POST["expusrorder"],$_POST["soonexpusrorder"],$_POST["autoupdcheck"],$_POST["usrorderby"],$_POST["usrorder"]);
 		if($updnotice=="0") {
 			$notice="toastr.success('Settings saved successfully');";
 		}
@@ -205,7 +205,32 @@ if(mysqli_connect_errno()) {
 														<option value="4" <?php if($setres["extrausrtbl"]=="4") { print("selected"); } ?>>Added by</option>
 													</select>
 												</div>
-										</div>										
+										</div>
+										<div class="control-group">
+											<label class="control-label" for="usrorderby">User order by</label>
+												<div class="controls">
+													<select name="usrorderby" id="usrorderby">
+														<option value="user" <?php if($setres["usrorderby"]=="user") { print("selected"); } ?>>Username</option>
+														<option value="password" <?php if($setres["usrorderby"]=="password") { print("selected"); } ?>>Password</option>
+														<option value="displayname" <?php if($setres["usrorderby"]=="displayname") { print("selected"); } ?>>Displayname</option>
+														<option value="usrgroup" <?php if($setres["usrorderby"]=="usrgroup") { print("selected"); } ?>>Group</option>
+														<option value="admin" <?php if($setres["usrorderby"]=="admin") { print("selected"); } ?>>Admin</option>
+														<option value="enabled" <?php if($setres["usrorderby"]=="enabled") { print("selected"); } ?>>Enabled</option>
+														<option value="startdate" <?php if($setres["usrorderby"]=="startdate") { print("selected"); } ?>>Start date</option>
+														<option value="expiredate" <?php if($setres["usrorderby"]=="expiredate") { print("selected"); } ?>>Expire date</option>
+														<option value="addedby" <?php if($setres["usrorderby"]=="addedby") { print("selected"); } ?>>Added by</option>
+													</select>
+												</div>
+										</div>
+										<div class="control-group">
+											<label class="control-label" for="usrorder">User order</label>
+												<div class="controls">
+													<select name="usrorder" id="usrorder">
+														<option value="asc" <?php if($setres["usrorder"]=="asc") { print("selected"); } ?>>Ascending</option>
+														<option value="desc" <?php if($setres["usrorder"]=="desc") { print("selected"); } ?>>Descending</option>
+													</select>
+												</div>
+										</div>							
 										<div class="control-group">
 											<div class="controls">
 												<input type="submit" name="bsave" value="Save Changes" class="btn">
