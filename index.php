@@ -16,7 +16,7 @@ if(file_exists("install/") && !file_exists("cmum.override")) {
 }
 
 if(checkversion(CMUM_VERSION)=="0" && !file_exists("cmum.override")) {
-	errorpage("VERSION MISMATCH","Please run the upgrade tool to upgrade your installation!<br><br>Click <a href=\"\upgrade\">here</a> to run the upgrade tool","utf-8",CMUM_TITLE,$_SERVER["REQUEST_URI"],CMUM_VERSION,CMUM_BUILD,CMUM_MOD);
+	errorpage("VERSION MISMATCH","Please run the upgrade tool to upgrade your installation!<br><br>Click <a href=\"upgrade/\">here</a> to run the upgrade tool","utf-8",CMUM_TITLE,$_SERVER["REQUEST_URI"],CMUM_VERSION,CMUM_BUILD,CMUM_MOD);
 	exit;
 }
 
