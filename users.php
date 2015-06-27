@@ -35,7 +35,7 @@ if(mysqli_connect_errno()) {
 	errorpage("MYSQL DATABASE ERROR",mysqli_connect_error(),$charset,CMUM_TITLE,$_SERVER["REQUEST_URI"],CMUM_VERSION,CMUM_BUILD,CMUM_MOD);
 	exit;
 }
-	$sql=$mysqli->query("SELECT comptables,extrausrtbl FROM settings WHERE id='1'");
+	$sql=$mysqli->query("SELECT comptables,extrausrtbl,usrorderby,usrorder FROM settings WHERE id='1'");
 	$setres=$sql->fetch_array();
 		if($setres["comptables"]=="1") {
 			$tblcond=" table-condensed";
@@ -147,16 +147,16 @@ if(isset($_GET["edit"]) && $_GET["edit"]=="1") {
 											if($_SESSION[$secretkey."userlvl"]=="0" || $_SESSION[$secretkey."userlvl"]=="1") {
 												if(isset($_POST["searchfor"]) && $_POST["searchfor"]<>"") {
 													$searchstring=$mysqli->real_escape_string(trim($_POST["searchfor"]));
-													$sql=$mysqli->query("SELECT * FROM users WHERE (user LIKE '%".$searchstring."%' OR password LIKE '%".$searchstring."%' OR displayname LIKE '%".$searchstring."%' OR ipmask LIKE '%".$searchstring."%' OR mapexclude LIKE '%".$searchstring."%' OR comment LIKE '%".$searchstring."%' OR email LIKE '%".$searchstring."%' OR boxtype LIKE '%".$searchstring."%' OR macaddress LIKE '%".$searchstring."%' OR serialnumber LIKE '%".$searchstring."%') ORDER BY user");
+													$sql=$mysqli->query("SELECT * FROM users WHERE (user LIKE '%".$searchstring."%' OR password LIKE '%".$searchstring."%' OR displayname LIKE '%".$searchstring."%' OR ipmask LIKE '%".$searchstring."%' OR mapexclude LIKE '%".$searchstring."%' OR comment LIKE '%".$searchstring."%' OR email LIKE '%".$searchstring."%' OR boxtype LIKE '%".$searchstring."%' OR macaddress LIKE '%".$searchstring."%' OR serialnumber LIKE '%".$searchstring."%') ORDER BY ".$setres["usrorderby"]." ".$setres["usrorder"]);
 												} else {
-													$sql=$mysqli->query("SELECT id,user,password,displayname,usrgroup,admin,enabled,startdate,expiredate,addedby FROM users ORDER BY user");
+													$sql=$mysqli->query("SELECT id,user,password,displayname,usrgroup,admin,enabled,startdate,expiredate,addedby FROM users ORDER BY ".$setres["usrorderby"]." ".$setres["usrorder"]);
 												}	
 											} elseif($_SESSION[$secretkey."userlvl"]=="2" && $_SESSION[$secretkey."usergrp"]<>"0") {
 												if(isset($_POST["searchfor"]) && $_POST["searchfor"]<>"") {
 													$searchstring=$mysqli->real_escape_string(trim($_POST["searchfor"]));
-													$sql=$mysqli->query("SELECT * FROM users WHERE (user LIKE '%".$searchstring."%' OR password LIKE '%".$searchstring."%' OR displayname LIKE '%".$searchstring."%' OR ipmask LIKE '%".$searchstring."%' OR mapexclude LIKE '%".$searchstring."%' OR comment LIKE '%".$searchstring."%' OR email LIKE '%".$searchstring."%' OR boxtype LIKE '%".$searchstring."%' OR macaddress LIKE '%".$searchstring."%' OR serialnumber LIKE '%".$searchstring."%') AND usrgroup='".$_SESSION[$secretkey."usergrp"]."' ORDER BY user");
+													$sql=$mysqli->query("SELECT * FROM users WHERE (user LIKE '%".$searchstring."%' OR password LIKE '%".$searchstring."%' OR displayname LIKE '%".$searchstring."%' OR ipmask LIKE '%".$searchstring."%' OR mapexclude LIKE '%".$searchstring."%' OR comment LIKE '%".$searchstring."%' OR email LIKE '%".$searchstring."%' OR boxtype LIKE '%".$searchstring."%' OR macaddress LIKE '%".$searchstring."%' OR serialnumber LIKE '%".$searchstring."%') AND usrgroup='".$_SESSION[$secretkey."usergrp"]."' ORDER BY ".$setres["usrorderby"]." ".$setres["usrorder"]);
 												} else {
-													$sql=$mysqli->query("SELECT id,user,password,displayname,usrgroup,admin,enabled,startdate,expiredate,addedby FROM users WHERE usrgroup='".$mysqli->real_escape_string($_SESSION[$secretkey."usergrp"])."' ORDER BY user");	
+													$sql=$mysqli->query("SELECT id,user,password,displayname,usrgroup,admin,enabled,startdate,expiredate,addedby FROM users WHERE usrgroup='".$mysqli->real_escape_string($_SESSION[$secretkey."usergrp"])."' ORDER BY ".$setres["usrorderby"]." ".$setres["usrorder"]);	
 												}
 											} else {
 												$sql="";

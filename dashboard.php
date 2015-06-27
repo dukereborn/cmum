@@ -60,6 +60,13 @@ if(mysqli_connect_errno()) {
 							if($_SESSION[$secretkey."fetchcsp"]=="1" && $cspconnstatus=="0") {
 								print("<div class=\"span12\"><center><div class=\"alert alert-error\"><h4>Warning</h4>Can’t connect to csp server, please check your settings!</div></center></div>");
 							}
+							if(checksetting("autoupdcheck")==1) {
+								$upd=cmumupdcheck(CMUM_VERSION);
+								$upd=explode(";",$upd);
+									if($upd[0]=="1") {
+										print("<div class=\"span12\"><center><div class=\"alert alert-success\"><h4>new version of CMUM available</h4>Installed version: ".CMUM_VERSION." | Latest version: ".$upd[1]."<br>Visit <a href=\"http://github.com/dukereborn/cmum/releases/\" target=\"_blank\">http://github.com/dukereborn/cmum/releases/</a> to download the latest version</center></div>");
+									}
+							}
 						?>
 						<div class="span6">
 						<h4 class="header header-dash">User Statistics</h4>

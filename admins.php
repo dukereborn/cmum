@@ -232,6 +232,10 @@ mysqli_close($mysqli);
 		<script src="js/modal.js"></script>
 		<script language="javascript" type="text/javascript">
 			$(".sortable").tablesorter();
+			
+			$('#modalNewAdmin').on('hidden', function () {
+				cleanmodalNewAdmin();
+			});
 		</script>
 	</body>
 </html>

@@ -5,6 +5,26 @@ CSP MySQL User Manager Changelog
 [#] Improved/changed feature
 [-] Bug fixed
 
+
+3.2.0 [not yet released]
+[+] Enable/disable groups
+[+] Ability to override and force database upgrade
+[+] Check for invalid characters in username and password
+[+] Auto update check
+[+] Wrong genxml key gives 404 error
+[+] Ability to shutdown csp server
+[+] Setting to set default user order
+[+] Update-users command is sent to csp server on logout
+[+] Support for IPv6 logging
+[#] Changed update check url for new releases
+[#] Removed cmum dbversion from database
+[#] Hide csp server tools when csp connection check fails
+[#] Improved manager activity log
+[-] Empty input fields in modals if cancelled
+[-] Fixed some possible header exploits
+[-] Removed php closing tags to avoid header errors
+
+
 3.1.1 [2015-04-12]
 [-] Fixed a critical bug in the internal start-/expiredate
 

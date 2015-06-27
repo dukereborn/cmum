@@ -19,7 +19,7 @@
 						?>
 					</select>
 						&nbsp;&nbsp;
-					<input type="submit" name="baction" value="Clear activity log" class="btn">
+					<input type="submit" name="bclractlog" value="Clear log" class="btn">
 				</div>
 		</div>
 		<div class="control-group">
@@ -38,30 +38,30 @@
 							exit;
 						}
 						if(isset($_POST["logfilter"]) && $_POST["logfilter"]<>"") {
-							$sql=$mysqli->query("SELECT activity,adminid,userid,timestamp FROM log_activity WHERE adminid='".$_POST["logfilter"]."' ORDER BY id DESC");
+							$sql=$mysqli->query("SELECT activity,adminid,userid,data,timestamp FROM log_activity WHERE adminid='".$_POST["logfilter"]."' ORDER BY id DESC");
 						} else {
-							$sql=$mysqli->query("SELECT activity,adminid,userid,timestamp FROM log_activity ORDER BY id DESC");
+							$sql=$mysqli->query("SELECT activity,adminid,userid,data,timestamp FROM log_activity ORDER BY id DESC");
 						}
 							while($logdata=$sql->fetch_array()) {
 								print("<tr>");
 									print("<td>".$logdata["timestamp"]."</td>");
 									if($logdata["activity"]=="1") {
-										print("<td>".idtoadmin($logdata["adminid"])." added user ".idtouser($logdata["userid"])."</td>");
+										print("<td>".idtoadmin($logdata["adminid"])." added ".$logdata["data"]." (userid: ".$logdata["userid"].")</td>");
 									}
 									if($logdata["activity"]=="2") {
-										print("<td>".idtoadmin($logdata["adminid"])." edited user ".idtouser($logdata["userid"])."</td>");
+										print("<td>".idtoadmin($logdata["adminid"])." edited ".$logdata["data"]." (userid: ".$logdata["userid"].")</td>");
 
 									}
 									if($logdata["activity"]=="3") {
-										print("<td>".idtoadmin($logdata["adminid"])." deleted user (id: ".$logdata["userid"].")</td>");
+										print("<td>".idtoadmin($logdata["adminid"])." deleted ".$logdata["data"]." (userid: ".$logdata["userid"].")</td>");
 
 									}
 									if($logdata["activity"]=="4") {
-										print("<td>".idtoadmin($logdata["adminid"])." enabled user ".idtouser($logdata["userid"])."</td>");
+										print("<td>".idtoadmin($logdata["adminid"])." enabled ".$logdata["data"]." (userid: ".$logdata["userid"].")</td>");
 
 									}
 									if($logdata["activity"]=="5") {
-										print("<td>".idtoadmin($logdata["adminid"])." disabled user ".idtouser($logdata["userid"])."</td>");
+										print("<td><".idtoadmin($logdata["adminid"])." disabled ".$logdata["data"]." (userid: ".$logdata["userid"].")</td>");
 
 									}
 								print("</tr>");

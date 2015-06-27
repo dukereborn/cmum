@@ -10,7 +10,7 @@
 						<option value="2" <?php if(isset($_POST["logfilter"]) && $_POST["logfilter"]=="2") { print("selected"); } ?>>Disabled</option>
 					</select>
 						&nbsp;&nbsp;
-					<input type="submit" name="baction" value="Clear admin login log" class="btn">
+					<input type="submit" name="bclradmlog" value="Clear log" class="btn">
 				</div>
 		</div>
 		<div class="control-group">

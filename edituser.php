@@ -12,6 +12,7 @@ if(isset($_POST["uid"]) && $_POST["uid"]<>"") {
 	$status=edituser($_POST["uid"],$_POST["user"],$_POST["password"],$_POST["displayname"],$_POST["email"],$_POST["ipmask"],$_POST["maxconn"],$_POST["ecmrate"],$_POST["customvalues"],$_POST["usrgroup"],$_POST["admin"],$_POST["enabled"],$_POST["mapexclude"],$_POST["debug"],$_POST["startdate"],$_POST["expiredate"],$profiles,$_POST["boxtype"],$_POST["macaddress"],$_POST["serialnumber"],$_POST["comment"]);
 		if($status=="0") {
 			header("Location: users.php?edit=1");
+			exit;
 		} elseif($status=="1") {
 			$notice="toastr.error('You must enter a username and a password');";
 		} elseif($status=="2") {
@@ -21,6 +22,7 @@ if(isset($_POST["uid"]) && $_POST["uid"]<>"") {
 
 if(!isset($_GET["uid"]) || $_GET["uid"]=="") {
 	header("Location: users.php");
+	exit;
 }
 
 $counters=explode(";",counter());
@@ -47,6 +49,7 @@ mysqli_close($mysqli);
 
 if($_SESSION[$secretkey."userlvl"]=="2" && $_SESSION[$secretkey."usergrp"]<>$usrres["usrgroup"]) {
 	header("Location: users.php?error=1");
+	exit;
 }
 ?>
 <html>

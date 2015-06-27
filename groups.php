@@ -139,6 +139,7 @@ mysqli_close($mysqli);
 											<th style="cursor:ns-resize;">Name</th>
 											<th style="cursor:ns-resize;">Users</th>
 											<th style="cursor:ns-resize;">Comment</th>
+											<th style="cursor:ns-resize;">Status</th>
 											<th></th>
 										</tr>
 									</thead>
@@ -149,17 +150,26 @@ mysqli_close($mysqli);
 												errorpage("MYSQL DATABASE ERROR",mysqli_connect_error(),$charset,CMUM_TITLE,$_SERVER["REQUEST_URI"],CMUM_VERSION,CMUM_BUILD,CMUM_MOD);
 												exit;
 											}
-												$sql=$mysqli->query("SELECT id,name,comment FROM groups ORDER BY name");
+												$sql=$mysqli->query("SELECT id,name,comment,enabled FROM groups ORDER BY name");
 												while($res=$sql->fetch_array()) {
 													print("<tr>");
 														print("<td>".$res["name"]."</td>");
 														print("<td>".usersingroup($res["id"])."</td>");
 														print("<td>".$res["comment"]."</td>");
+															if($res["enabled"]=="1") {
+																print("<td><a id=\"grplnkenabled-".$res["id"]."\" href=\"javascript:void(0);\" onclick=\"disablegroup('".$res["id"]."');\"><div id=\"grpenabled-".$res["id"]."\"><span class=\"label label-success\">Enabled</span></div></a></td>");
+															} else {
+																print("<td><a id=\"grplnkenabled-".$res["id"]."\" href=\"javascript:void(0);\" onclick=\"enablegroup('".$res["id"]."');\"><div id=\"grpenabled-".$res["id"]."\"><span class=\"label label-important\">Disabled</span></div></a></td>");
+															}
 														print("<td>");
 															print("<div class=\"btn-group pull-right\">");
 																print("<button data-toggle=\"dropdown\" class=\"btn btn-small\">Actions <span class=\"caret\"></span></button>");
 																print("<ul class=\"dropdown-menu\">");
-																	print("<li><a href=\"groups.php?action=edit&gid=".$res["id"]."\">Edit</a><a href=\"groups.php?action=delete&gid=".$res["id"]."\">Delete</a></li>");
+																	if($res["enabled"]=="1") {
+																		print("<li><a href=\"groups.php?action=edit&gid=".$res["id"]."\">Edit</a><a id=\"agrpenabled-".$res["id"]."\" href=\"javascript:void(0);\" onclick=\"disablegroup('".$res["id"]."');\">Disable</a><a href=\"groups.php?action=delete&gid=".$res["id"]."\">Delete</a></li>");
+																	} else {
+																		print("<li><a href=\"groups.php?action=edit&gid=".$res["id"]."\">Edit</a><a id=\"agrpenabled-".$res["id"]."\" href=\"javascript:void(0);\" onclick=\"enablegroup('".$res["id"]."');\">Enable</a><a href=\"groups.php?action=delete&gid=".$res["id"]."\">Delete</a></li>");
+																	}
 																print("</ul>");
 															print("</div>");
 														print("</td>");
@@ -168,6 +178,7 @@ mysqli_close($mysqli);
 												print("<tr>");
 													print("<td><i>Ungrouped</i></td>");
 													print("<td><i>".usersingroup("")."</i></td>");
+													print("<td>&nbsp;</td>");
 													print("<td>&nbsp;</td>");
 													print("<td>&nbsp;</td>");
 												print("</tr>");
@@ -195,6 +206,10 @@ mysqli_close($mysqli);
 		<script src="js/modal.js"></script>
 		<script language="javascript" type="text/javascript">
 			$(".sortable").tablesorter();
+			
+			$('#modalNewGroup').on('hidden', function () {
+				cleanmodalNewGroup();
+			});
 		</script>
 	</body>
 </html>

@@ -13,6 +13,9 @@
 // 11 = kick csp user
 // 12 = send csp osd message
 // 13 = get csp user info
+// 14 = get csp user ip info
+// 15 = enable group
+// 16 = disable group
 
 require("../config.php");
 require("cmum.php");
@@ -96,4 +99,13 @@ if(isset($_POST["function"]) && $_POST["function"]=="14" && $_POST["username"]<>
 	$status=cspgetuseripinfo($_POST["username"]);
 echo $status;
 }
-?>
+
+if(isset($_POST["function"]) && $_POST["function"]=="15" && $_POST["gid"]<>"") {	
+	$status=enablegroup($_POST["gid"]);
+echo $status;
+}
+
+if(isset($_POST["function"]) && $_POST["function"]=="16" && $_POST["gid"]<>"") {	
+	$status=disablegroup($_POST["gid"]);
+echo $status;
+}

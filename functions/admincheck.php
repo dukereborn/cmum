@@ -39,4 +39,3 @@
 		if(isset($_GET["dologout"]) && stripslashes($_GET["dologout"])=="1") {
 			logout();
 		}
-?>

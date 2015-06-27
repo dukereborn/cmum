@@ -73,7 +73,7 @@ if(isset($_POST["baction"]) && $_POST["baction"]=="Empty profile database") {
 			$notice="toastr.error('Something went wrong, try again');";
 		}
 }
-if(isset($_POST["baction"]) && $_POST["baction"]=="Clear admin login log") {
+if(isset($_POST["bclradmlog"]) && $_POST["bclradmlog"]=="Clear log") {
 	$status=clearlog("log_login");
 		if($status=="1") {
 			$notice="toastr.success('Admin login log cleared');";
@@ -81,7 +81,7 @@ if(isset($_POST["baction"]) && $_POST["baction"]=="Clear admin login log") {
 			$notice="toastr.error('Something went wrong, try again');";
 		}
 }
-if(isset($_POST["baction"]) && $_POST["baction"]=="Clear genxml request log") {
+if(isset($_POST["bclrgxlog"]) && $_POST["bclrgxlog"]=="Clear log") {
 	$status=clearlog("log_genxmlreq");
 		if($status=="1") {
 			$notice="toastr.success('Genxml request log cleared');";
@@ -89,7 +89,7 @@ if(isset($_POST["baction"]) && $_POST["baction"]=="Clear genxml request log") {
 			$notice="toastr.error('Something went wrong, try again');";
 		}
 }
-if(isset($_POST["baction"]) && $_POST["baction"]=="Clear activity log") {
+if(isset($_POST["bclractlog"]) && $_POST["bclractlog"]=="Clear log") {
 	$status=clearlog("log_activity");
 		if($status=="1") {
 			$notice="toastr.success('Activity log cleared');";
@@ -149,7 +149,15 @@ if(isset($_POST["baction"]) && $_POST["baction"]=="Send OSD") {
 			$notice="toastr.error('Something went wrong, try again');";
 		}
 }
-if(isset($_POST["baction"]) && $_POST["baction"]=="Check Tables") {
+if(isset($_POST["baction"]) && $_POST["baction"]=="Shutdown CSP Server") {
+	$status=cspshutdown();
+		if($status=="1") {
+			$notice="toastr.success('Shutdown initiated');";
+		} else {
+			$notice="toastr.error('Something went wrong, try again');";
+		}
+}
+if(isset($_POST["baction"]) && $_POST["baction"]=="Check tables") {
 	$status=checktables();
 		if($status=="1") {
 			$notice="toastr.success('Database tables checked successfully');";
@@ -157,7 +165,7 @@ if(isset($_POST["baction"]) && $_POST["baction"]=="Check Tables") {
 			$notice="toastr.error('Something went wrong, try again');";
 		}
 }
-if(isset($_POST["baction"]) && $_POST["baction"]=="Analyze Tables") {
+if(isset($_POST["baction"]) && $_POST["baction"]=="Analyze tables") {
 	$status=analyzetables();
 		if($status=="1") {
 			$notice="toastr.success('Database tables analyzed successfully');";
@@ -165,7 +173,7 @@ if(isset($_POST["baction"]) && $_POST["baction"]=="Analyze Tables") {
 			$notice="toastr.error('Something went wrong, try again');";
 		}
 }
-if(isset($_POST["baction"]) && $_POST["baction"]=="Repair Tables") {
+if(isset($_POST["baction"]) && $_POST["baction"]=="Repair tables") {
 	$status=repairtables();
 		if($status=="1") {
 			$notice="toastr.success('Database tables repaired successfully');";
@@ -173,7 +181,7 @@ if(isset($_POST["baction"]) && $_POST["baction"]=="Repair Tables") {
 			$notice="toastr.error('Something went wrong, try again');";
 		}
 }
-if(isset($_POST["baction"]) && $_POST["baction"]=="Optimize Tables") {
+if(isset($_POST["baction"]) && $_POST["baction"]=="Optimize tables") {
 	$status=optimizetables();
 		if($status=="1") {
 			$notice="toastr.success('Database tables optimized successfully');";
@@ -284,7 +292,7 @@ $counters=explode(";",counter());
 													<a href="tools.php?menu=2&tool=203"><span>Export Users (CSP XML)</span></a>
 													<a href="tools.php?menu=2&tool=204"><span>Export Users (CSV)</span></a>
 													<?php
-														if($setres["fetchcsp"]=="1") {
+														if($setres["fetchcsp"]=="1" && $cspconnstatus=="1") {
 															print("<a href=\"tools.php?menu=2&tool=205\"><span>Import Profiles (CSP Server)</span></a>");
 														}	
 													?>
@@ -292,7 +300,7 @@ $counters=explode(";",counter());
 											</ul>
 										</li>
 									<?php
-										if($setres["fetchcsp"]=="1") {
+										if($setres["fetchcsp"]=="1" && $cspconnstatus=="1") {
 											print("<li class=\"sidebar-header\"><a href=\"#csp\" data-toggle=\"collapse\" class=\"accordion-toggle\">CSP Server</a></li>");
 												if(isset($_GET["menu"]) && $_GET["menu"]=="3") {
 													print("<li id=\"csp\" class=\"in collapse\">");
@@ -303,6 +311,7 @@ $counters=explode(";",counter());
 													print("<li class=\"sidebar-inner\">");
 														print("<a href=\"tools.php?menu=3&tool=301\"><span>Update CSP Users</span></a>");
 														print("<a href=\"tools.php?menu=3&tool=302\"><span>Send OSD To All Users</span></a>");
+														print("<a href=\"tools.php?menu=3&tool=303\"><span>Shutdown CSP Server</span></a>");
 													print("</li>");
 												print("</ul>");
 											print("</li>");

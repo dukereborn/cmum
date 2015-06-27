@@ -10,17 +10,17 @@ require("includes/settings.php");
 require("functions/cmum.php");
 require("functions/login.php");
 
-if(file_exists("install/")) {
+if(file_exists("install/") && !file_exists("cmum.override")) {
 	errorpage("INSTALLATION INCOMPLETE","Please delete the install dir from your www-root after you completed the installation!","utf-8",CMUM_TITLE,$_SERVER["REQUEST_URI"],CMUM_VERSION,CMUM_BUILD,CMUM_MOD);
 	exit;
 }
 
-if(checkversion(CMUM_VERSION)=="0") {
-	errorpage("VERSION MISMATCH","Please run the upgrade tool to upgrade your installation!<br><br>Click <a href=\"\upgrade\">here</a> to run the upgrade tool","utf-8",CMUM_TITLE,$_SERVER["REQUEST_URI"],CMUM_VERSION,CMUM_BUILD,CMUM_MOD);
+if(checkversion(CMUM_VERSION)=="0" && !file_exists("cmum.override")) {
+	errorpage("VERSION MISMATCH","Please run the upgrade tool to upgrade your installation!<br><br>Click <a href=\"upgrade/\">here</a> to run the upgrade tool","utf-8",CMUM_TITLE,$_SERVER["REQUEST_URI"],CMUM_VERSION,CMUM_BUILD,CMUM_MOD);
 	exit;
 }
 
-if(file_exists("upgrade/")) {
+if(file_exists("upgrade/") && !file_exists("cmum.override")) {
 	errorpage("UPGRADE INCOMPLETE","Please delete the upgrade dir from your www-root after you completed the upgrade!","utf-8",CMUM_TITLE,$_SERVER["REQUEST_URI"],CMUM_VERSION,CMUM_BUILD,CMUM_MOD);
 	exit;
 }
@@ -55,6 +55,7 @@ if(isset($_POST["blogin"]) && $_POST["blogin"]=="Login") {
 	$login=login($_POST["user"],$_POST["pass"]);
 		if($login=="0") {
 			header("Location:dashboard.php");
+			exit;
 		} elseif($login=="1") {
 			$notice="toastr.error('Unknown username or bad password');";
 		} elseif($login=="2") {

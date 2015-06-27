@@ -105,3 +105,22 @@ $('#modalSearch').on('show', function() {
 $('#modalCspSendOsd').on('show', function() {
 	setTimeout(function() {$('input[name=osdmsg]').focus();}, 700);
 });
+
+function cleanmodalNewGroup() {
+	$('#newgroup input[name=name]').val('');
+	$('#newgroup input[name=comment]').val('');
+}
+
+function cleanmodalNewProfile() {
+	$('#newprofile input[name=name]').val('');
+	$('#newprofile input[name=cspvalue]').val('');
+	$('#newprofile input[name=comment]').val('');
+}
+
+function cleanmodalNewAdmin() {
+	$('#newadmin input[name=user]').val('');
+	$('#newadmin input[name=pass]').val('');
+	$('#newadmin input[name=name]').val('');
+	$('#newadmin select[name=admlvl]').val('0');
+	$('#newadmin select[name=ugroup]').val('0');
+}
