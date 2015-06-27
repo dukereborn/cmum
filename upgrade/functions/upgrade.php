@@ -1,7 +1,7 @@
 <?php
 function getversion($sqlhost,$sqluser,$sqlpass,$sqlname) {
 	$mysqli=new mysqli($sqlhost,$sqluser,$sqlpass,$sqlname);
-		$versql=$mysqli->query("SELECT cmumversion FROM settings WHERE id='1' LIMIT 1");
+		$versql=$mysqli->query("SELECT cmumversion FROM settings WHERE id='1'");
 		$verres=$versql->fetch_array();
 	mysqli_close($mysqli);
 return($verres["cmumversion"]);
