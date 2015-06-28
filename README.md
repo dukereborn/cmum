@@ -142,10 +142,7 @@ Full config example for the above part, so you place it correctly
 If you find any bugs, got an idea or just wanna say "Hi!", send me a email on dukereborn@gmail.com. You can also follow me on twitter for updates and news about the development on cmum http://www.twitter.com/dukereborn/
 
 ## Donations
-If you like cmum and all the work I have put into it, consider donating a buck or two :) All donations are welcome through paypal to account dukereborn@gmail.com
-
-## Last words
-Please use a modern browser like Safari, Google Chrome or Firefox. If it looks like hell in Internet Explorer, well that's just the way it will be.
+If you like cmum and all the work I have put into it, consider donating a buck or two. All donations are welcome through paypal to account dukereborn@gmail.com
 
 ## License
 Released under the [MIT license](http://makesites.org/licenses/MIT)
