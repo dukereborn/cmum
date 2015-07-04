@@ -40,6 +40,15 @@ function upgradecmumdb($sqlhost,$sqluser,$sqlpass,$sqlname,$cmumversion,$charset
 					foreach($datalines as $i => $value) {
 						$mysqli->query($datalines[$i]);	
 					}
+				$fh=fopen("includes/320to330.sql","r");
+					$data=fread($fh,filesize("includes/311to320.sql"));
+					$charset=str_replace("-","",$charset);
+					$data=str_replace("%charset%",$charset,$data);
+				fclose($fh);
+				$datalines=preg_split("/\r\n|[\r\n]/",$data);
+					foreach($datalines as $i => $value) {
+						$mysqli->query($datalines[$i]);	
+					}
 				$status="1";
 			}
 			if($cmumversion=="3.1.0") {
@@ -61,10 +70,40 @@ function upgradecmumdb($sqlhost,$sqluser,$sqlpass,$sqlname,$cmumversion,$charset
 					foreach($datalines as $i => $value) {
 						$mysqli->query($datalines[$i]);	
 					}
+				$fh=fopen("includes/320to330.sql","r");
+					$data=fread($fh,filesize("includes/311to320.sql"));
+					$charset=str_replace("-","",$charset);
+					$data=str_replace("%charset%",$charset,$data);
+				fclose($fh);
+				$datalines=preg_split("/\r\n|[\r\n]/",$data);
+					foreach($datalines as $i => $value) {
+						$mysqli->query($datalines[$i]);	
+					}
 				$status="1";
 			}
 			if($cmumversion=="3.1.1") {
 				$fh=fopen("includes/311to320.sql","r");
+					$data=fread($fh,filesize("includes/311to320.sql"));
+					$charset=str_replace("-","",$charset);
+					$data=str_replace("%charset%",$charset,$data);
+				fclose($fh);
+				$datalines=preg_split("/\r\n|[\r\n]/",$data);
+					foreach($datalines as $i => $value) {
+						$mysqli->query($datalines[$i]);	
+					}
+				$fh=fopen("includes/320to330.sql","r");
+					$data=fread($fh,filesize("includes/311to320.sql"));
+					$charset=str_replace("-","",$charset);
+					$data=str_replace("%charset%",$charset,$data);
+				fclose($fh);
+				$datalines=preg_split("/\r\n|[\r\n]/",$data);
+					foreach($datalines as $i => $value) {
+						$mysqli->query($datalines[$i]);	
+					}
+				$status="1";
+			}
+			if($cmumversion=="3.2.0") {
+				$fh=fopen("includes/320to330.sql","r");
 					$data=fread($fh,filesize("includes/311to320.sql"));
 					$charset=str_replace("-","",$charset);
 					$data=str_replace("%charset%",$charset,$data);
