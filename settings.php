@@ -70,6 +70,7 @@ if(mysqli_connect_errno()) {
 									if($_SESSION[$secretkey."userlvl"]=="0") {
 										print("<li><span class=\"label label-info pull-right\">".$counters[1]."</span><a href=\"groups.php\"><i class=\"batch database\"></i><br>Groups</a></li>");
 										print("<li><span class=\"label label-info pull-right\">".$counters[2]."</span><a href=\"profiles.php\"><i class=\"batch tables\"></i><br>Profiles</a></li>");
+										print("<li><span class=\"label label-info pull-right\">".$counters[4]."</span><a href=\"#\"><i class=\"batch stream\"></i><br>Connectors</a></li>");
 										print("<li><span class=\"label label-info pull-right\">".$counters[3]."</span><a href=\"admins.php\"><i class=\"batch star\"></i><br>Admins</a></li>");
 										print("<li><a href=\"tools.php\"><i class=\"batch console\"></i><br>Tools</a></li>");
 										print("<li><a href=\"settings.php\" class=\"active\"><i class=\"batch settings\"></i><br>Settings</a></li>");
