@@ -70,9 +70,12 @@ require("functions/install.php");
 								</div>
 							</div>
 							<div class="control-group">
-								<label for="inst_seckey" class="control-label">Secretkey </label>
+								<label for="inst_seckey" class="control-label">Secret key </label>
 								<div class="controls">
 									<input id="inst_seckey" type="text" name="inst_seckey" value="<?php print(uniqid()); ?>">
+								</div>
+								<div class="controls checkbox">
+									<input id="inst_seckeyasgxk" type="checkbox" name="inst_seckeyasgxk"> Also use as genxml key
 								</div>
 							</div>
 							<div class="control-group">

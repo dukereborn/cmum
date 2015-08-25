@@ -45,7 +45,7 @@ function downloadconfig($sqlhost,$sqlname,$sqluser,$sqlpass,$charset,$timezone,$
 	exit();
 }
 
-function installcmumdb($sqlhost,$sqlname,$sqluser,$sqlpass,$charset,$admin_name,$admin_pass,$seckey) {
+function installcmumdb($sqlhost,$sqlname,$sqluser,$sqlpass,$charset,$admin_name,$admin_pass,$seckey,$seckeyagxk) {
 	$mysqli=new mysqli($sqlhost,$sqluser,$sqlpass);
 		if(mysqli_connect_errno()) {
 			$status="0";
@@ -57,6 +57,11 @@ function installcmumdb($sqlhost,$sqlname,$sqluser,$sqlpass,$charset,$admin_name,
 				$data=str_replace("%charset%",$charset,$data);
 				$data=str_replace("%aname%",$admin_name,$data);
 				$data=str_replace("%apass%",hash("sha256",$admin_pass.$seckey),$data);
+				if($seckeyagxk=="1") {
+					$data=str_replace("%genxmlkey%",$seckey,$data);
+				} else {
+					$data=str_replace("%genxmlkey%","",$data);
+				}
 			fclose($fh);
 			$datalines=preg_split("/\r\n|[\r\n]/",$data);
 				foreach($datalines as $i => $value) {
@@ -82,6 +87,6 @@ echo $status;
 }
 
 if(isset($_POST["function"]) && $_POST["function"]=="dbinstall" && $_POST["host"]<>"" && $_POST["name"]<>""  && $_POST["user"]<>"" && $_POST["pass"]<>"" && $_POST["charset"]<>"" && $_POST["aname"]<>"" && $_POST["apass"]<>"" && $_POST["skey"]<>"") {	
-	$status=installcmumdb($_POST["host"],$_POST["name"],$_POST["user"],$_POST["pass"],$_POST["charset"],$_POST["aname"],$_POST["apass"],$_POST["skey"]);
+	$status=installcmumdb($_POST["host"],$_POST["name"],$_POST["user"],$_POST["pass"],$_POST["charset"],$_POST["aname"],$_POST["apass"],$_POST["skey"],$_POST["skeygxk"]);
 echo $status;
 }
