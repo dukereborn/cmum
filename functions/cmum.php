@@ -8,7 +8,6 @@ function counter() {
 	// 1 = groups
 	// 2 = profiles
 	// 3 = admins
-	// 4 = connectors
 	if(file_exists("config.php")) {
 		require("config.php");
 	} else {
@@ -25,9 +24,8 @@ function counter() {
 			$g_sql=$mysqli->query("SELECT id FROM groups");
 			$p_sql=$mysqli->query("SELECT id FROM profiles");
 			$a_sql=$mysqli->query("SELECT id FROM admins");
-			$c_sql=$mysqli->query("SELECT id FROM connectors");
 		mysqli_close($mysqli);
-return($u_sql->num_rows.";".$g_sql->num_rows.";".$p_sql->num_rows.";".$a_sql->num_rows.";".$c_sql->num_rows);
+return($u_sql->num_rows.";".$g_sql->num_rows.";".$p_sql->num_rows.";".$a_sql->num_rows);
 }
 
 function errorpage($errortitle,$errortext,$charset,$title,$uribase,$ver,$build,$mod) {
