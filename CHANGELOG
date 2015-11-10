@@ -9,6 +9,7 @@ CSP MySQL User Manager Changelog
 3.3.0 [not yet released]
 [+] Set secret key as genxml key during installation
 [#] Improved security on ajax functions
+[-] Enable/disable button in userlist shows wrong state
 
 
 3.2.0 [2015-06-27]

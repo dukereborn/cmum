@@ -211,7 +211,7 @@ if(isset($_GET["edit"]) && $_GET["edit"]=="1") {
 																	} else {
 																		$cspmenu="";
 																	}
-																	if($res["enabled"]=="1" && $usrexp=="0" || $res["enabled"]=="" && $usrexp=="0") {
+																	if($usrexp=="1") {
 																		print("<li class=\"ausrenabled-".$res["id"]."\"><a href=\"edituser.php?uid=".$res["id"]."\">Edit</a><a id=\"ausrenabled-".$res["id"]."\" href=\"javascript:void(0);\" onclick=\"disableuser('".$res["id"]."');\">Disable</a>".$cspmenu."<a href=\"users.php?action=delete&uid=".$res["id"]."\">Delete</a></li>");
 																	} else {
 																		print("<li><a href=\"edituser.php?uid=".$res["id"]."\">Edit</a><a id=\"ausrenabled-".$res["id"]."\" href=\"javascript:void(0);\" onclick=\"enableuser('".$res["id"]."');\">Enable</a>".$cspmenu."<a href=\"users.php?action=delete&uid=".$res["id"]."\">Delete</a></li>");
