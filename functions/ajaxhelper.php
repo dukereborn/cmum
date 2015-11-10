@@ -55,13 +55,13 @@ if(isset($_POST["function"]) && $_POST["function"]=="5" && $_POST["cspvalue"]<>"
 echo $rowcheck;
 }
 
-if(isset($_POST["function"]) && $_POST["function"]=="6" && $_POST["uid"]<>"") {	
-	$status=enableuser($_POST["uid"],$_POST["admlvl"],$_POST["admgrp"],$_POST["admid"]);
+if(isset($_POST["function"]) && $_POST["function"]=="6" && $_POST["uid"]<>"") {
+	$status=enableuser($_POST["uid"]);
 echo $status;
 }
 
-if(isset($_POST["function"]) && $_POST["function"]=="7" && $_POST["uid"]<>"") {	
-	$status=disableuser($_POST["uid"],$_POST["admlvl"],$_POST["admgrp"],$_POST["admid"]);
+if(isset($_POST["function"]) && $_POST["function"]=="7" && $_POST["uid"]<>"") {
+	$status=disableuser($_POST["uid"]);
 echo $status;
 }
 

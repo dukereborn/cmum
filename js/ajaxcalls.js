@@ -314,19 +314,19 @@ function checkchpassadminname() {
 		}
 }
 
-function enableuser(uid,admlvl,admgrp,admid) {
+function enableuser(uid) {
 	if(uid!="") {
 		jQuery.ajax({
 			type: 'post',
 			url: 'functions/ajaxhelper.php',
-			data: 'function=6&uid='+uid+'&admlvl='+admlvl+'&admgrp='+admgrp+'&admid='+admid,
+			data: 'function=6&uid='+uid,
 			cache: false,
 			success: function(response) {
 				if(response==0) {
 					$('#usrenabled-'+uid).html('<span class=\"label label-success\">Enabled</span>');
-					$('#usrlnkenabled-'+uid).attr('onclick','disableuser(\''+uid+'\',\''+admlvl+'\',\''+admgrp+'\',\''+admid+'\');');
+					$('#usrlnkenabled-'+uid).attr('onclick','disableuser(\''+uid+'\');');
 					$('#ausrenabled-'+uid).html('Disable');
-					$('#ausrenabled-'+uid).attr('onclick','disableuser(\''+uid+'\',\''+admlvl+'\',\''+admgrp+'\',\''+admid+'\');');
+					$('#ausrenabled-'+uid).attr('onclick','disableuser(\''+uid+'\');');
 				}
 				if(response==1) {
 					toastr.error('This user does not belong to you');
@@ -336,19 +336,19 @@ function enableuser(uid,admlvl,admgrp,admid) {
 	}
 }
 
-function disableuser(uid,admlvl,admgrp,admid) {
+function disableuser(uid) {
 	if(uid!="") {
 		jQuery.ajax({
 			type: 'post',
 			url: 'functions/ajaxhelper.php',
-			data: 'function=7&uid='+uid+'&admlvl='+admlvl+'&admgrp='+admgrp+'&admid='+admid,
+			data: 'function=7&uid='+uid,
 			cache: false,
 			success: function(response) {
 				if(response==0) {
 					$('#usrenabled-'+uid).html('<span class=\"label label-important\">Disabled</span>');
-					$('#usrlnkenabled-'+uid).attr('onclick','enableuser(\''+uid+'\',\''+admlvl+'\',\''+admgrp+'\',\''+admid+'\');');
+					$('#usrlnkenabled-'+uid).attr('onclick','enableuser(\''+uid+'\');');
 					$('#ausrenabled-'+uid).html('Enable');
-					$('#ausrenabled-'+uid).attr('onclick','enableuser(\''+uid+'\',\''+admlvl+'\',\''+admgrp+'\',\''+admid+'\');');
+					$('#ausrenabled-'+uid).attr('onclick','enableuser(\''+uid+'\');');
 				}
 				if(response==1) {
 					toastr.error('This user does not belong to you');

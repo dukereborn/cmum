@@ -1787,91 +1787,83 @@ function deleteuser($uid) {
 	} else {
 		require("../config.php");
 	}
-		$mysqli=new mysqli($dbhost,$dbuser,$dbpass,$dbname);
-			$sql=$mysqli->query("SELECT usrgroup FROM users WHERE id='".$uid."'");
-			$delres=$sql->fetch_array();
-				if($_SESSION[$secretkey."userlvl"]=="2" && $_SESSION[$secretkey."usergrp"]<>$delres["usrgroup"]) {
-					$status="1";
-				} else {
-					$username=idtouser($uid);
-					$mysqli->query("DELETE FROM users WHERE id='".$uid."'");
-					if(checksetting("logactivity")=="1") {
-						logactivity("3",$_SESSION[$secretkey."userid"],$_SESSION[$secretkey."userlvl"],$uid,$username);
-					}
-					$status="0";
-				}
-		mysqli_close($mysqli);
-return($status);
-}
-
-function enableuser($uid,$admlvl,$admgrp,$admid) {
-	if(file_exists("config.php")) {
-		require("config.php");
-	} else {
-		require("../config.php");
-	}
-	if(isset($admlvl)) {
-		$admlvl=$admlvl;
-	} else {
+	@session_start();
 		$admlvl=$_SESSION[$secretkey."userlvl"];
-	}
-	if(isset($admgrp)) {
-		$admgrp=$admgrp;
-	} else {
 		$admgrp=$_SESSION[$secretkey."usergrp"];
-	}
-		$mysqli=new mysqli($dbhost,$dbuser,$dbpass,$dbname);
-			$sql=$mysqli->query("SELECT usrgroup FROM users WHERE id='".$uid."'");
-			$delres=$sql->fetch_array();
-				if($admlvl=="2" && $admgrp<>$delres["usrgroup"]) {
-					$status="1";
-				} else {
-					$usrexp=checkuserstartexpire($uid);
-					if($usrexp=="2") {
-						$mysqli->query("UPDATE users SET enabled='1',startdate='".date('Y-m-d')."',changed='".date('Y-m-d H:i:s')."',changedby='".$admid."' WHERE id='".$uid."'");
-					} elseif($usrexp=="3") {
-						$mysqli->query("UPDATE users SET enabled='1',expiredate='0000-00-00',changed='".date('Y-m-d H:i:s')."',changedby='".$admid."' WHERE id='".$uid."'");
+		$admid=$_SESSION[$secretkey."userid"];
+			$mysqli=new mysqli($dbhost,$dbuser,$dbpass,$dbname);
+				$sql=$mysqli->query("SELECT usrgroup FROM users WHERE id='".$uid."'");
+				$delres=$sql->fetch_array();
+					if($admlvl=="2" && $admgrp<>$delres["usrgroup"]) {
+						$status="1";
 					} else {
-						$mysqli->query("UPDATE users SET enabled='1',changed='".date('Y-m-d H:i:s')."',changedby='".$admid."' WHERE id='".$uid."'");
+						$username=idtouser($uid);
+						$mysqli->query("DELETE FROM users WHERE id='".$uid."'");
+						if(checksetting("logactivity")=="1") {
+							logactivity("3",$admid,$admlvl,$uid,$username);
+						}
+						$status="0";
 					}
-					if(checksetting("logactivity")=="1") {
-						logactivity("4",$admid,$admlvl,$uid,idtouser($uid));
-					}
-					$status="0";
-				}
-		mysqli_close($mysqli);
+			mysqli_close($mysqli);
 return($status);
 }
 
-function disableuser($uid,$admlvl,$admgrp,$admid) {
+function enableuser($uid) {
 	if(file_exists("config.php")) {
 		require("config.php");
 	} else {
 		require("../config.php");
 	}
-	if(isset($admlvl)) {
-		$admlvl=$admlvl;
-	} else {
+		@session_start();
 		$admlvl=$_SESSION[$secretkey."userlvl"];
-	}
-	if(isset($admgrp)) {
-		$admgrp=$admgrp;
-	} else {
 		$admgrp=$_SESSION[$secretkey."usergrp"];
-	}
-		$mysqli=new mysqli($dbhost,$dbuser,$dbpass,$dbname);
-			$sql=$mysqli->query("SELECT usrgroup FROM users WHERE id='".$uid."'");
-			$delres=$sql->fetch_array();
-				if($admlvl=="2" && $admgrp<>$delres["usrgroup"]) {
-					$status="1";
-				} else {
-					$mysqli->query("UPDATE users SET enabled='0',changed='".date('Y-m-d H:i:s')."',changedby='".$admid."' WHERE id='".$uid."'");
-					if(checksetting("logactivity")=="1") {
-						logactivity("5",$admid,$admlvl,$uid,idtouser($uid));
+		$admid=$_SESSION[$secretkey."userid"];
+			$mysqli=new mysqli($dbhost,$dbuser,$dbpass,$dbname);
+				$sql=$mysqli->query("SELECT usrgroup FROM users WHERE id='".$uid."'");
+				$delres=$sql->fetch_array();
+					if($admlvl=="2" && $admgrp<>$delres["usrgroup"]) {
+						$status="1";
+					} else {
+						$usrexp=checkuserstartexpire($uid);
+						if($usrexp=="2") {
+							$mysqli->query("UPDATE users SET enabled='1',startdate='".date('Y-m-d')."',changed='".date('Y-m-d H:i:s')."',changedby='".$admid."' WHERE id='".$uid."'");
+						} elseif($usrexp=="3") {
+							$mysqli->query("UPDATE users SET enabled='1',expiredate='0000-00-00',changed='".date('Y-m-d H:i:s')."',changedby='".$admid."' WHERE id='".$uid."'");
+						} else {
+							$mysqli->query("UPDATE users SET enabled='1',changed='".date('Y-m-d H:i:s')."',changedby='".$admid."' WHERE id='".$uid."'");
+						}
+						if(checksetting("logactivity")=="1") {
+							logactivity("4",$admid,$admlvl,$uid,idtouser($uid));
+						}
+						$status="0";
 					}
-					$status="0";
-				}
-		mysqli_close($mysqli);
+			mysqli_close($mysqli);
+return($status);
+}
+
+function disableuser($uid) {
+	if(file_exists("config.php")) {
+		require("config.php");
+	} else {
+		require("../config.php");
+	}
+		@session_start();
+		$admlvl=$_SESSION[$secretkey."userlvl"];
+		$admgrp=$_SESSION[$secretkey."usergrp"];
+		$admid=$_SESSION[$secretkey."userid"];
+			$mysqli=new mysqli($dbhost,$dbuser,$dbpass,$dbname);
+				$sql=$mysqli->query("SELECT usrgroup FROM users WHERE id='".$uid."'");
+				$delres=$sql->fetch_array();
+					if($admlvl=="2" && $admgrp<>$delres["usrgroup"]) {
+						$status="1";
+					} else {
+						$mysqli->query("UPDATE users SET enabled='0',changed='".date('Y-m-d H:i:s')."',changedby='".$admid."' WHERE id='".$uid."'");
+						if(checksetting("logactivity")=="1") {
+							logactivity("5",$admid,$admlvl,$uid,idtouser($uid));
+						}
+						$status="0";
+					}
+			mysqli_close($mysqli);
 return($status);
 }
 
