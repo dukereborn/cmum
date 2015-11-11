@@ -78,7 +78,7 @@ if(isset($_GET["edit"]) && $_GET["edit"]=="1") {
 					<div class="span12">
 						<ul>
 							<li><?php if($_SESSION[$secretkey."fetchcsp"]=="1") { print(dashcheckcspconn($cspconnstatus)); } ?><a href="dashboard.php"><i class="batch home"></i><br>Dashboard</a></li>
-							<li><span class="label label-info pull-right"><?php print($counters[0]); ?></span><a href="users.php" class="active"><i class="batch users"></i><br>Users</a></li>
+							<li><span class="label label-info pull-right" id="numusers"><?php print($counters[0]); ?></span><a href="users.php" class="active"><i class="batch users"></i><br>Users</a></li>
 								<?php
 									if($_SESSION[$secretkey."userlvl"]=="0") {
 										print("<li><span class=\"label label-info pull-right\">".$counters[1]."</span><a href=\"groups.php\"><i class=\"batch database\"></i><br>Groups</a></li>");
@@ -163,7 +163,7 @@ if(isset($_GET["edit"]) && $_GET["edit"]=="1") {
 											}
 												while($res=$sql->fetch_array()) {
 													$usrexp=checkstartexpire($res["startdate"],$res["expiredate"],$res["enabled"]);
-													print("<tr>");
+													print("<tr id=user-".$res["id"].">");
 														if($res["admin"]=="1") {
 															print("<td>".$res["user"]." <span class=\"label label-warning\">A</span></td>");	
 														} else {
@@ -212,9 +212,9 @@ if(isset($_GET["edit"]) && $_GET["edit"]=="1") {
 																		$cspmenu="";
 																	}
 																	if($usrexp=="1") {
-																		print("<li class=\"ausrenabled-".$res["id"]."\"><a href=\"edituser.php?uid=".$res["id"]."\">Edit</a><a id=\"ausrenabled-".$res["id"]."\" href=\"javascript:void(0);\" onclick=\"disableuser('".$res["id"]."');\">Disable</a>".$cspmenu."<a href=\"users.php?action=delete&uid=".$res["id"]."\">Delete</a></li>");
+																		print("<li class=\"ausrenabled-".$res["id"]."\"><a href=\"edituser.php?uid=".$res["id"]."\">Edit</a><a id=\"ausrenabled-".$res["id"]."\" href=\"javascript:void(0);\" onclick=\"disableuser('".$res["id"]."');\">Disable</a>".$cspmenu."<a href=\"javascript:void(0);\" onclick=\"getdeleteuser('".$res["id"]."','".$res["user"]."');\">Delete</a></li>");
 																	} else {
-																		print("<li><a href=\"edituser.php?uid=".$res["id"]."\">Edit</a><a id=\"ausrenabled-".$res["id"]."\" href=\"javascript:void(0);\" onclick=\"enableuser('".$res["id"]."');\">Enable</a>".$cspmenu."<a href=\"users.php?action=delete&uid=".$res["id"]."\">Delete</a></li>");
+																		print("<li><a href=\"edituser.php?uid=".$res["id"]."\">Edit</a><a id=\"ausrenabled-".$res["id"]."\" href=\"javascript:void(0);\" onclick=\"enableuser('".$res["id"]."');\">Enable</a>".$cspmenu."<a href=\"javascript:void(0);\" onclick=\"getdeleteuser('".$res["id"]."','".$res["user"]."');\">Delete</a>Delete</a></li>");
 																	}
 																print("</ul>");
 															print("</div>");

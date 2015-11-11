@@ -16,6 +16,7 @@
 // 14 = get csp user ip info
 // 15 = enable group
 // 16 = disable group
+// 17 = delete user
 
 require("../config.php");
 require("cmum.php");
@@ -107,5 +108,10 @@ echo $status;
 
 if(isset($_POST["function"]) && $_POST["function"]=="16" && $_POST["gid"]<>"") {	
 	$status=disablegroup($_POST["gid"]);
+echo $status;
+}
+
+if(isset($_POST["function"]) && $_POST["function"]=="17" && $_POST["uid"]<>"") {	
+	$status=deleteuser($_POST["uid"]);
 echo $status;
 }

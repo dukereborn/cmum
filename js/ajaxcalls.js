@@ -583,3 +583,42 @@ function cspgetuseripinfo(username) {
 		});
 	}
 }
+
+function getdeleteuser(uid,username) {
+	if(uid!="" || username!="") {
+		$('#modal-body').html('Are your sure you want to delete user <strong>'+username+'</strong>?');
+		$('#btndeluser').attr('onclick','deleteuser(\''+uid+'\');');
+		$('#modalDelUser').modal('show');
+	} else {
+		toastr.error('Something went wrong, please try again');
+	}
+}
+
+function deleteuser(uid) {
+	if(uid!="") {
+		$('#modalDelUser').modal('hide');
+			jQuery.ajax({
+				type: 'post',
+				url: 'functions/ajaxhelper.php',
+				data: 'function=17&uid='+uid,
+				cache: false,
+				success: function(response) {
+					if(response!="") {
+						if(response==0) {
+							var numusers = $('#numusers').html() - 1;
+							$('#numusers').html(numusers);
+							$('#user-'+uid).remove();
+							toastr.success('User successfully deleted');
+						}
+						if(response==1) {
+							toastr.error('This user does not belong to you');
+						}
+					} else {
+						toastr.error('Something went wrong, please try again');
+					}
+				}
+			});
+	} else {
+		toastr.error('Something went wrong, please try again');
+	}
+}
