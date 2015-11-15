@@ -3,31 +3,6 @@
 require("functions/logincheck.php");
 require("functions/cmum.php");
 
-if(isset($_GET["action"]) && stripslashes($_GET["action"])=="delete" && isset($_GET["uid"]) && $_GET["uid"]<>"") {
-	$mysqli=new mysqli($dbhost,$dbuser,$dbpass,$dbname);
-	if(mysqli_connect_errno()) {
-		errorpage("MYSQL DATABASE ERROR",mysqli_connect_error(),$charset,CMUM_TITLE,$_SERVER["REQUEST_URI"],CMUM_VERSION,CMUM_BUILD,CMUM_MOD);
-		exit;
-	}
-		$sql=$mysqli->query("SELECT id,user,usrgroup FROM users WHERE id='".$mysqli->real_escape_string($_GET["uid"])."'");
-		$eu_res=$sql->fetch_array();
-			if($_SESSION[$secretkey."userlvl"]=="2" && $_SESSION[$secretkey."usergrp"]<>$eu_res["usrgroup"]) {
-				$notice="toastr.error('This user does not belong to you');";
-			} else {
-				$eu_id=$eu_res["id"];
-				$eu_user=$eu_res["user"];
-				$notice="$('#modalDelUser').modal({ show: true });";
-			}
-	mysqli_close($mysqli);	
-}
-if(isset($_POST["bdelusr"]) && $_POST["bdelusr"]=="Delete") {
-	$status=deleteuser($_POST["uid"]);
-		if($status=="0") {
-			$notice="toastr.success('User successfully deleted');";
-		}
-	$counters=explode(";",counter());	
-}
-
 $counters=explode(";",counter());
 
 $mysqli=new mysqli($dbhost,$dbuser,$dbpass,$dbname);
