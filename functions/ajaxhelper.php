@@ -115,3 +115,8 @@ if(isset($_POST["function"]) && $_POST["function"]=="17" && $_POST["uid"]<>"") {
 	$status=deleteuser($_POST["uid"]);
 echo $status;
 }
+
+if(isset($_POST["function"]) && $_POST["function"]=="18" && $_POST["gid"]<>"") {	
+	$status=deletegroup($_POST["gid"]);
+echo $status;
+}

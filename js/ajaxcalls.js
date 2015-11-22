@@ -622,3 +622,42 @@ function deleteuser(uid) {
 		toastr.error('Something went wrong, please try again');
 	}
 }
+
+function getdeletegroup(gid,groupname) {
+	if(gid!="" || groupname!="") {
+		$('#modal-body').html('Are your sure you want to delete group <strong>'+groupname+'</strong>?<br><br><strong>WARNING!</strong><br>All users in this group will also be deleted and group managers for this group will be disabled.');
+		$('#btndelgroup').attr('onclick','deletegroup(\''+gid+'\');');
+		$('#modalDelGroup').modal('show');
+	} else {
+		toastr.error('Something went wrong, please try again');
+	}
+}
+
+function deletegroup(gid) {
+	if(gid!="") {
+		$('#modalDelGroup').modal('hide');
+			jQuery.ajax({
+				type: 'post',
+				url: 'functions/ajaxhelper.php',
+				data: 'function=18&gid='+gid,
+				cache: false,
+				success: function(response) {
+					if(response!="") {
+						if(response==0) {
+							var numgroups = $('#numgroups').html() - 1;
+							$('#numgroups').html(numgroups);
+							$('#group-'+gid).remove();
+							toastr.success('Group successfully deleted');
+						}
+						if(response==1) {
+							toastr.error('This group does not belong to you');
+						}
+					} else {
+						toastr.error('Something went wrong, please try again');
+					}
+				}
+			});
+	} else {
+		toastr.error('Something went wrong, please try again');
+	}
+}

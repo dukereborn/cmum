@@ -723,6 +723,33 @@ function editgroup($gid,$name,$comment) {
 return($status);
 }
 
+function deletegroup($gid) {
+	if(file_exists("config.php")) {
+		require("config.php");
+	} else {
+		require("../config.php");
+	}
+		@session_start();
+		$admlvl=$_SESSION[$secretkey."userlvl"];
+		$admid=$_SESSION[$secretkey."userid"];
+			if(trim($gid)=="") {
+				$status="2";
+			} else {
+				if($admlvl<>"0" || $admid=="") {
+					$status="1";
+				} else {
+					$mysqli=new mysqli($dbhost,$dbuser,$dbpass,$dbname);
+						$mysqli->query("DELETE FROM groups WHERE id='".$gid."'");
+						$mysqli->query("DELETE FROM users WHERE usrgroup='".$gid."'");
+						$mysqli->query("UPDATE admins SET enabled='0',ugroup='0' WHERE ugroup='".$gid."' AND admlvl='2'");
+						$mysqli->query("UPDATE admins SET ugroup='0' WHERE ugroup='".$gid."' AND admlvl<>'2'");
+					mysqli_close($mysqli);
+					$status="0";
+				}
+			}
+return($status);
+}
+
 function enablegroup($gid) {
 	if(file_exists("config.php")) {
 		require("config.php");
@@ -746,26 +773,6 @@ function disablegroup($gid) {
 			$mysqli->query("UPDATE groups SET enabled='0' WHERE id='".$gid."'");
 		mysqli_close($mysqli);
 		$status="0";
-return($status);
-}
-
-function delgroup($gid) {
-	if(file_exists("config.php")) {
-		require("config.php");
-	} else {
-		require("../config.php");
-	}
-		if(trim($gid)=="") {
-			$status="1";
-		} else {
-			$mysqli=new mysqli($dbhost,$dbuser,$dbpass,$dbname);
-				$mysqli->query("DELETE FROM groups WHERE id='".$gid."'");
-				$mysqli->query("DELETE FROM users WHERE usrgroup='".$gid."'");
-				$mysqli->query("UPDATE admins SET enabled='0',ugroup='0' WHERE ugroup='".$gid."' AND admlvl='2'");
-				$mysqli->query("UPDATE admins SET ugroup='0' WHERE ugroup='".$gid."' AND admlvl<>'2'");
-			mysqli_close($mysqli);
-			$status="0";
-		}
 return($status);
 }
 
