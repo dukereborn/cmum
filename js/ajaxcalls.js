@@ -605,7 +605,7 @@ function deleteuser(uid) {
 				success: function(response) {
 					if(response!="") {
 						if(response==0) {
-							var numusers = $('#numusers').html() - 1;
+							var numusers=$('#numusers').html()-1;
 							$('#numusers').html(numusers);
 							$('#user-'+uid).remove();
 							toastr.success('User successfully deleted');
@@ -644,7 +644,7 @@ function deletegroup(gid) {
 				success: function(response) {
 					if(response!="") {
 						if(response==0) {
-							var numgroups = $('#numgroups').html() - 1;
+							var numgroups=$('#numgroups').html()-1;
 							$('#numgroups').html(numgroups);
 							$('#group-'+gid).remove();
 							toastr.success('Group successfully deleted');
@@ -683,7 +683,7 @@ function deleteprofile(pid) {
 				success: function(response) {
 					if(response!="") {
 						if(response==0) {
-							var numprofs = $('#numprofs').html() - 1;
+							var numprofs=$('#numprofs').html()-1;
 							$('#numprofs').html(numprofs);
 							$('#profile-'+pid).remove();
 							toastr.success('Profile successfully deleted');
@@ -722,7 +722,7 @@ function deleteadmin(aid) {
 				success: function(response) {
 					if(response!="") {
 						if(response==0) {
-							var numadmins = $('#numadmins').html() - 1;
+							var numadmins=$('#numadmins').html()-1;
 							$('#numadmins').html(numadmins);
 							$('#admin-'+aid).remove();
 							toastr.success('Admin successfully deleted');
