@@ -19,6 +19,7 @@
 // 17 = delete user
 // 18 = delete group
 // 19 = delete profile
+// 20 = delete admin
 
 require("../config.php");
 require("cmum.php");
@@ -125,5 +126,10 @@ echo $status;
 
 if(isset($_POST["function"]) && $_POST["function"]=="19" && $_POST["pid"]<>"") {	
 	$status=deleteprofile($_POST["pid"]);
+echo $status;
+}
+
+if(isset($_POST["function"]) && $_POST["function"]=="20" && $_POST["aid"]<>"") {	
+	$status=deleteadmin($_POST["aid"]);
 echo $status;
 }

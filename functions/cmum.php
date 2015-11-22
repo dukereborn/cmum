@@ -205,16 +205,27 @@ function chpassadmin($uid,$pass1,$pass2) {
 return($status);
 }
 
-function deleteadmin($uid) {
+function deleteadmin($aid) {
 	if(file_exists("config.php")) {
 		require("config.php");
 	} else {
 		require("../config.php");
 	}
-		$mysqli=new mysqli($dbhost,$dbuser,$dbpass,$dbname);
-			$mysqli->query("DELETE FROM admins WHERE id='".$uid."'");
-		mysqli_close($mysqli);
-		$status="0";
+		@session_start();
+		$admlvl=$_SESSION[$secretkey."userlvl"];
+		$admid=$_SESSION[$secretkey."userid"];
+			if(trim($aid)=="") {
+				$status="2";
+			} else {
+				if($admlvl<>"0" || $admid=="") {
+					$status="1";
+				} else {
+					$mysqli=new mysqli($dbhost,$dbuser,$dbpass,$dbname);
+						$mysqli->query("DELETE FROM admins WHERE id='".$aid."'");
+					mysqli_close($mysqli);
+					$status="0";
+				}
+			}
 return($status);
 }
 

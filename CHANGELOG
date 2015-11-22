@@ -10,7 +10,7 @@ CSP MySQL User Manager Changelog
 [+] Set secret key as genxml key during installation
 [#] Improved security on ajax functions
 [#] Changed default random string length to 12 characters
-[#] Improved user/group/profile delete handling
+[#] Improved admin-/group-/profile-/user delete handling
 [-] Enable/disable button in userlist shows wrong state
 
 

@@ -49,29 +49,6 @@ if(isset($_POST["value"]) && $_POST["value"]=="beditadm") {
 		}
 }
 
-if(isset($_GET["action"]) && stripslashes($_GET["action"])=="delete" && isset($_GET["uid"]) && $_GET["uid"]<>"") {
-	$mysqli=new mysqli($dbhost,$dbuser,$dbpass,$dbname);
-	if(mysqli_connect_errno()) {
-		errorpage("MYSQL DATABASE ERROR",mysqli_connect_error(),$charset,CMUM_TITLE,$_SERVER["REQUEST_URI"],CMUM_VERSION,CMUM_BUILD,CMUM_MOD);
-		exit;
-	}
-		$sql=$mysqli->query("SELECT id,user FROM admins WHERE id='".$mysqli->real_escape_string($_GET["uid"])."'");
-		$ea_res=$sql->fetch_array();
-			$ea_id=$ea_res["id"];
-			$ea_user=$ea_res["user"];
-	mysqli_close($mysqli);
-	$notice="$('#modalDelAdmin').modal({ show: true });";	
-}
-if(isset($_POST["bdeladm"]) && $_POST["bdeladm"]=="Delete") {
-	$status=deleteadmin($_POST["uid"]);
-		if($status=="0") {
-			$notice="toastr.success('Admin successfully deleted');";
-		} else {
-			$notice="toastr.error('Unexpected error');";
-		}
-	$counters=explode(";",counter());	
-}
-
 if(isset($_GET["action"]) && stripslashes($_GET["action"])=="chpass" && isset($_GET["uid"]) && $_GET["uid"]<>"") {
 	$ea_id=$_GET["uid"];
 	$notice="$('#modalChpassAdmin').modal({ show: true });";
@@ -139,7 +116,7 @@ mysqli_close($mysqli);
 									if($_SESSION[$secretkey."userlvl"]=="0") {
 										print("<li><span class=\"label label-info pull-right\">".$counters[1]."</span><a href=\"groups.php\"><i class=\"batch database\"></i><br>Groups</a></li>");
 										print("<li><span class=\"label label-info pull-right\">".$counters[2]."</span><a href=\"profiles.php\"><i class=\"batch tables\"></i><br>Profiles</a></li>");
-										print("<li><span class=\"label label-info pull-right\">".$counters[3]."</span><a href=\"admins.php\" class=\"active\"><i class=\"batch star\"></i><br>Admins</a></li>");
+										print("<li><span class=\"label label-info pull-right\" id=\"numadmins\">".$counters[3]."</span><a href=\"admins.php\" class=\"active\"><i class=\"batch star\"></i><br>Admins</a></li>");
 										print("<li><a href=\"tools.php\"><i class=\"batch console\"></i><br>Tools</a></li>");
 										print("<li><a href=\"settings.php\"><i class=\"batch settings\"></i><br>Settings</a></li>");
 									}
@@ -176,7 +153,7 @@ mysqli_close($mysqli);
 											}
 												$sql=$mysqli->query("SELECT * FROM admins ORDER BY user");
 												while($res=$sql->fetch_array()) {
-													print("<tr>");
+													print("<tr id=admin-".$res["id"].">");
 														print("<td>".$res["user"]."</td>");
 														print("<td>".$res["name"]."</td>");
 															if($res["admlvl"]=="0") {
@@ -198,9 +175,9 @@ mysqli_close($mysqli);
 																print("<button data-toggle=\"dropdown\" class=\"btn btn-small\">Actions <span class=\"caret\"></span></button>");
 																print("<ul class=\"dropdown-menu\">");
 																	if($res["enabled"]=="1") {
-																		print("<li><a href=\"admins.php?action=edit&uid=".$res["id"]."\">Edit</a><a href=\"admins.php?action=chpass&uid=".$res["id"]."\">Change password</a><a id=\"aadmenabled-".$res["id"]."\" href=\"javascript:void(0);\" onclick=\"disableadmin('".$res["id"]."');\">Disable</a><a href=\"admins.php?action=delete&uid=".$res["id"]."\">Delete</a></li>");
+																		print("<li><a href=\"admins.php?action=edit&uid=".$res["id"]."\">Edit</a><a href=\"admins.php?action=chpass&uid=".$res["id"]."\">Change password</a><a id=\"aadmenabled-".$res["id"]."\" href=\"javascript:void(0);\" onclick=\"disableadmin('".$res["id"]."');\">Disable</a><a href=\"javascript:void(0);\" onclick=\"getdeleteadmin('".$res["id"]."','".$res["user"]."');\">Delete</a></li>");
 																	} else {
-																		print("<li><a href=\"admins.php?action=edit&uid=".$res["id"]."\">Edit</a><a href=\"admins.php?action=chpass&uid=".$res["id"]."\">Change password</a><a id=\"aadmenabled-".$res["id"]."\" href=\"javascript:void(0);\" onclick=\"enableadmin('".$res["id"]."');\">Enable</a><a href=\"admins.php?action=delete&uid=".$res["id"]."\">Delete</a></li>");
+																		print("<li><a href=\"admins.php?action=edit&uid=".$res["id"]."\">Edit</a><a href=\"admins.php?action=chpass&uid=".$res["id"]."\">Change password</a><a id=\"aadmenabled-".$res["id"]."\" href=\"javascript:void(0);\" onclick=\"enableadmin('".$res["id"]."');\">Enable</a><a href=\"javascript:void(0);\" onclick=\"getdeleteadmin('".$res["id"]."','".$res["user"]."');\">Delete</a></li>");
 																	}
 																print("</ul>");
 															print("</div>");

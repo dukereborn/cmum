@@ -700,3 +700,42 @@ function deleteprofile(pid) {
 		toastr.error('Something went wrong, please try again');
 	}
 }
+
+function getdeleteadmin(aid,adminname) {
+	if(aid!="" || adminname!="") {
+		$('#modal-body').html('Are your sure you want to delete admin <strong>'+adminname+'</strong>?');
+		$('#btndeladmin').attr('onclick','deleteadmin(\''+aid+'\');');
+		$('#modalDelAdmin').modal('show');
+	} else {
+		toastr.error('Something went wrong, please try again');
+	}
+}
+
+function deleteadmin(aid) {
+	if(aid!="") {
+		$('#modalDelAdmin').modal('hide');
+			jQuery.ajax({
+				type: 'post',
+				url: 'functions/ajaxhelper.php',
+				data: 'function=20&aid='+aid,
+				cache: false,
+				success: function(response) {
+					if(response!="") {
+						if(response==0) {
+							var numadmins = $('#numadmins').html() - 1;
+							$('#numadmins').html(numadmins);
+							$('#admin-'+aid).remove();
+							toastr.success('Admin successfully deleted');
+						}
+						if(response==1) {
+							toastr.error('This admin does not belong to you');
+						}
+					} else {
+						toastr.error('Something went wrong, please try again');
+					}
+				}
+			});
+	} else {
+		toastr.error('Something went wrong, please try again');
+	}
+}
