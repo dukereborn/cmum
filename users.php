@@ -189,7 +189,7 @@ if(isset($_GET["edit"]) && $_GET["edit"]=="1") {
 																	if($usrexp=="1") {
 																		print("<li class=\"ausrenabled-".$res["id"]."\"><a href=\"edituser.php?uid=".$res["id"]."\">Edit</a><a id=\"ausrenabled-".$res["id"]."\" href=\"javascript:void(0);\" onclick=\"disableuser('".$res["id"]."');\">Disable</a>".$cspmenu."<a href=\"javascript:void(0);\" onclick=\"getdeleteuser('".$res["id"]."','".$res["user"]."');\">Delete</a></li>");
 																	} else {
-																		print("<li><a href=\"edituser.php?uid=".$res["id"]."\">Edit</a><a id=\"ausrenabled-".$res["id"]."\" href=\"javascript:void(0);\" onclick=\"enableuser('".$res["id"]."');\">Enable</a>".$cspmenu."<a href=\"javascript:void(0);\" onclick=\"getdeleteuser('".$res["id"]."','".$res["user"]."');\">Delete</a>Delete</a></li>");
+																		print("<li><a href=\"edituser.php?uid=".$res["id"]."\">Edit</a><a id=\"ausrenabled-".$res["id"]."\" href=\"javascript:void(0);\" onclick=\"enableuser('".$res["id"]."');\">Enable</a>".$cspmenu."<a href=\"javascript:void(0);\" onclick=\"getdeleteuser('".$res["id"]."','".$res["user"]."');\">Delete</a></li>");
 																	}
 																print("</ul>");
 															print("</div>");
