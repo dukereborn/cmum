@@ -913,20 +913,27 @@ function editprofile($pid,$name,$cspvalue,$comment) {
 return($status);
 }
 
-function delprofile($pid) {
+function deleteprofile($pid) {
 	if(file_exists("config.php")) {
 		require("config.php");
 	} else {
 		require("../config.php");
 	}
-		if(trim($pid)=="") {
-			$status="1";
-		} else {
-			$mysqli=new mysqli($dbhost,$dbuser,$dbpass,$dbname);
-				cleanprofile($pid);
-				$sql=$mysqli->query("DELETE FROM profiles WHERE id='".$pid."'");
-			mysqli_close($mysqli);
-			$status="0";
+		@session_start();
+		$admlvl=$_SESSION[$secretkey."userlvl"];
+		$admid=$_SESSION[$secretkey."userid"];
+			if(trim($pid)=="") {
+				$status="2";
+			} else {
+				if($admlvl<>"0" || $admid=="") {
+					$status="1";
+				} else {
+					$mysqli=new mysqli($dbhost,$dbuser,$dbpass,$dbname);
+						cleanprofile($pid);
+						$sql=$mysqli->query("DELETE FROM profiles WHERE id='".$pid."'");
+					mysqli_close($mysqli);
+					$status="0";
+				}
 		}
 return($status);
 }

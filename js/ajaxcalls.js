@@ -661,3 +661,42 @@ function deletegroup(gid) {
 		toastr.error('Something went wrong, please try again');
 	}
 }
+
+function getdeleteprofile(pid,profname,cspvalue) {
+	if(pid!="" || profname!="" || cspvalue!="") {
+		$('#modal-body').html('Are your sure you want to delete profile <strong>'+profname+' ('+cspvalue+')</strong>?');
+		$('#btndelprofile').attr('onclick','deleteprofile(\''+pid+'\');');
+		$('#modalDelProfile').modal('show');
+	} else {
+		toastr.error('Something went wrong, please try again');
+	}
+}
+
+function deleteprofile(pid) {
+	if(pid!="") {
+		$('#modalDelProfile').modal('hide');
+			jQuery.ajax({
+				type: 'post',
+				url: 'functions/ajaxhelper.php',
+				data: 'function=19&pid='+pid,
+				cache: false,
+				success: function(response) {
+					if(response!="") {
+						if(response==0) {
+							var numprofs = $('#numprofs').html() - 1;
+							$('#numprofs').html(numprofs);
+							$('#profile-'+pid).remove();
+							toastr.success('Profile successfully deleted');
+						}
+						if(response==1) {
+							toastr.error('This profile does not belong to you');
+						}
+					} else {
+						toastr.error('Something went wrong, please try again');
+					}
+				}
+			});
+	} else {
+		toastr.error('Something went wrong, please try again');
+	}
+}

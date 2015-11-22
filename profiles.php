@@ -49,29 +49,6 @@ if(isset($_POST["value"]) && $_POST["value"]=="beditprf") {
 		}
 }
 
-if(isset($_GET["action"]) && stripslashes($_GET["action"])=="delete" && isset($_GET["pid"]) && $_GET["pid"]<>"") {
-	$mysqli=new mysqli($dbhost,$dbuser,$dbpass,$dbname);
-	if(mysqli_connect_errno()) {
-		errorpage("MYSQL DATABASE ERROR",mysqli_connect_error(),$charset,CMUM_TITLE,$_SERVER["REQUEST_URI"],CMUM_VERSION,CMUM_BUILD,CMUM_MOD);
-		exit;
-	}
-		$sql=$mysqli->query("SELECT id,name,cspvalue FROM profiles WHERE id='".$mysqli->real_escape_string($_GET["pid"])."'");
-		$ep_res=$sql->fetch_array();
-			$ep_id=$ep_res["id"];
-			$ep_name=$ep_res["name"];
-			$ep_cspvalue=$ep_res["cspvalue"];
-	mysqli_close($mysqli);
-	$notice="$('#modalDelProfile').modal({ show: true });";
-}
-if(isset($_POST["bdelprf"]) && $_POST["bdelprf"]=="Delete") {
-	$status=delprofile($_POST["pid"]);
-		if($status=="0") {
-			$notice="toastr.success('Profile successfully deleted');";
-		} elseif($status=="1") {
-			$notice="toastr.error('Profile not given, please try again');";
-		}
-}
-
 $counters=explode(";",counter());
 
 $mysqli=new mysqli($dbhost,$dbuser,$dbpass,$dbname);
@@ -119,7 +96,7 @@ mysqli_close($mysqli);
 								<?php
 									if($_SESSION[$secretkey."userlvl"]=="0") {
 										print("<li><span class=\"label label-info pull-right\">".$counters[1]."</span><a href=\"groups.php\"><i class=\"batch database\"></i><br>Groups</a></li>");
-										print("<li><span class=\"label label-info pull-right\">".$counters[2]."</span><a href=\"profiles.php\" class=\"active\"><i class=\"batch tables\"></i><br>Profiles</a></li>");
+										print("<li><span class=\"label label-info pull-right\" id=\"numprofs\">".$counters[2]."</span><a href=\"profiles.php\" class=\"active\"><i class=\"batch tables\"></i><br>Profiles</a></li>");
 										print("<li><span class=\"label label-info pull-right\">".$counters[3]."</span><a href=\"admins.php\"><i class=\"batch star\"></i><br>Admins</a></li>");
 										print("<li><a href=\"tools.php\"><i class=\"batch console\"></i><br>Tools</a></li>");
 										print("<li><a href=\"settings.php\"><i class=\"batch settings\"></i><br>Settings</a></li>");
@@ -155,7 +132,7 @@ mysqli_close($mysqli);
 											}
 												$sql=$mysqli->query("SELECT id,name,cspvalue,comment FROM profiles ORDER BY name");
 												while($res=$sql->fetch_array()) {
-													print("<tr>");
+													print("<tr id=profile-".$res["id"].">");
 														print("<td>".$res["name"]."</td>");
 														print("<td>".$res["cspvalue"]."</td>");
 														print("<td>".$res["comment"]."</td>");
@@ -163,7 +140,7 @@ mysqli_close($mysqli);
 															print("<div class=\"btn-group pull-right\">");
 																print("<button data-toggle=\"dropdown\" class=\"btn btn-small\">Actions <span class=\"caret\"></span></button>");
 																print("<ul class=\"dropdown-menu\">");
-																	print("<li><a href=\"profiles.php?action=edit&pid=".$res["id"]."\">Edit</a><a href=\"profiles.php?action=delete&pid=".$res["id"]."\">Delete</a></li>");
+																	print("<li><a href=\"profiles.php?action=edit&pid=".$res["id"]."\">Edit</a><a href=\"javascript:void(0);\" onclick=\"getdeleteprofile('".$res["id"]."','".$res["name"]."','".$res["cspvalue"]."');\">Delete</a></li>");
 																print("</ul>");
 															print("</div>");
 														print("</td>");
