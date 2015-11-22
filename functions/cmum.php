@@ -14,10 +14,10 @@ function counter() {
 		require("../config.php");
 	}
 		$mysqli=new mysqli($dbhost,$dbuser,$dbpass,$dbname);
-			if($_SESSION[$secretkey."userlvl"]=="0" ||  $_SESSION[$secretkey."userlvl"]=="1") {
+			if($_SESSION[$secretkey."admlvl"]=="0" ||  $_SESSION[$secretkey."admlvl"]=="1") {
 				$u_sql=$mysqli->query("SELECT id FROM users");	
-			} elseif($_SESSION[$secretkey."userlvl"]=="2" && $_SESSION[$secretkey."usergrp"]<>"0") {
-				$u_sql=$mysqli->query("SELECT id FROM users WHERE usrgroup='".$_SESSION[$secretkey."usergrp"]."'");
+			} elseif($_SESSION[$secretkey."admlvl"]=="2" && $_SESSION[$secretkey."admgrp"]<>"0") {
+				$u_sql=$mysqli->query("SELECT id FROM users WHERE usrgroup='".$_SESSION[$secretkey."admgrp"]."'");
 			} else {
 				$u_sql="";
 			}
@@ -212,8 +212,8 @@ function deleteadmin($aid) {
 		require("../config.php");
 	}
 		@session_start();
-		$admlvl=$_SESSION[$secretkey."userlvl"];
-		$admid=$_SESSION[$secretkey."userid"];
+		$admlvl=$_SESSION[$secretkey."admlvl"];
+		$admid=$_SESSION[$secretkey."admid"];
 			if(trim($aid)=="") {
 				$status="2";
 			} else {
@@ -622,46 +622,46 @@ function countusers($type) {
 	}
 		$mysqli=new mysqli($dbhost,$dbuser,$dbpass,$dbname);
 			if($type=="0") {
-				if($_SESSION[$secretkey."userlvl"]=="0" ||  $_SESSION[$secretkey."userlvl"]=="1") {
+				if($_SESSION[$secretkey."admlvl"]=="0" ||  $_SESSION[$secretkey."admlvl"]=="1") {
 					$sql=$mysqli->query("SELECT id FROM users");
-				} elseif($_SESSION[$secretkey."userlvl"]=="2" && $_SESSION[$secretkey."usergrp"]<>"0") {
-					$sql=$mysqli->query("SELECT id FROM users WHERE usrgroup='".$_SESSION[$secretkey."usergrp"]."'");
+				} elseif($_SESSION[$secretkey."admlvl"]=="2" && $_SESSION[$secretkey."admgrp"]<>"0") {
+					$sql=$mysqli->query("SELECT id FROM users WHERE usrgroup='".$_SESSION[$secretkey."admgrp"]."'");
 				} else {
 					$sql="";
 				}
 			}
 			if($type=="1") {
-				if($_SESSION[$secretkey."userlvl"]=="0" ||  $_SESSION[$secretkey."userlvl"]=="1") {
+				if($_SESSION[$secretkey."admlvl"]=="0" ||  $_SESSION[$secretkey."admlvl"]=="1") {
 					$sql=$mysqli->query("SELECT id FROM users WHERE enabled='1' OR enabled=''");
-				} elseif($_SESSION[$secretkey."userlvl"]=="2" && $_SESSION[$secretkey."usergrp"]<>"0") {
-					$sql=$mysqli->query("SELECT id FROM users WHERE (enabled='1' OR enabled='') AND usrgroup='".$_SESSION[$secretkey."usergrp"]."'");
+				} elseif($_SESSION[$secretkey."admlvl"]=="2" && $_SESSION[$secretkey."admgrp"]<>"0") {
+					$sql=$mysqli->query("SELECT id FROM users WHERE (enabled='1' OR enabled='') AND usrgroup='".$_SESSION[$secretkey."admgrp"]."'");
 				} else {
 					$sql="";
 				}
 			}
 			if($type=="2") {
-				if($_SESSION[$secretkey."userlvl"]=="0" ||  $_SESSION[$secretkey."userlvl"]=="1") {
+				if($_SESSION[$secretkey."admlvl"]=="0" ||  $_SESSION[$secretkey."admlvl"]=="1") {
 					$sql=$mysqli->query("SELECT id FROM users WHERE enabled='0'");
-				} elseif($_SESSION[$secretkey."userlvl"]=="2" && $_SESSION[$secretkey."usergrp"]<>"0") {
-					$sql=$mysqli->query("SELECT id FROM users WHERE enabled='0' AND usrgroup='".$_SESSION[$secretkey."usergrp"]."'");
+				} elseif($_SESSION[$secretkey."admlvl"]=="2" && $_SESSION[$secretkey."admgrp"]<>"0") {
+					$sql=$mysqli->query("SELECT id FROM users WHERE enabled='0' AND usrgroup='".$_SESSION[$secretkey."admgrp"]."'");
 				} else {
 					$sql="";
 				}
 			}
 			if($type=="3") {
-				if($_SESSION[$secretkey."userlvl"]=="0" ||  $_SESSION[$secretkey."userlvl"]=="1") {
+				if($_SESSION[$secretkey."admlvl"]=="0" ||  $_SESSION[$secretkey."admlvl"]=="1") {
 					$sql=$mysqli->query("SELECT id FROM users WHERE expiredate<='".date("Y-m-d")."' AND expiredate<>'0000-00-00'");
-				} elseif($_SESSION[$secretkey."userlvl"]=="2" && $_SESSION[$secretkey."usergrp"]<>"0") {
-					$sql=$mysqli->query("SELECT id FROM users WHERE expiredate<='".date("Y-m-d")."' AND expiredate<>'0000-00-00' AND usrgroup='".$_SESSION[$secretkey."usergrp"]."'");
+				} elseif($_SESSION[$secretkey."admlvl"]=="2" && $_SESSION[$secretkey."admgrp"]<>"0") {
+					$sql=$mysqli->query("SELECT id FROM users WHERE expiredate<='".date("Y-m-d")."' AND expiredate<>'0000-00-00' AND usrgroup='".$_SESSION[$secretkey."admgrp"]."'");
 				} else {
 					$sql="";
 				}
 			}
 			if($type=="4") {
-				if($_SESSION[$secretkey."userlvl"]=="0" ||  $_SESSION[$secretkey."userlvl"]=="1") {
+				if($_SESSION[$secretkey."admlvl"]=="0" ||  $_SESSION[$secretkey."admlvl"]=="1") {
 					$sql=$mysqli->query("SELECT id FROM users WHERE admin='1'");
-				} elseif($_SESSION[$secretkey."userlvl"]=="2" && $_SESSION[$secretkey."usergrp"]<>"0") {
-					$sql=$mysqli->query("SELECT id FROM users WHERE admin='1' AND usrgroup='".$_SESSION[$secretkey."usergrp"]."'");
+				} elseif($_SESSION[$secretkey."admlvl"]=="2" && $_SESSION[$secretkey."admgrp"]<>"0") {
+					$sql=$mysqli->query("SELECT id FROM users WHERE admin='1' AND usrgroup='".$_SESSION[$secretkey."admgrp"]."'");
 				} else {
 					$sql="";
 				}
@@ -741,8 +741,8 @@ function deletegroup($gid) {
 		require("../config.php");
 	}
 		@session_start();
-		$admlvl=$_SESSION[$secretkey."userlvl"];
-		$admid=$_SESSION[$secretkey."userid"];
+		$admlvl=$_SESSION[$secretkey."admlvl"];
+		$admid=$_SESSION[$secretkey."admid"];
 			if(trim($gid)=="") {
 				$status="2";
 			} else {
@@ -931,8 +931,8 @@ function deleteprofile($pid) {
 		require("../config.php");
 	}
 		@session_start();
-		$admlvl=$_SESSION[$secretkey."userlvl"];
-		$admid=$_SESSION[$secretkey."userid"];
+		$admlvl=$_SESSION[$secretkey."admlvl"];
+		$admid=$_SESSION[$secretkey."admid"];
 			if(trim($pid)=="") {
 				$status="2";
 			} else {
@@ -1325,7 +1325,7 @@ function impusrcspxml($cspxml,$usrgrp,$createprof) {
 												} else {
 													$convporf=serialize($convporf);
 												}
-												$mysqli->query("INSERT INTO users (user,password,displayname,ipmask,profiles,maxconn,admin,enabled,mapexclude,debug,comment,email,customvalues,ecmrate,startdate,expiredate,usrgroup,boxtype,macaddress,serialnumber,addedby,changed,changedby) VALUES ('".stripslashes(trim($xml_username))."','".stripslashes(trim($xml_password))."','".stripslashes(trim($xml_displayname))."','".stripslashes(trim($xml_ipmask))."','".$convporf."','".stripslashes(trim($xml_maxconn))."','".trim($xml_admin)."','".trim($xml_enabled)."','".trim($xml_mapexclude)."','".trim($xml_debug)."','','".stripslashes(trim($xml_email))."','','".stripslashes(trim($xml_ecmrate))."','".$xml_startdate."','".$xml_expiredate."','".$usrgrp."','','','','".$_SESSION[$secretkey."userid"]."','','')");
+												$mysqli->query("INSERT INTO users (user,password,displayname,ipmask,profiles,maxconn,admin,enabled,mapexclude,debug,comment,email,customvalues,ecmrate,startdate,expiredate,usrgroup,boxtype,macaddress,serialnumber,addedby,changed,changedby) VALUES ('".stripslashes(trim($xml_username))."','".stripslashes(trim($xml_password))."','".stripslashes(trim($xml_displayname))."','".stripslashes(trim($xml_ipmask))."','".$convporf."','".stripslashes(trim($xml_maxconn))."','".trim($xml_admin)."','".trim($xml_enabled)."','".trim($xml_mapexclude)."','".trim($xml_debug)."','','".stripslashes(trim($xml_email))."','','".stripslashes(trim($xml_ecmrate))."','".$xml_startdate."','".$xml_expiredate."','".$usrgrp."','','','','".$_SESSION[$secretkey."admid"]."','','')");
 												unset($convporf);
 												$sql="";
 												$psql="";
@@ -1758,10 +1758,10 @@ function adduser($user,$password,$displayname,$email,$ipmask,$maxconn,$ecmrate,$
 				} else {
 					$expiredate="";
 				}
-				$mysqli->query("INSERT INTO users (user,password,displayname,ipmask,profiles,maxconn,admin,enabled,mapexclude,debug,comment,email,customvalues,ecmrate,startdate,expiredate,usrgroup,boxtype,macaddress,serialnumber,addedby,changed,changedby) VALUES ('".stripslashes(trim($user))."','".stripslashes(trim($password))."','".stripslashes(trim($displayname))."','".stripslashes(trim($ipmask))."','".$profiles."','".stripslashes(trim($maxconn))."','".trim($admin)."','".trim($enabled)."','".trim($mapexclude)."','".trim($debug)."','".stripslashes(trim($comment))."','".stripslashes(trim($email))."','".$mysqli->real_escape_string(trim($customvalues))."','".stripslashes(trim($ecmrate))."','".$startdate."','".$expiredate."','".trim($usrgroup)."','".stripslashes(trim($boxtype))."','".stripslashes(trim($macaddress))."','".stripslashes(trim($serialnumber))."','".$_SESSION[$secretkey."userid"]."','','')");
+				$mysqli->query("INSERT INTO users (user,password,displayname,ipmask,profiles,maxconn,admin,enabled,mapexclude,debug,comment,email,customvalues,ecmrate,startdate,expiredate,usrgroup,boxtype,macaddress,serialnumber,addedby,changed,changedby) VALUES ('".stripslashes(trim($user))."','".stripslashes(trim($password))."','".stripslashes(trim($displayname))."','".stripslashes(trim($ipmask))."','".$profiles."','".stripslashes(trim($maxconn))."','".trim($admin)."','".trim($enabled)."','".trim($mapexclude)."','".trim($debug)."','".stripslashes(trim($comment))."','".stripslashes(trim($email))."','".$mysqli->real_escape_string(trim($customvalues))."','".stripslashes(trim($ecmrate))."','".$startdate."','".$expiredate."','".trim($usrgroup)."','".stripslashes(trim($boxtype))."','".stripslashes(trim($macaddress))."','".stripslashes(trim($serialnumber))."','".$_SESSION[$secretkey."admid"]."','','')");
 				$newuid=$mysqli->insert_id;
 				if(checksetting("logactivity")=="1") {
-					logactivity("1",$_SESSION[$secretkey."userid"],$_SESSION[$secretkey."userlvl"],$newuid,$user);
+					logactivity("1",$_SESSION[$secretkey."admid"],$_SESSION[$secretkey."admlvl"],$newuid,$user);
 				}
 				$status="0";
 			}
@@ -1796,9 +1796,9 @@ function edituser($uid,$user,$password,$displayname,$email,$ipmask,$maxconn,$ecm
 				} else {
 					$expiredate="";
 				}
-				$mysqli->query("UPDATE users SET user='".stripslashes(trim($user))."',password='".stripslashes(trim($password))."',displayname='".stripslashes(trim($displayname))."',ipmask='".stripslashes(trim($ipmask))."',profiles='".$profiles."',maxconn='".trim($maxconn)."',admin='".trim($admin)."',enabled='".trim($enabled)."',mapexclude='".trim($mapexclude)."',debug='".trim($debug)."',user='".stripslashes(trim($user))."',comment='".stripslashes(trim($comment))."',email='".stripslashes(trim($email))."',customvalues='".$mysqli->real_escape_string(trim($customvalues))."',ecmrate='".stripslashes(trim($ecmrate))."',startdate='".$startdate."',expiredate='".$expiredate."',usrgroup='".trim($usrgroup)."',boxtype='".stripslashes(trim($boxtype))."',macaddress='".stripslashes(trim($macaddress))."',serialnumber='".stripslashes(trim($serialnumber))."',changed='".date('Y-m-d H:i:s')."',changedby='".$_SESSION[$secretkey."userid"]."' WHERE id='".$uid."'");
+				$mysqli->query("UPDATE users SET user='".stripslashes(trim($user))."',password='".stripslashes(trim($password))."',displayname='".stripslashes(trim($displayname))."',ipmask='".stripslashes(trim($ipmask))."',profiles='".$profiles."',maxconn='".trim($maxconn)."',admin='".trim($admin)."',enabled='".trim($enabled)."',mapexclude='".trim($mapexclude)."',debug='".trim($debug)."',user='".stripslashes(trim($user))."',comment='".stripslashes(trim($comment))."',email='".stripslashes(trim($email))."',customvalues='".$mysqli->real_escape_string(trim($customvalues))."',ecmrate='".stripslashes(trim($ecmrate))."',startdate='".$startdate."',expiredate='".$expiredate."',usrgroup='".trim($usrgroup)."',boxtype='".stripslashes(trim($boxtype))."',macaddress='".stripslashes(trim($macaddress))."',serialnumber='".stripslashes(trim($serialnumber))."',changed='".date('Y-m-d H:i:s')."',changedby='".$_SESSION[$secretkey."admid"]."' WHERE id='".$uid."'");
 				if(checksetting("logactivity")=="1") {
-					logactivity("2",$_SESSION[$secretkey."userid"],$_SESSION[$secretkey."userlvl"],$uid,$user);
+					logactivity("2",$_SESSION[$secretkey."admid"],$_SESSION[$secretkey."admlvl"],$uid,$user);
 				}
 				$status="0";
 			}
@@ -1813,9 +1813,9 @@ function deleteuser($uid) {
 		require("../config.php");
 	}
 	@session_start();
-		$admlvl=$_SESSION[$secretkey."userlvl"];
-		$admgrp=$_SESSION[$secretkey."usergrp"];
-		$admid=$_SESSION[$secretkey."userid"];
+		$admlvl=$_SESSION[$secretkey."admlvl"];
+		$admgrp=$_SESSION[$secretkey."admgrp"];
+		$admid=$_SESSION[$secretkey."admid"];
 			$mysqli=new mysqli($dbhost,$dbuser,$dbpass,$dbname);
 				$sql=$mysqli->query("SELECT usrgroup FROM users WHERE id='".$uid."'");
 				$delres=$sql->fetch_array();
@@ -1840,9 +1840,9 @@ function enableuser($uid) {
 		require("../config.php");
 	}
 		@session_start();
-		$admlvl=$_SESSION[$secretkey."userlvl"];
-		$admgrp=$_SESSION[$secretkey."usergrp"];
-		$admid=$_SESSION[$secretkey."userid"];
+		$admlvl=$_SESSION[$secretkey."admlvl"];
+		$admgrp=$_SESSION[$secretkey."admgrp"];
+		$admid=$_SESSION[$secretkey."admid"];
 			$mysqli=new mysqli($dbhost,$dbuser,$dbpass,$dbname);
 				$sql=$mysqli->query("SELECT usrgroup FROM users WHERE id='".$uid."'");
 				$delres=$sql->fetch_array();
@@ -1873,9 +1873,9 @@ function disableuser($uid) {
 		require("../config.php");
 	}
 		@session_start();
-		$admlvl=$_SESSION[$secretkey."userlvl"];
-		$admgrp=$_SESSION[$secretkey."usergrp"];
-		$admid=$_SESSION[$secretkey."userid"];
+		$admlvl=$_SESSION[$secretkey."admlvl"];
+		$admgrp=$_SESSION[$secretkey."admgrp"];
+		$admid=$_SESSION[$secretkey."admid"];
 			$mysqli=new mysqli($dbhost,$dbuser,$dbpass,$dbname);
 				$sql=$mysqli->query("SELECT usrgroup FROM users WHERE id='".$uid."'");
 				$delres=$sql->fetch_array();

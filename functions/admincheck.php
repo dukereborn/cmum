@@ -3,7 +3,7 @@
 	require("config.php");
 	require("includes/settings.php");
 	require("functions/login.php");
-		if($_SESSION[$secretkey."sessid"]<>session_id() || $_SESSION[$secretkey."user"]=="" || $_SESSION[$secretkey."userid"]=="" || $_SESSION[$secretkey."userlvl"]<>"0") {
+		if($_SESSION[$secretkey."sessid"]<>session_id() || $_SESSION[$secretkey."admin"]=="" || $_SESSION[$secretkey."admid"]=="" || $_SESSION[$secretkey."admlvl"]<>"0") {
 			session_unset ();
 			session_destroy ();
 			header("Location:index.php?error=1");

@@ -55,7 +55,7 @@ if(isset($_GET["edit"]) && $_GET["edit"]=="1") {
 							<li><?php if($_SESSION[$secretkey."fetchcsp"]=="1") { print(dashcheckcspconn($cspconnstatus)); } ?><a href="dashboard.php"><i class="batch home"></i><br>Dashboard</a></li>
 							<li><span class="label label-info pull-right" id="numusers"><?php print($counters[0]); ?></span><a href="users.php" class="active"><i class="batch users"></i><br>Users</a></li>
 								<?php
-									if($_SESSION[$secretkey."userlvl"]=="0") {
+									if($_SESSION[$secretkey."admlvl"]=="0") {
 										print("<li><span class=\"label label-info pull-right\">".$counters[1]."</span><a href=\"groups.php\"><i class=\"batch database\"></i><br>Groups</a></li>");
 										print("<li><span class=\"label label-info pull-right\">".$counters[2]."</span><a href=\"profiles.php\"><i class=\"batch tables\"></i><br>Profiles</a></li>");
 										print("<li><span class=\"label label-info pull-right\">".$counters[3]."</span><a href=\"admins.php\"><i class=\"batch star\"></i><br>Admins</a></li>");
@@ -119,19 +119,19 @@ if(isset($_GET["edit"]) && $_GET["edit"]=="1") {
 												errorpage("MYSQL DATABASE ERROR",mysqli_connect_error(),$charset,CMUM_TITLE,$_SERVER["REQUEST_URI"],CMUM_VERSION,CMUM_BUILD,CMUM_MOD);
 												exit;
 											}
-											if($_SESSION[$secretkey."userlvl"]=="0" || $_SESSION[$secretkey."userlvl"]=="1") {
+											if($_SESSION[$secretkey."admlvl"]=="0" || $_SESSION[$secretkey."admlvl"]=="1") {
 												if(isset($_POST["searchfor"]) && $_POST["searchfor"]<>"") {
 													$searchstring=$mysqli->real_escape_string(trim($_POST["searchfor"]));
 													$sql=$mysqli->query("SELECT * FROM users WHERE (user LIKE '%".$searchstring."%' OR password LIKE '%".$searchstring."%' OR displayname LIKE '%".$searchstring."%' OR ipmask LIKE '%".$searchstring."%' OR mapexclude LIKE '%".$searchstring."%' OR comment LIKE '%".$searchstring."%' OR email LIKE '%".$searchstring."%' OR boxtype LIKE '%".$searchstring."%' OR macaddress LIKE '%".$searchstring."%' OR serialnumber LIKE '%".$searchstring."%') ORDER BY ".$setres["usrorderby"]." ".$setres["usrorder"]);
 												} else {
 													$sql=$mysqli->query("SELECT id,user,password,displayname,usrgroup,admin,enabled,startdate,expiredate,addedby FROM users ORDER BY ".$setres["usrorderby"]." ".$setres["usrorder"]);
 												}	
-											} elseif($_SESSION[$secretkey."userlvl"]=="2" && $_SESSION[$secretkey."usergrp"]<>"0") {
+											} elseif($_SESSION[$secretkey."admlvl"]=="2" && $_SESSION[$secretkey."admgrp"]<>"0") {
 												if(isset($_POST["searchfor"]) && $_POST["searchfor"]<>"") {
 													$searchstring=$mysqli->real_escape_string(trim($_POST["searchfor"]));
-													$sql=$mysqli->query("SELECT * FROM users WHERE (user LIKE '%".$searchstring."%' OR password LIKE '%".$searchstring."%' OR displayname LIKE '%".$searchstring."%' OR ipmask LIKE '%".$searchstring."%' OR mapexclude LIKE '%".$searchstring."%' OR comment LIKE '%".$searchstring."%' OR email LIKE '%".$searchstring."%' OR boxtype LIKE '%".$searchstring."%' OR macaddress LIKE '%".$searchstring."%' OR serialnumber LIKE '%".$searchstring."%') AND usrgroup='".$_SESSION[$secretkey."usergrp"]."' ORDER BY ".$setres["usrorderby"]." ".$setres["usrorder"]);
+													$sql=$mysqli->query("SELECT * FROM users WHERE (user LIKE '%".$searchstring."%' OR password LIKE '%".$searchstring."%' OR displayname LIKE '%".$searchstring."%' OR ipmask LIKE '%".$searchstring."%' OR mapexclude LIKE '%".$searchstring."%' OR comment LIKE '%".$searchstring."%' OR email LIKE '%".$searchstring."%' OR boxtype LIKE '%".$searchstring."%' OR macaddress LIKE '%".$searchstring."%' OR serialnumber LIKE '%".$searchstring."%') AND usrgroup='".$_SESSION[$secretkey."admgrp"]."' ORDER BY ".$setres["usrorderby"]." ".$setres["usrorder"]);
 												} else {
-													$sql=$mysqli->query("SELECT id,user,password,displayname,usrgroup,admin,enabled,startdate,expiredate,addedby FROM users WHERE usrgroup='".$mysqli->real_escape_string($_SESSION[$secretkey."usergrp"])."' ORDER BY ".$setres["usrorderby"]." ".$setres["usrorder"]);	
+													$sql=$mysqli->query("SELECT id,user,password,displayname,usrgroup,admin,enabled,startdate,expiredate,addedby FROM users WHERE usrgroup='".$mysqli->real_escape_string($_SESSION[$secretkey."admgrp"])."' ORDER BY ".$setres["usrorderby"]." ".$setres["usrorder"]);	
 												}
 											} else {
 												$sql="";
