@@ -17,6 +17,7 @@
 // 15 = enable group
 // 16 = disable group
 // 17 = delete user
+// 18 = delete group
 
 require("../config.php");
 require("cmum.php");
