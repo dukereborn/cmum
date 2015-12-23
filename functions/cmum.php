@@ -475,7 +475,7 @@ return($status);
 
 function cspgetuseripinfo($user) {
 	// Return structure
-	// ip;hostname;country;region;city;timezone
+	// ip;hostname;country;region;city;zipcode;timezone
 	if(file_exists("config.php")) {
 		require("config.php");
 	} else {
@@ -520,16 +520,21 @@ function cspgetuseripinfo($user) {
 					$ip_region="";
 				}
 				if(isset($data["city"])) {
-					$ip_city=$data["city"]." (".$data["zip_code"].")";
+					$ip_city=$data["city"];
 				} else {
 					$ip_city="";
+				}
+				if(isset($data["zip_code"])) {
+					$ip_zipcode=$data["zip_code"];
+				} else {
+					$ip_zipcode="";
 				}
 				if(isset($data["time_zone"])) {
 					$ip_timezone=$data["time_zone"];
 				} else {
 					$ip_timezone="";
 				}
-		$status=$ip_ip.";".$ip_hostname.";".$ip_country.";".$ip_region.";".$ip_city.";".$ip_timezone;
+		$status=$ip_ip.";".$ip_hostname.";".$ip_country.";".$ip_region.";".$ip_city.";".$ip_zipcode.";".$ip_timezone;
 return($status);
 }
 

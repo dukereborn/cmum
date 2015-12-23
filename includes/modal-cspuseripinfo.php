@@ -15,6 +15,8 @@
 					<div id="cspusrip-region" class="cspuserinfobox">%region%</div>
 				<strong>City</strong>
 					<div id="cspusrip-city" class="cspuserinfobox">%city%</div>
+				<strong>Zipcode</strong>
+					<div id="cspusrip-zipcode" class="cspuserinfobox">%zipcode%</div>
 				<strong>Timezone</strong>
 					<div id="cspusrip-timezone" class="cspuserinfobox">%timezone%</div>
 			</div>

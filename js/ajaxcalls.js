@@ -572,7 +572,8 @@ function cspgetuseripinfo(username) {
 						$('#cspusrip-country').html(ifempty(cspdata[2]));
 						$('#cspusrip-region').html(ifempty(cspdata[3]));
 						$('#cspusrip-city').html(ifempty(cspdata[4]));
-						$('#cspusrip-timezone').html(ifempty(cspdata[5]));
+						$('#cspusrip-zipcode').html(ifempty(cspdata[5]));
+						$('#cspusrip-timezone').html(ifempty(cspdata[6]));
 					$('#modalCspUserIpInfo').modal({ show: true });
 				} else {
 					toastr.error('Something went wrong, please try again');
