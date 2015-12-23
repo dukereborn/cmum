@@ -11,6 +11,7 @@ CSP MySQL User Manager Changelog
 [#] Improved security on ajax functions
 [#] Changed default random string length to 12 characters
 [#] Improved admin-/group-/profile-/user delete handling
+[#] Changed api for ip lookup on connected users
 [-] Enable/disable button in userlist shows wrong state
 
 

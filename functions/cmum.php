@@ -475,7 +475,7 @@ return($status);
 
 function cspgetuseripinfo($user) {
 	// Return structure
-	// ip;hostname;continent;country;region;city;timezone;isp
+	// ip;hostname;country;region;city;timezone
 	if(file_exists("config.php")) {
 		require("config.php");
 	} else {
@@ -501,7 +501,7 @@ function cspgetuseripinfo($user) {
 					}
 				}
 			$usrip=(string)$xmldata->$proxyusers->user[$i]->session[$actsess]->attributes()->host;
-			$data=json_decode(file_get_contents("http://www.telize.com/geoip/".$usrip),true);
+			$data=json_decode(file_get_contents("http://freegeoip.net/json/".$usrip),true);
 				if(isset($data["ip"])) {
 					$ip_ip=$data["ip"];
 					$ip_hostname=gethostbyaddr($data["ip"]);
@@ -509,37 +509,27 @@ function cspgetuseripinfo($user) {
 					$ip_ip="";
 					$ip_hostname="";
 				}
-				if(isset($data["continent_code"])) {
-					$ip_continent=$data["continent_code"];
-				} else {
-					$ip_continent="";
-				}
-				if(isset($data["country"])) {
-					$ip_country=$data["country"]." (".$data["country_code"].")";
+				if(isset($data["country_name"])) {
+					$ip_country=$data["country_name"]." (".$data["country_code"].")";
 				} else {
 					$ip_country="";
 				}
-				if(isset($data["region"])) {
-					$ip_region=$data["region"];
+				if(isset($data["region_name"])) {
+					$ip_region=$data["region_name"]." (".$data["region_code"].")";
 				} else {
 					$ip_region="";
 				}
 				if(isset($data["city"])) {
-					$ip_city=$data["city"];
+					$ip_city=$data["city"]." (".$data["zip_code"].")";
 				} else {
 					$ip_city="";
 				}
-				if(isset($data["timezone"])) {
-					$ip_timezone=$data["timezone"];
+				if(isset($data["time_zone"])) {
+					$ip_timezone=$data["time_zone"];
 				} else {
 					$ip_timezone="";
 				}
-				if(isset($data["isp"])) {
-					$ip_isp=$data["isp"];
-				} else {
-					$ip_isp="";
-				}
-		$status=$ip_ip.";".$ip_hostname.";".$ip_continent.";".$ip_country.";".$ip_region.";".$ip_city.";".$ip_timezone.";".$ip_isp;
+		$status=$ip_ip.";".$ip_hostname.";".$ip_country.";".$ip_region.";".$ip_city.";".$ip_timezone;
 return($status);
 }
 
