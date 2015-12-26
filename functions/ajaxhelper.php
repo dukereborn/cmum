@@ -20,6 +20,7 @@
 // 18 = delete group
 // 19 = delete profile
 // 20 = delete admin
+// 21 = send email to singel user
 
 require("../config.php");
 require("cmum.php");
@@ -131,5 +132,10 @@ echo $status;
 
 if(isset($_POST["function"]) && $_POST["function"]=="20" && $_POST["aid"]<>"") {	
 	$status=deleteadmin($_POST["aid"]);
+echo $status;
+}
+
+if(isset($_POST["function"]) && $_POST["function"]=="21" && $_POST["email_to"]<>"" && $_POST["email_subject"]<>"" && $_POST["email_body"]<>"") {	
+	$status=sendemail($_POST["email_to"],$_POST["email_subject"],$_POST["email_body"]);
 echo $status;
 }

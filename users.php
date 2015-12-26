@@ -25,6 +25,8 @@ if(isset($_GET["error"]) && $_GET["error"]=="1") {
 if(isset($_GET["edit"]) && $_GET["edit"]=="1") {
 	$notice="toastr.success('Changes saved');";
 }
+
+$emailsettings=checkemailsettings();
 ?>
 <html>
 	<head>
@@ -124,14 +126,14 @@ if(isset($_GET["edit"]) && $_GET["edit"]=="1") {
 													$searchstring=$mysqli->real_escape_string(trim($_POST["searchfor"]));
 													$sql=$mysqli->query("SELECT * FROM users WHERE (user LIKE '%".$searchstring."%' OR password LIKE '%".$searchstring."%' OR displayname LIKE '%".$searchstring."%' OR ipmask LIKE '%".$searchstring."%' OR mapexclude LIKE '%".$searchstring."%' OR comment LIKE '%".$searchstring."%' OR email LIKE '%".$searchstring."%' OR boxtype LIKE '%".$searchstring."%' OR macaddress LIKE '%".$searchstring."%' OR serialnumber LIKE '%".$searchstring."%') ORDER BY ".$setres["usrorderby"]." ".$setres["usrorder"]);
 												} else {
-													$sql=$mysqli->query("SELECT id,user,password,displayname,usrgroup,admin,enabled,startdate,expiredate,addedby FROM users ORDER BY ".$setres["usrorderby"]." ".$setres["usrorder"]);
+													$sql=$mysqli->query("SELECT id,user,password,displayname,usrgroup,admin,enabled,email,startdate,expiredate,addedby FROM users ORDER BY ".$setres["usrorderby"]." ".$setres["usrorder"]);
 												}	
 											} elseif($_SESSION[$secretkey."admlvl"]=="2" && $_SESSION[$secretkey."admgrp"]<>"0") {
 												if(isset($_POST["searchfor"]) && $_POST["searchfor"]<>"") {
 													$searchstring=$mysqli->real_escape_string(trim($_POST["searchfor"]));
 													$sql=$mysqli->query("SELECT * FROM users WHERE (user LIKE '%".$searchstring."%' OR password LIKE '%".$searchstring."%' OR displayname LIKE '%".$searchstring."%' OR ipmask LIKE '%".$searchstring."%' OR mapexclude LIKE '%".$searchstring."%' OR comment LIKE '%".$searchstring."%' OR email LIKE '%".$searchstring."%' OR boxtype LIKE '%".$searchstring."%' OR macaddress LIKE '%".$searchstring."%' OR serialnumber LIKE '%".$searchstring."%') AND usrgroup='".$_SESSION[$secretkey."admgrp"]."' ORDER BY ".$setres["usrorderby"]." ".$setres["usrorder"]);
 												} else {
-													$sql=$mysqli->query("SELECT id,user,password,displayname,usrgroup,admin,enabled,startdate,expiredate,addedby FROM users WHERE usrgroup='".$mysqli->real_escape_string($_SESSION[$secretkey."admgrp"])."' ORDER BY ".$setres["usrorderby"]." ".$setres["usrorder"]);	
+													$sql=$mysqli->query("SELECT id,user,password,displayname,usrgroup,admin,enabled,email,startdate,expiredate,addedby FROM users WHERE usrgroup='".$mysqli->real_escape_string($_SESSION[$secretkey."admgrp"])."' ORDER BY ".$setres["usrorderby"]." ".$setres["usrorder"]);	
 												}
 											} else {
 												$sql="";
@@ -186,10 +188,15 @@ if(isset($_GET["edit"]) && $_GET["edit"]=="1") {
 																	} else {
 																		$cspmenu="";
 																	}
-																	if($usrexp=="1") {
-																		print("<li class=\"ausrenabled-".$res["id"]."\"><a href=\"edituser.php?uid=".$res["id"]."\">Edit</a><a id=\"ausrenabled-".$res["id"]."\" href=\"javascript:void(0);\" onclick=\"disableuser('".$res["id"]."');\">Disable</a>".$cspmenu."<a href=\"javascript:void(0);\" onclick=\"getdeleteuser('".$res["id"]."','".$res["user"]."');\">Delete</a></li>");
+																	if($emailsettings=="0" && $res["email"]<>"") {
+																		$emailmenu="<a href=\"javascript:void(0);\" onclick=\"loadsendemail('".$res["email"]."');\">Send email</a>";
 																	} else {
-																		print("<li><a href=\"edituser.php?uid=".$res["id"]."\">Edit</a><a id=\"ausrenabled-".$res["id"]."\" href=\"javascript:void(0);\" onclick=\"enableuser('".$res["id"]."');\">Enable</a>".$cspmenu."<a href=\"javascript:void(0);\" onclick=\"getdeleteuser('".$res["id"]."','".$res["user"]."');\">Delete</a></li>");
+																		$emailmenu="";
+																	}
+																	if($usrexp=="1") {
+																		print("<li class=\"ausrenabled-".$res["id"]."\"><a href=\"edituser.php?uid=".$res["id"]."\">Edit</a><a id=\"ausrenabled-".$res["id"]."\" href=\"javascript:void(0);\" onclick=\"disableuser('".$res["id"]."');\">Disable</a>".$emailmenu.$cspmenu."<a href=\"javascript:void(0);\" onclick=\"getdeleteuser('".$res["id"]."','".$res["user"]."');\">Delete</a></li>");
+																	} else {
+																		print("<li><a href=\"edituser.php?uid=".$res["id"]."\">Edit</a><a id=\"ausrenabled-".$res["id"]."\" href=\"javascript:void(0);\" onclick=\"enableuser('".$res["id"]."');\">Enable</a>".$emailmenu.$cspmenu."<a href=\"javascript:void(0);\" onclick=\"getdeleteuser('".$res["id"]."','".$res["user"]."');\">Delete</a></li>");
 																	}
 																print("</ul>");
 															print("</div>");
@@ -211,6 +218,7 @@ if(isset($_GET["edit"]) && $_GET["edit"]=="1") {
 			require("includes/modal-cspsendosd.php");
 			require("includes/modal-cspuserinfo.php");
 			require("includes/modal-cspuseripinfo.php");
+			require("includes/modal-sendemail.php");
 			require("includes/footer.php");
 		?>
 		<script src="js/jquery.js"></script>

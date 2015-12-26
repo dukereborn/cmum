@@ -738,3 +738,50 @@ function deleteadmin(aid) {
 		toastr.error('Something went wrong, please try again');
 	}
 }
+
+function loadsendemail(email) {
+	if(email!="") {
+		$('#email_to').val(email);
+		$('#email_subject').val('');
+		$('#email_body').val('');
+		$('#emailusrlabel').html('<label>Recipient<br><strong>'+email+'</strong></label>');
+		$('#modalSendEmail').modal({ show: true });
+			$('#modalSendEmail').on('shown', function () {
+				$('#email_subject').focus()
+			});
+	}
+}
+
+function checksendemail() {
+	var email_to=$('#email_to').val();
+	var email_subject=$('#email_subject').val();
+	var email_body=$('#email_body').val();
+		if(email_subject=="") {
+			toastr.warning('Please enter a subject');
+			$('#email_subject').focus();
+		} else if(email_body=="") {
+			toastr.warning('Please enter a message');
+			$('#email_body').focus();
+		} else {
+			jQuery.ajax({
+				type: 'post',
+				url: 'functions/ajaxhelper.php',
+				data: 'function=21&email_to='+email_to+'&email_subject='+email_subject+'&email_body='+email_body,
+				cache: false,
+				success: function(response) {
+					if(response==1) {
+						$('#modalSendEmail').modal('hide');
+						toastr.error('No to address given');
+					} 
+					if(response==2) {
+						$('#modalSendEmail').modal('hide');
+						toastr.error('Email not sent, please try again or check settings');
+					}
+					if(response==0) {
+						$('#modalSendEmail').modal('hide');
+						toastr.success('Email sent');
+					}
+				}
+			});
+		}
+}

@@ -173,9 +173,9 @@ function sendemail($to,$subject,$body) {
 						}
 					$mail->isHTML(false);
 					$mail->setFrom($data["email_fromaddr"],$data["email_fromname"]);
-					$mail->addAddress($to);
-					$mail->Subject=$subject;
-					$mail->Body=$body;
+					$mail->addAddress(trim($to));
+					$mail->Subject=trim($subject);
+					$mail->Body=trim($body);
 						if(!$mail->send()) {
 						    $status="2";
 						} else {
@@ -1090,6 +1090,24 @@ function checksetting($setting) {
 			$rdata=$sql->fetch_array();
 		mysqli_close($mysqli);
 return($rdata[$setting]);
+}
+
+function checkemailsettings() {
+	if(file_exists("config.php")) {
+		require("config.php");
+	} else {
+		require("../config.php");
+	}
+		$mysqli=new mysqli($dbhost,$dbuser,$dbpass,$dbname);
+			$sql=$mysqli->query("SELECT email_host,email_port,email_fromaddr FROM settings WHERE id='1'");
+			$rdata=$sql->fetch_array();
+		mysqli_close($mysqli);
+			if($rdata["email_host"]=="" || $rdata["email_port"]=="" || $rdata["email_fromaddr"]=="") {
+				$status="1";
+			} else {
+				$status="0";
+			}
+return($status);
 }
 
 //
