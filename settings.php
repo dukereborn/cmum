@@ -11,7 +11,7 @@ if(isset($_POST["bsave"]) && $_POST["bsave"]=="Save Changes") {
 	} else {
 		$def_profiles=$_POST["def_profiles"];
 	}
-	$updnotice=updatesettings($_POST["servername"],$_POST["timeout"],$_POST["rndstring"],$_POST["rndstringlength"],$_POST["loglogins"],$_POST["logactivity"],$_POST["cleanlogin"],$_POST["genxmlkey"],$_POST["genxmllogreq"],$_POST["genxmlusrgrp"],$_POST["genxmldateformat"],$_POST["genxmlintstrexp"],$_POST["def_autoload"],$_POST["def_ipmask"],$def_profiles,$_POST["def_maxconn"],$_POST["def_admin"],$_POST["def_enabled"],$_POST["def_mapexc"],$_POST["def_debug"],$_POST["def_custcspval"],$_POST["def_ecmrate"],$_POST["fetchcsp"],$_POST["cspsrv_ip"],$_POST["cspsrv_port"],$_POST["cspsrv_user"],$_POST["cspsrv_pass"],$_POST["cspsrv_protocol"],$_POST["comptables"],$_POST["extrausrtbl"],$_POST["notstartusrorder"],$_POST["expusrorder"],$_POST["soonexpusrorder"],$_POST["autoupdcheck"],$_POST["usrorderby"],$_POST["usrorder"]);
+	$updnotice=updatesettings($_POST["servername"],$_POST["timeout"],$_POST["rndstring"],$_POST["rndstringlength"],$_POST["loglogins"],$_POST["logactivity"],$_POST["cleanlogin"],$_POST["genxmlkey"],$_POST["genxmllogreq"],$_POST["genxmlusrgrp"],$_POST["genxmldateformat"],$_POST["genxmlintstrexp"],$_POST["def_autoload"],$_POST["def_ipmask"],$def_profiles,$_POST["def_maxconn"],$_POST["def_admin"],$_POST["def_enabled"],$_POST["def_mapexc"],$_POST["def_debug"],$_POST["def_custcspval"],$_POST["def_ecmrate"],$_POST["fetchcsp"],$_POST["cspsrv_ip"],$_POST["cspsrv_port"],$_POST["cspsrv_user"],$_POST["cspsrv_pass"],$_POST["cspsrv_protocol"],$_POST["comptables"],$_POST["extrausrtbl"],$_POST["notstartusrorder"],$_POST["expusrorder"],$_POST["soonexpusrorder"],$_POST["autoupdcheck"],$_POST["usrorderby"],$_POST["usrorder"],$_POST["email_host"],$_POST["email_port"],$_POST["email_secure"],$_POST["email_auth"],$_POST["email_authuser"],$_POST["email_authpass"],$_POST["email_fromname"],$_POST["email_fromaddr"]);
 		if($updnotice=="0") {
 			$notice="toastr.success('Settings saved successfully');";
 		}
@@ -515,6 +515,79 @@ if(mysqli_connect_errno()) {
 														<option value="0" <?php if($setres["cspsrv_protocol"]=="0") { print("selected"); } ?>>HTTP</option>
 														<option value="1" <?php if($setres["cspsrv_protocol"]=="1") { print("selected"); } ?>>HTTPS</option>
 													</select>
+												</div>
+										</div>
+										<div class="control-group">
+											<div class="controls">
+												<input type="submit" name="bsave" value="Save Changes" class="btn">
+											</div>
+										</div>
+									</div>
+									<div class="span6">
+										<p>
+											&nbsp;
+										</p>
+									</div>
+								</div>
+								<div class="row">
+									<div class="span9">&nbsp;</div>
+								</div>
+							<h4 class="header">Email SMTP Server</h4>
+								<div class="row">
+									<div class="span5">
+										<div class="control-group">
+											<label class="control-label" for="email_host">SMTP Host</label>
+												<div class="controls">
+													<input type="text" name="email_host" id="email_host" value="<?php print($setres["email_host"]); ?>" maxlength="255">
+												</div>
+										</div>
+										<div class="control-group">
+											<label class="control-label" for="email_port">SMTP Port</label>
+												<div class="controls">
+													<input type="text" name="email_port" id="email_port" value="<?php print($setres["email_port"]); ?>" maxlength="6">
+												</div>
+										</div>
+										<div class="control-group">
+											<label class="control-label" for="email_secure">Encryption</label>
+												<div class="controls">
+													<select name="email_secure" id="email_secure">
+														<option value="0" <?php if($setres["email_secure"]=="0") { print("selected"); } ?>>None</option>
+														<option value="1" <?php if($setres["email_secure"]=="1") { print("selected"); } ?>>SSL</option>
+														<option value="2" <?php if($setres["email_secure"]=="2") { print("selected"); } ?>>TLS</option>
+													</select>
+												</div>
+										</div>
+										<div class="control-group">
+											<label class="control-label" for="email_auth">Authentication</label>
+												<div class="controls">
+													<select name="email_auth" id="email_auth">
+														<option value="0" <?php if($setres["email_auth"]=="0") { print("selected"); } ?>>No</option>
+														<option value="1" <?php if($setres["email_auth"]=="1") { print("selected"); } ?>>Yes</option>
+													</select>
+												</div>
+										</div>
+										<div class="control-group">
+											<label class="control-label" for="email_authuser">Username</label>
+												<div class="controls">
+													<input type="text" name="email_authuser" id="email_authuser" value="<?php print($setres["email_authuser"]); ?>" maxlength="254">
+												</div>
+										</div>
+										<div class="control-group">
+											<label class="control-label" for="email_authpass">Password</label>
+												<div class="controls">
+													<input type="text" name="email_authpass" id="email_authpass" value="<?php print($setres["email_authpass"]); ?>" maxlength="50">
+												</div>
+										</div>
+										<div class="control-group">
+											<label class="control-label" for="email_fromname">From Name</label>
+												<div class="controls">
+													<input type="text" name="email_fromname" id="email_fromname" value="<?php print($setres["email_fromname"]); ?>" maxlength="50">
+												</div>
+										</div>
+										<div class="control-group">
+											<label class="control-label" for="email_fromaddr">From Email</label>
+												<div class="controls">
+													<input type="text" name="email_fromaddr" id="email_fromaddr" value="<?php print($setres["email_fromaddr"]); ?>" maxlength="254">
 												</div>
 										</div>
 										<div class="control-group">

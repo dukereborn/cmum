@@ -131,6 +131,60 @@ function percent($num_amount,$num_total) {
 return($count);
 }
 
+function sendemail($to,$subject,$body) {
+	if(file_exists("config.php")) {
+		require("config.php");
+	} else {
+		require("../config.php");
+	}
+	if(file_exists("functions/class.phpmailer.php")) {
+		require("functions/class.phpmailer.php");
+	} else {
+		require("../functions/class.phpmailer.php");
+	}
+	if(file_exists("functions/class.smtp.php")) {
+		require("functions/class.smtp.php");
+	} else {
+		require("../functions/class.smtp.php");
+	}
+		if($to=="") {
+			$status="1";
+		} else {
+			$mysqli=new mysqli($dbhost,$dbuser,$dbpass,$dbname);
+				$sql=$mysqli->query("SELECT email_host,email_port,email_secure,email_auth,email_authuser,email_authpass,email_fromname,email_fromaddr FROM settings WHERE id='1'");
+				$data=$sql->fetch_array();
+			mysqli_close($mysqli);
+				$mail=new PHPMailer;
+					$mail->isSMTP();
+					$mail->CharSet=$charset;
+					$mail->Host=$data["email_host"];
+					$mail->Port=$data["email_port"];
+						if($data["email_secure"]==1) {
+							$mail->SMTPSecure="ssl";
+						} elseif($data["email_secure"]==2) {
+							$mail->SMTPSecure="tls";
+						}
+						if($data["email_auth"]==1) {
+							$mail->SMTPAuth=true;
+							$mail->Username=$data["email_authuser"];
+							$mail->Password=$data["email_authpass"];
+						} else {
+							$mail->SMTPAuth=false;
+						}
+					$mail->isHTML(false);
+					$mail->setFrom($data["email_fromaddr"],$data["email_fromname"]);
+					$mail->addAddress($to);
+					$mail->Subject=$subject;
+					$mail->Body=$body;
+						if(!$mail->send()) {
+						    $status="2";
+						} else {
+						    $status="0";
+						}
+		}
+return($status);
+}
+
 //
 // admin functions
 //
@@ -1003,7 +1057,7 @@ function logactivity($act,$aid,$alvl,$uid,$data) {
 //
 // settings functions
 //
-function updatesettings($servername,$timeout,$rndstring,$rndstringlength,$loglogins,$logactivity,$cleanlogin,$genxmlkey,$genxmllogreq,$genxmlusrgrp,$genxmldateformat,$genxmlintstrexp,$def_autoload,$def_ipmask,$def_profiles,$def_maxconn,$def_admin,$def_enabled,$def_mapexc,$def_debug,$def_custcspval,$def_ecmrate,$fetchcsp,$cspsrv_ip,$cspsrv_port,$cspsrv_user,$cspsrv_pass,$cspsrv_protocol,$comptables,$extrausrtbl,$notstartusrorder,$expusrorder,$soonexpusrorder,$autoupdcheck,$usrorderby,$usrorder) {
+function updatesettings($servername,$timeout,$rndstring,$rndstringlength,$loglogins,$logactivity,$cleanlogin,$genxmlkey,$genxmllogreq,$genxmlusrgrp,$genxmldateformat,$genxmlintstrexp,$def_autoload,$def_ipmask,$def_profiles,$def_maxconn,$def_admin,$def_enabled,$def_mapexc,$def_debug,$def_custcspval,$def_ecmrate,$fetchcsp,$cspsrv_ip,$cspsrv_port,$cspsrv_user,$cspsrv_pass,$cspsrv_protocol,$comptables,$extrausrtbl,$notstartusrorder,$expusrorder,$soonexpusrorder,$autoupdcheck,$usrorderby,$usrorder,$email_host,$email_port,$email_secure,$email_auth,$email_authuser,$email_authpass,$email_fromname,$email_fromaddr) {
 	if(file_exists("config.php")) {
 		require("config.php");
 	} else {
@@ -1015,7 +1069,7 @@ function updatesettings($servername,$timeout,$rndstring,$rndstringlength,$loglog
 			} else {
 				$def_profiles=serialize($def_profiles);
 			}
-			$mysqli->query("UPDATE settings SET servername='".stripslashes(trim($servername))."',timeout='".stripslashes(trim($timeout))."',rndstring='".stripslashes(trim($rndstring))."',rndstringlength='".stripslashes(trim($rndstringlength))."',loglogins='".stripslashes(trim($loglogins))."',logactivity='".stripslashes(trim($logactivity))."',cleanlogin='".stripslashes(trim($cleanlogin))."',genxmlkey='".stripslashes(trim($genxmlkey))."',genxmllogreq='".stripslashes(trim($genxmllogreq))."',genxmlusrgrp='".stripslashes(trim($genxmlusrgrp))."',genxmldateformat='".stripslashes(trim($genxmldateformat))."',genxmlintstrexp='".stripslashes(trim($genxmlintstrexp))."',def_autoload='".stripslashes(trim($def_autoload))."',def_ipmask='".stripslashes(trim($def_ipmask))."',def_profiles='".$def_profiles."',def_maxconn='".stripslashes(trim($def_maxconn))."',def_admin='".stripslashes(trim($def_admin))."',def_enabled='".stripslashes(trim($def_enabled))."',def_mapexc='".stripslashes(trim($def_mapexc))."',def_debug='".stripslashes(trim($def_debug))."',def_custcspval='".$mysqli->real_escape_string(trim($def_custcspval))."',def_ecmrate='".stripslashes(trim($def_ecmrate))."',fetchcsp='".stripslashes(trim($fetchcsp))."',cspsrv_ip='".stripslashes(trim($cspsrv_ip))."',cspsrv_port='".stripslashes(trim($cspsrv_port))."',cspsrv_user='".stripslashes(trim($cspsrv_user))."',cspsrv_pass='".stripslashes(trim($cspsrv_pass))."',cspsrv_protocol='".stripslashes(trim($cspsrv_protocol))."',comptables='".stripslashes(trim($comptables))."',extrausrtbl='".stripslashes(trim($extrausrtbl))."',notstartusrorder='".stripslashes(trim($notstartusrorder))."',expusrorder='".stripslashes(trim($expusrorder))."',soonexpusrorder='".stripslashes(trim($soonexpusrorder))."',autoupdcheck='".stripslashes(trim($autoupdcheck))."',usrorderby='".stripslashes(trim($usrorderby))."',usrorder='".stripslashes(trim($usrorder))."' WHERE id='1'");
+			$mysqli->query("UPDATE settings SET servername='".stripslashes(trim($servername))."',timeout='".stripslashes(trim($timeout))."',rndstring='".stripslashes(trim($rndstring))."',rndstringlength='".stripslashes(trim($rndstringlength))."',loglogins='".stripslashes(trim($loglogins))."',logactivity='".stripslashes(trim($logactivity))."',cleanlogin='".stripslashes(trim($cleanlogin))."',genxmlkey='".stripslashes(trim($genxmlkey))."',genxmllogreq='".stripslashes(trim($genxmllogreq))."',genxmlusrgrp='".stripslashes(trim($genxmlusrgrp))."',genxmldateformat='".stripslashes(trim($genxmldateformat))."',genxmlintstrexp='".stripslashes(trim($genxmlintstrexp))."',def_autoload='".stripslashes(trim($def_autoload))."',def_ipmask='".stripslashes(trim($def_ipmask))."',def_profiles='".$def_profiles."',def_maxconn='".stripslashes(trim($def_maxconn))."',def_admin='".stripslashes(trim($def_admin))."',def_enabled='".stripslashes(trim($def_enabled))."',def_mapexc='".stripslashes(trim($def_mapexc))."',def_debug='".stripslashes(trim($def_debug))."',def_custcspval='".$mysqli->real_escape_string(trim($def_custcspval))."',def_ecmrate='".stripslashes(trim($def_ecmrate))."',fetchcsp='".stripslashes(trim($fetchcsp))."',cspsrv_ip='".stripslashes(trim($cspsrv_ip))."',cspsrv_port='".stripslashes(trim($cspsrv_port))."',cspsrv_user='".stripslashes(trim($cspsrv_user))."',cspsrv_pass='".stripslashes(trim($cspsrv_pass))."',cspsrv_protocol='".stripslashes(trim($cspsrv_protocol))."',comptables='".stripslashes(trim($comptables))."',extrausrtbl='".stripslashes(trim($extrausrtbl))."',notstartusrorder='".stripslashes(trim($notstartusrorder))."',expusrorder='".stripslashes(trim($expusrorder))."',soonexpusrorder='".stripslashes(trim($soonexpusrorder))."',autoupdcheck='".stripslashes(trim($autoupdcheck))."',usrorderby='".stripslashes(trim($usrorderby))."',usrorder='".stripslashes(trim($usrorder))."',email_host='".stripslashes(trim($email_host))."',email_port='".stripslashes(trim($email_port))."',email_secure='".stripslashes(trim($email_secure))."',email_auth='".stripslashes(trim($email_auth))."',email_authuser='".stripslashes(trim($email_authuser))."',email_authpass='".stripslashes(trim($email_authpass))."',email_fromname='".stripslashes(trim($email_fromname))."',email_fromaddr='".stripslashes(trim($email_fromaddr))."' WHERE id='1'");
 		mysqli_close($mysqli);
 			@session_start();
 				$_SESSION[$secretkey."timeout"]=$timeout;
