@@ -341,7 +341,11 @@ $counters=explode(";",counter());
 												<li class="sidebar-inner">
 													<a href="tools.php?menu=5&tool=501"><span>Empty Group Database</span></a>
 													<a href="tools.php?menu=5&tool=502"><span>Empty Profile Database</span></a>
-													<a href="tools.php?menu=5&tool=503"><span>Send Email To All Users</span></a>
+													<?php
+														if(checkemailsettings()=="0") {
+															print("<a href=\"tools.php?menu=5&tool=503\"><span>Send Email To All Users</span></a>");
+														}
+													?>
 												</li>
 											</ul>
 										</li>
