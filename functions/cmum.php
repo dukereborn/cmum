@@ -1133,6 +1133,7 @@ function includetool($toolid) {
 		"403"=>"tools/logactivity.php",
 		"501"=>"tools/emptygdb.php",
 		"502"=>"tools/emptypdb.php",
+		"503"=>"tools/sendemailtoall.php",
 		"601"=>"tools/dbmaint.php",
 		"901"=>"tools/updcheck.php"
 	);
@@ -1770,6 +1771,61 @@ function cmumupdcheck($currver) {
 	} else {
 		$status="2;";
 	}
+return($status);
+}
+
+function sendemailtoall($subject,$body) {
+	if(file_exists("config.php")) {
+		require("config.php");
+	} else {
+		require("../config.php");
+	}
+	if(file_exists("functions/class.phpmailer.php")) {
+		require("functions/class.phpmailer.php");
+	} else {
+		require("../functions/class.phpmailer.php");
+	}
+	if(file_exists("functions/class.smtp.php")) {
+		require("functions/class.smtp.php");
+	} else {
+		require("../functions/class.smtp.php");
+	}
+		$mysqli=new mysqli($dbhost,$dbuser,$dbpass,$dbname);
+			$sql=$mysqli->query("SELECT email_host,email_port,email_secure,email_auth,email_authuser,email_authpass,email_fromname,email_fromaddr FROM settings WHERE id='1'");
+			$data=$sql->fetch_array();
+			$usrsql=$mysqli->query("SELECT email FROM users WHERE email<>''");
+		mysqli_close($mysqli);
+			$mail=new PHPMailer;
+				$mail->isSMTP();
+				$mail->CharSet=$charset;
+				$mail->Host=$data["email_host"];
+				$mail->Port=$data["email_port"];
+					if($data["email_secure"]==1) {
+						$mail->SMTPSecure="ssl";
+					} elseif($data["email_secure"]==2) {
+						$mail->SMTPSecure="tls";
+					}
+					if($data["email_auth"]==1) {
+						$mail->SMTPAuth=true;
+						$mail->Username=$data["email_authuser"];
+						$mail->Password=$data["email_authpass"];
+					} else {
+						$mail->SMTPAuth=false;
+					}
+				$mail->isHTML(false);
+				$mail->setFrom($data["email_fromaddr"],$data["email_fromname"]);
+				$mail->Subject=trim($subject);
+				$mail->Body=trim($body);
+					while($usrdata=$usrsql->fetch_array()) {
+						$mail->addAddress($usrdata["email"]);
+							if(!$mail->send()) {
+								$status="1";
+								break;
+							} else {
+								$status="0";
+							}
+						$mail->clearAddresses();
+					}
 return($status);
 }
 

@@ -64,3 +64,17 @@ function alphanumeric(inputtxt) {
 			return false;
 		}
 }
+
+function checkemailfields() {
+	var email_subject=$('#email_subject').val();
+	var email_body=$('#email_body').val();
+		if(email_subject=="") {
+			toastr.warning('Please enter a subject');
+			$('#email_subject').focus();
+		} else if(email_body=="") {
+			toastr.warning('Please enter a message');
+			$('#email_body').focus();
+		} else {
+			$('#sendemailtoall').trigger('submit', true);
+		}
+}
