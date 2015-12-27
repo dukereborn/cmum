@@ -318,7 +318,7 @@ $counters=explode(";",counter());
 												print("<ul>");
 													print("<li class=\"sidebar-inner\">");
 														print("<a href=\"tools.php?menu=3&tool=301\"><span>Update CSP Users</span></a>");
-														print("<a href=\"tools.php?menu=3&tool=302\"><span>Send OSD To All Users</span></a>");
+														print("<a href=\"tools.php?menu=3&tool=302\"><span>Send OSD to All Users</span></a>");
 														print("<a href=\"tools.php?menu=3&tool=303\"><span>Shutdown CSP Server</span></a>");
 													print("</li>");
 												print("</ul>");
@@ -343,7 +343,7 @@ $counters=explode(";",counter());
 													<a href="tools.php?menu=5&tool=502"><span>Empty Profile Database</span></a>
 													<?php
 														if(checkemailsettings()=="0") {
-															print("<a href=\"tools.php?menu=5&tool=503\"><span>Send Email To All Users</span></a>");
+															print("<a href=\"tools.php?menu=5&tool=503\"><span>Send Email to All Users</span></a>");
 														}
 													?>
 												</li>
