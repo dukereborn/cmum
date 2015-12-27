@@ -1790,6 +1790,7 @@ function sendemailtoall($subject,$body) {
 	} else {
 		require("../functions/class.smtp.php");
 	}
+	set_time_limit(0);
 		$mysqli=new mysqli($dbhost,$dbuser,$dbpass,$dbname);
 			$sql=$mysqli->query("SELECT email_host,email_port,email_secure,email_auth,email_authuser,email_authpass,email_fromname,email_fromaddr FROM settings WHERE id='1'");
 			$data=$sql->fetch_array();
