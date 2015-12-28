@@ -26,7 +26,7 @@ if(isset($_GET["action"]) && stripslashes($_GET["action"])=="edit" && isset($_GE
 			$ea_admlvl=$ea_res["admlvl"];
 			$ea_ugroup=$ea_res["ugroup"];
 	mysqli_close($mysqli);
-	$notice="$('#modalEditAdmin').modal({ show: true });";
+	$notice="$('#modalEditAdmin').modal('show');";
 }
 if(isset($_POST["value"]) && $_POST["value"]=="beditadm") {
 	$status=editadmin($_POST["aid"],$_POST["user"],$_POST["name"],$_POST["admlvl"],$_POST["ugroup"]);
@@ -38,13 +38,13 @@ if(isset($_POST["value"]) && $_POST["value"]=="beditadm") {
 			$ea_name=$_POST["name"];
 			$ea_admlvl=$_POST["admlvl"];
 			$ea_ugroup=$_POST["ugroup"];
-			$notice="toastr.error('You must select a group'); $('#modalEditAdmin').modal({ show: true });";
+			$notice="toastr.error('You must select a group'); $('#modalEditAdmin').modal('show');";
 		}
 }
 
 if(isset($_GET["action"]) && stripslashes($_GET["action"])=="chpass" && isset($_GET["aid"]) && $_GET["aid"]<>"") {
 	$ea_id=$_GET["aid"];
-	$notice="$('#modalChpassAdmin').modal({ show: true });";
+	$notice="$('#modalChpassAdmin').modal('show');";
 }
 if(isset($_POST["value"]) && $_POST["value"]=="bchpassadm") {
 	$status=chpassadmin($_POST["aid"],$_POST["pass1"],$_POST["pass2"]);
@@ -54,12 +54,12 @@ if(isset($_POST["value"]) && $_POST["value"]=="bchpassadm") {
 			$ea_id=$_POST["aid"];
 			$ea_pass1=$_POST["pass1"];
 			$ea_pass2=$_POST["pass2"];
-			$notice="toastr.error('You must fill in both fields'); $('#modalChpassAdmin').modal({ show: true });";
+			$notice="toastr.error('You must fill in both fields'); $('#modalChpassAdmin').modal('show');";
 		} elseif($status=="2") {
 			$ea_id=$_POST["aid"];
 			$ea_pass1=$_POST["pass1"];
 			$ea_pass2=$_POST["pass2"];
-			$notice="toastr.error('Passwords dont match'); $('#modalChpassAdmin').modal({ show: true });";
+			$notice="toastr.error('Passwords dont match'); $('#modalChpassAdmin').modal('show');";
 		}
 }
 

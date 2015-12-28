@@ -24,7 +24,7 @@ if(isset($_GET["action"]) && stripslashes($_GET["action"])=="edit" && isset($_GE
 			$eg_name=$eg_res["name"];
 			$eg_comment=$eg_res["comment"];
 	mysqli_close($mysqli);
-	$notice="$('#modalEditGroup').modal({ show: true });";
+	$notice="$('#modalEditGroup').modal('show');";
 }
 if(isset($_POST["value"]) && $_POST["value"]=="beditgrp") {
 	$status=editgroup($_POST["gid"],$_POST["name"],$_POST["comment"]);
@@ -34,12 +34,12 @@ if(isset($_POST["value"]) && $_POST["value"]=="beditgrp") {
 			$eg_id=$_POST["gid"];
 			$eg_name=$_POST["name"];
 			$eg_comment=$_POST["comment"];
-			$notice="toastr.error('You must enter a group name'); $('#modalEditGroup').modal({ show: true });";
+			$notice="toastr.error('You must enter a group name'); $('#modalEditGroup').modal('show');";
 		} elseif($status=="2") {
 			$eg_id=$_POST["gid"];
 			$eg_name=$_POST["name"];
 			$eg_comment=$_POST["comment"];
-			$notice="toastr.error('Group already exists'); $('#modalEditGroup').modal({ show: true });";
+			$notice="toastr.error('Group already exists'); $('#modalEditGroup').modal('show');";
 		}
 }
 

@@ -26,7 +26,7 @@ if(isset($_GET["action"]) && stripslashes($_GET["action"])=="edit" && isset($_GE
 			$ep_cspvalue=$ep_res["cspvalue"];
 			$ep_comment=$ep_res["comment"];
 	mysqli_close($mysqli);
-	$notice="$('#modalEditProfile').modal({ show: true });";
+	$notice="$('#modalEditProfile').modal('show');";
 }
 if(isset($_POST["value"]) && $_POST["value"]=="beditprf") {
 	$status=editprofile($_POST["pid"],$_POST["name"],$_POST["cspvalue"],$_POST["comment"]);
@@ -37,13 +37,13 @@ if(isset($_POST["value"]) && $_POST["value"]=="beditprf") {
 			$ep_name=$_POST["name"];
 			$ep_cspvalue=$_POST["cspvalue"];
 			$ep_comment=$_POST["comment"];
-			$notice="toastr.error('You must enter a profile name'); $('#modalEditProfile').modal({ show: true });";
+			$notice="toastr.error('You must enter a profile name'); $('#modalEditProfile').modal('show');";
 		} elseif($status=="2") {
 			$ep_id=$_POST["pid"];
 			$ep_name=$_POST["name"];
 			$ep_cspvalue=$_POST["cspvalue"];
 			$ep_comment=$_POST["comment"];
-			$notice="toastr.error('Profile already exists'); $('#modalEditProfile').modal({ show: true });";
+			$notice="toastr.error('Profile already exists'); $('#modalEditProfile').modal('show');";
 		}
 }
 

@@ -189,7 +189,7 @@ function csploadsendosd(username) {
 		$('#osdusr').val(username);
 		$('#osdmsg').val('');
 		$('#osdusrlabel').html('<label>Message to <strong>'+username+'</strong></label>');
-		$('#modalCspSendOsd').modal({ show: true });
+		$('#modalCspSendOsd').modal('show');
 			$('#modalCspSendOsd').on('shown', function () {
 				$('#osdmsg').focus()
 			});
@@ -260,7 +260,7 @@ function cspgetuserinfo(username) {
 						$('#cspusr-sessionid').html(ifempty(cspdata[20]));
 						$('#cspusr-sessioncdata').html(ifempty(cspdata[21]));
 						$('#cspusr-sessionname').html(ifempty(cspdata[22]));
-					$('#modalCspUserInfo').modal({ show: true });
+					$('#modalCspUserInfo').modal('show');
 				} else {
 					toastr.error('Something went wrong, please try again');
 				}
@@ -287,7 +287,7 @@ function cspgetuseripinfo(username) {
 						$('#cspusrip-city').html(ifempty(cspdata[4]));
 						$('#cspusrip-zipcode').html(ifempty(cspdata[5]));
 						$('#cspusrip-timezone').html(ifempty(cspdata[6]));
-					$('#modalCspUserIpInfo').modal({ show: true });
+					$('#modalCspUserIpInfo').modal('show');
 				} else {
 					toastr.error('Something went wrong, please try again');
 				}
@@ -305,7 +305,7 @@ function loadsendemail(email) {
 		$('#email_subject').val('');
 		$('#email_body').val('');
 		$('#emailusrlabel').html('<label>Recipient<br><strong>'+email+'</strong></label>');
-		$('#modalSendEmail').modal({ show: true });
+		$('#modalSendEmail').modal('show');
 			$('#modalSendEmail').on('shown', function () {
 				$('#email_subject').focus()
 			});

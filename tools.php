@@ -105,7 +105,7 @@ if(isset($_POST["bimpxml"]) && $_POST["bimpxml"]=="Import users") {
 	}
 	$impstatus=impusrcspxml($_POST["cspxml"],$_POST["usrgrp"],$createprof);
 		if(!empty($impstatus["usrimp"]) || !empty($impstatus["usrexi"])) {
-			$notice="$('#modalImpUsrRes').modal({ show: true });";
+			$notice="$('#modalImpUsrRes').modal('show');";
 		} else {
 			$notice="toastr.error('Something went wrong, try again');";
 		}
@@ -123,7 +123,7 @@ if(isset($_POST["bimpcsv"]) && $_POST["bimpcsv"]=="Import users") {
 	}
 	$impstatus=impusrcsv($_POST["csv"],$creategrp,$createprof,$_POST["cmumcsvver"]);
 		if(!empty($impstatus["usrimp"]) || !empty($impstatus["usrexi"])) {
-			$notice="$('#modalImpUsrRes').modal({ show: true });";
+			$notice="$('#modalImpUsrRes').modal('show');";
 		} else {
 			$notice="toastr.error('Something went wrong, try again');";
 		}
@@ -198,7 +198,7 @@ if(isset($_POST["bexpxmldown"]) && $_POST["bexpxmldown"]=="Download") {
 if(isset($_POST["bimpprof"]) && $_POST["bimpprof"]=="Import profiles") {
 	$impstatus=impcspprofiles($_POST["profvalue"],$_POST["profname"]);
 		if(!empty($impstatus["profimp"]) || !empty($impstatus["profexi"])) {
-			$notice="$('#modalImpProfRes').modal({ show: true });";
+			$notice="$('#modalImpProfRes').modal('show');";
 		} else {
 			$notice="toastr.error('Something went wrong, try again');";
 		}
