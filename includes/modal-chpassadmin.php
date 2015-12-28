@@ -6,8 +6,8 @@
 		<div class="modal-body">
 			<div class="row">
 				<div class="span3">
-					<input type="hidden" name="value" value="bchpassadm">
-					<input type="hidden" name="uid" value="<?php if(isset($ea_id)) { print($ea_id); } ?>">
+					<input type="hidden" name="value" id="value" value="bchpassadm">
+					<input type="hidden" name="aid" id="aid" value="<?php if(isset($ea_id)) { print($ea_id); } ?>">
 					<label>New password</label>
 						<input type="text" name="pass1" id="pass1" value="<?php if(isset($ea_pass1)) { print($ea_pass1); } ?>" autocomplete="off" onkeypress="submitChpassAdmin(event);">
 					<label>Retype new password</label>

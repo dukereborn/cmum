@@ -41,40 +41,11 @@ function checkedallprof(value) {
 		}
 }
 
-function checksearch(e) {
-	if(window.event)
-		var keyCode=window.event.keyCode;
-	else
-		var keyCode=e.which;
-	if(keyCode==13) {
-		var searchfor=$('#newsearch input[name=searchfor]').val();
-			if(searchfor=="") {
-				newsearch.searchfor.focus();
-			} else {
-				$('#newsearch').trigger('submit', true);
-			}
-	}
-}
-
 function alphanumeric(inputtxt) { 
 	var letters = /^[0-9a-zA-Z]+$/;
 		if(letters.test(inputtxt)) {
 			return true;
 		} else {
 			return false;
-		}
-}
-
-function checkemailfields() {
-	var email_subject=$('#email_subject').val();
-	var email_body=$('#email_body').val();
-		if(email_subject=="") {
-			toastr.warning('Please enter a subject');
-			$('#email_subject').focus();
-		} else if(email_body=="") {
-			toastr.warning('Please enter a message');
-			$('#email_body').focus();
-		} else {
-			$('#sendemailtoall').trigger('submit', true);
 		}
 }

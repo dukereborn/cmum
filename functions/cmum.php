@@ -221,7 +221,7 @@ function addadmin($user,$pass,$name,$admlvl,$ugroup) {
 return($status);
 }
 
-function editadmin($uid,$user,$name,$admlvl,$ugroup) {
+function editadmin($aid,$user,$name,$admlvl,$ugroup) {
 	if(file_exists("config.php")) {
 		require("config.php");
 	} else {
@@ -231,14 +231,14 @@ function editadmin($uid,$user,$name,$admlvl,$ugroup) {
 			$status="1";
 		} else {
 			$mysqli=new mysqli($dbhost,$dbuser,$dbpass,$dbname);
-				$mysqli->query("UPDATE admins SET user='".$user."',name='".$name."',admlvl='".$admlvl."',ugroup='".$ugroup."' WHERE id='".$uid."'");
+				$mysqli->query("UPDATE admins SET user='".$user."',name='".$name."',admlvl='".$admlvl."',ugroup='".$ugroup."' WHERE id='".$aid."'");
 			mysqli_close($mysqli);
 			$status="0";	
 		}
 return($status);
 }
 
-function chpassadmin($uid,$pass1,$pass2) {
+function chpassadmin($aid,$pass1,$pass2) {
 	if(file_exists("config.php")) {
 		require("config.php");
 	} else {
@@ -251,7 +251,7 @@ function chpassadmin($uid,$pass1,$pass2) {
 				$status="2";
 			} else {
 				$mysqli=new mysqli($dbhost,$dbuser,$dbpass,$dbname);
-					$mysqli->query("UPDATE admins SET pass='".hash("sha256",$pass1.$secretkey)."' WHERE id='".$mysqli->real_escape_string($uid)."'");
+					$mysqli->query("UPDATE admins SET pass='".hash("sha256",$pass1.$secretkey)."' WHERE id='".$mysqli->real_escape_string($aid)."'");
 				mysqli_close($mysqli);
 				$status="0";
 			}
@@ -283,27 +283,27 @@ function deleteadmin($aid) {
 return($status);
 }
 
-function enableadmin($uid) {
+function enableadmin($aid) {
 	if(file_exists("config.php")) {
 		require("config.php");
 	} else {
 		require("../config.php");
 	}
 		$mysqli=new mysqli($dbhost,$dbuser,$dbpass,$dbname);
-			$mysqli->query("UPDATE admins SET enabled='1' WHERE id='".$uid."'");
+			$mysqli->query("UPDATE admins SET enabled='1' WHERE id='".$aid."'");
 		mysqli_close($mysqli);
 		$status="0";
 return($status);
 }
 
-function disableadmin($uid) {
+function disableadmin($aid) {
 	if(file_exists("config.php")) {
 		require("config.php");
 	} else {
 		require("../config.php");
 	}
 		$mysqli=new mysqli($dbhost,$dbuser,$dbpass,$dbname);
-			$mysqli->query("UPDATE admins SET enabled='0' WHERE id='".$uid."'");
+			$mysqli->query("UPDATE admins SET enabled='0' WHERE id='".$aid."'");
 		mysqli_close($mysqli);
 		$status="0";
 return($status);

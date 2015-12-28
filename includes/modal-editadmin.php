@@ -8,7 +8,7 @@
 				<div class="span3">
 					<input type="hidden" name="value" id="value" value="beditadm">
 					<input type="hidden" name="ruser" id="ruser" value="<?php if(isset($ea_user)) { print($ea_user); } ?>">
-					<input type="hidden" name="uid" id="uid" value="<?php if(isset($ea_id)) { print($ea_id); } ?>">
+					<input type="hidden" name="aid" id="aid" value="<?php if(isset($ea_id)) { print($ea_id); } ?>">
 					<label>Username</label>
 						<input type="text" name="user" id="user" value="<?php if(isset($ea_user)) { print($ea_user); } ?>" autocomplete="off" onkeypress="submitEditAdmin(event);" maxlength="25">
 					<label>Name</label>
