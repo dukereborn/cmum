@@ -1,3 +1,6 @@
+//
+// keycode functions
+//
 function submitChpassAdmin(e) {
 	if(window.event)
 		var keyCode=window.event.keyCode;
@@ -71,41 +74,40 @@ function submitCspSendOsd(e) {
 	}
 }
 
-$('#modalChpassAdmin').on('show', function() {
-	setTimeout(function() {$('#chpassadmin input[name=pass1]').focus();}, 700);
+//
+// autofocus functions
+//
+$('#modalNewAdmin').on('shown', function () {
+	$('#newadmin input[name=user]').focus()
 });
 
-$('#modalEditAdmin').on('show', function() {
-	setTimeout(function() {$('#editadmin input[name=user]').focus();}, 700);
+$('#modalEditAdmin').on('shown', function () {
+	$('#editadmin input[name=user]').focus()
 });
 
-$('#modalEditGroup').on('show', function() {
-	setTimeout(function() {$('#editgroup input[name=name]').focus();}, 700);
+$('#modalChpassAdmin').on('shown', function () {
+	$('#chpassadmin input[name=pass1]').focus()
 });
 
-$('#modalEditProfile').on('show', function() {
-	setTimeout(function() {$('#editprofile input[name=name]').focus();}, 700);
+$('#modalNewGroup').on('shown', function () {
+	$('#newgroup input[name=name]').focus()
 });
 
-$('#modalNewAdmin').on('show', function() {
-	setTimeout(function() {$('#newadmin input[name=user]').focus();}, 700);
+$('#modalEditGroup').on('shown', function () {
+	$('#editgroup input[name=name]').focus()
 });
 
-$('#modalNewGroup').on('show', function() {
-	setTimeout(function() {$('#newgroup input[name=name]').focus();}, 700);
+$('#modalNewProfile').on('shown', function () {
+	$('#newprofile input[name=name]').focus()
 });
 
-$('#modalNewProfile').on('show', function() {
-	setTimeout(function() {$('#newprofile input[name=name]').focus();}, 700);
+$('#modalEditProfile').on('shown', function () {
+	$('#editprofile input[name=name]').focus()
 });
 
-$('#modalSearch').on('show', function() {
-	setTimeout(function() {$('#newsearch input[name=searchfor]').focus();}, 700);
-});
-$('#modalCspSendOsd').on('show', function() {
-	setTimeout(function() {$('input[name=osdmsg]').focus();}, 700);
-});
-
+//
+// modal cleanup functions
+//
 function cleanmodalNewGroup() {
 	$('#newgroup input[name=name]').val('');
 	$('#newgroup input[name=comment]').val('');

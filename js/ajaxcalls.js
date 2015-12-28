@@ -190,6 +190,9 @@ function csploadsendosd(username) {
 		$('#osdmsg').val('');
 		$('#osdusrlabel').html('<label>Message to <strong>'+username+'</strong></label>');
 		$('#modalCspSendOsd').modal({ show: true });
+			$('#modalCspSendOsd').on('shown', function () {
+				$('#osdmsg').focus()
+			});
 	}
 }
 
