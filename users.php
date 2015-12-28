@@ -3,7 +3,12 @@
 require("functions/logincheck.php");
 require("functions/cmum.php");
 
-$counters=explode(";",counter());
+if(isset($_GET["error"]) && $_GET["error"]=="1") {
+	$notice="toastr.error('This user does not belong to you');";
+}
+if(isset($_GET["edit"]) && $_GET["edit"]=="1") {
+	$notice="toastr.success('Changes saved');";
+}
 
 $mysqli=new mysqli($dbhost,$dbuser,$dbpass,$dbname);
 if(mysqli_connect_errno()) {
@@ -19,14 +24,8 @@ if(mysqli_connect_errno()) {
 		}
 mysqli_close($mysqli);
 
-if(isset($_GET["error"]) && $_GET["error"]=="1") {
-	$notice="toastr.error('This user does not belong to you');";
-}
-if(isset($_GET["edit"]) && $_GET["edit"]=="1") {
-	$notice="toastr.success('Changes saved');";
-}
-
 $emailsettings=checkemailsettings();
+$counters=explode(";",counter());
 ?>
 <html>
 	<head>

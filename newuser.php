@@ -19,8 +19,6 @@ if(isset($_POST["user"]) && $_POST["user"]<>"") {
 		}
 }
 
-$counters=explode(";",counter());
-
 $mysqli=new mysqli($dbhost,$dbuser,$dbpass,$dbname);
 if(mysqli_connect_errno()) {
 	errorpage("MYSQL DATABASE ERROR",mysqli_connect_error(),$charset,CMUM_TITLE,$_SERVER["REQUEST_URI"],CMUM_VERSION,CMUM_BUILD,CMUM_MOD);
@@ -38,6 +36,8 @@ if(mysqli_connect_errno()) {
 	$setsql=$mysqli->query("SELECT rndstring,rndstringlength,def_autoload,def_ipmask,def_profiles,def_maxconn,def_admin,def_enabled,def_mapexc,def_debug,def_custcspval,def_ecmrate FROM settings WHERE id='1'");
 		$setres=$setsql->fetch_array();
 mysqli_close($mysqli);
+
+$counters=explode(";",counter());
 ?>
 <html>
 	<head>

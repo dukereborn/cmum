@@ -189,35 +189,15 @@ return($status);
 // admin functions
 //
 function addadmin($user,$pass,$name,$admlvl,$ugroup) {
-	// Return codes
-	// 0 = user added
-	// 1 = no username or password
-	// 2 = username allready exists
-	// 3 = empty group for group manager
 	if(file_exists("config.php")) {
 		require("config.php");
 	} else {
 		require("../config.php");
 	}
-		if($user=="" || $pass=="") {
-			$status="1";
-		} else {
-			$mysqli=new mysqli($dbhost,$dbuser,$dbpass,$dbname);
-			$sql=$mysqli->query("SELECT * FROM admins WHERE user='".$user."'");
-			$rowcheck=$sql->num_rows;
-				if($rowcheck==1) {
-					mysqli_close($mysqli);
-					$status="2";
-				} else {
-					if($admlvl=="2" && $ugroup=="0" || $admlvl=="2" && $ugroup=="") {
-						$status="3";
-					} else {
-						$mysqli->query("INSERT INTO admins (user,pass,name,enabled,admlvl,ugroup) VALUES ('".$user."','".hash("sha256",$pass.$secretkey)."','".$name."','1','".$admlvl."','".$ugroup."')");
-						mysqli_close($mysqli);
-						$status="0";
-					}
-				}
-		}
+		$mysqli=new mysqli($dbhost,$dbuser,$dbpass,$dbname);
+			$mysqli->query("INSERT INTO admins (user,pass,name,enabled,admlvl,ugroup) VALUES ('".$user."','".hash("sha256",$pass.$secretkey)."','".$name."','1','".$admlvl."','".$ugroup."')");
+			$status="0";
+		mysqli_close($mysqli);
 return($status);
 }
 
@@ -724,30 +704,15 @@ return($count);
 // group functions
 //
 function addgroup($name,$comment) {
-	// Return codes
-	// 0 = group added
-	// 1 = no group name
-	// 2 = group allready exists
 	if(file_exists("config.php")) {
 		require("config.php");
 	} else {
 		require("../config.php");
 	}
-		if(trim($name)=="") {
-			$status="1";
-		} else {
-			$mysqli=new mysqli($dbhost,$dbuser,$dbpass,$dbname);
-			$sql=$mysqli->query("SELECT id FROM groups WHERE name='".trim($name)."'");
-			$rowcheck=$sql->num_rows;
-				if($rowcheck==1) {
-					mysqli_close($mysqli);
-					$status="2";
-				} else {
-					$mysqli->query("INSERT INTO groups (name,comment,enabled) VALUES ('".trim($name)."','".trim($comment)."','1')");
-					mysqli_close($mysqli);
-					$status="0";
-				}
-		}
+		$mysqli=new mysqli($dbhost,$dbuser,$dbpass,$dbname);
+			$mysqli->query("INSERT INTO groups (name,comment,enabled) VALUES ('".trim($name)."','".trim($comment)."','1')");
+			$status="0";
+		mysqli_close($mysqli);
 return($status);
 }
 
@@ -914,30 +879,15 @@ return($enabledgroups);
 // profile functions
 //
 function addprofile($name,$cspvalue,$comment) {
-	// Return codes
-	// 0 = group added
-	// 1 = no group name
-	// 2 = group allready exists
 	if(file_exists("config.php")) {
 		require("config.php");
 	} else {
 		require("../config.php");
 	}
-		if(trim($name)=="") {
-			$status="1";
-		} else {
-			$mysqli=new mysqli($dbhost,$dbuser,$dbpass,$dbname);
-			$sql=$mysqli->query("SELECT * FROM profiles WHERE name='".trim($name)."'");
-			$rowcheck=$sql->num_rows;
-				if($rowcheck==1) {
-					mysqli_close($mysqli);
-					$status="2";
-				} else {
-					$mysqli->query("INSERT INTO profiles (name,cspvalue,comment) VALUES ('".trim($name)."','".trim($cspvalue)."','".trim($comment)."')");
-					mysqli_close($mysqli);
-					$status="0";
-				}
-		}
+		$mysqli=new mysqli($dbhost,$dbuser,$dbpass,$dbname);
+			$mysqli->query("INSERT INTO profiles (name,cspvalue,comment) VALUES ('".trim($name)."','".trim($cspvalue)."','".trim($comment)."')");
+			$status="0";
+		mysqli_close($mysqli);
 return($status);
 }
 

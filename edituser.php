@@ -25,8 +25,6 @@ if(!isset($_GET["uid"]) || $_GET["uid"]=="") {
 	exit;
 }
 
-$counters=explode(";",counter());
-
 $mysqli=new mysqli($dbhost,$dbuser,$dbpass,$dbname);
 if(mysqli_connect_errno()) {
 	errorpage("MYSQL DATABASE ERROR",mysqli_connect_error(),$charset,CMUM_TITLE,$_SERVER["REQUEST_URI"],CMUM_VERSION,CMUM_BUILD,CMUM_MOD);
@@ -51,6 +49,8 @@ if($_SESSION[$secretkey."admlvl"]=="2" && $_SESSION[$secretkey."admgrp"]<>$usrre
 	header("Location: users.php?error=1");
 	exit;
 }
+
+$counters=explode(";",counter());
 ?>
 <html>
 	<head>

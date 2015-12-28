@@ -3,13 +3,13 @@
 require("functions/logincheck.php");
 require("functions/cmum.php");
 
-$counters=explode(";",counter());
-
 $mysqli=new mysqli($dbhost,$dbuser,$dbpass,$dbname);
 if(mysqli_connect_errno()) {
 	errorpage("MYSQL DATABASE ERROR",mysqli_connect_error(),$charset,CMUM_TITLE,$_SERVER["REQUEST_URI"],CMUM_VERSION,CMUM_BUILD,CMUM_MOD);
 	exit;
 }
+
+$counters=explode(";",counter());
 ?>
 <html>
 	<head>

@@ -3,19 +3,12 @@
 require("functions/admincheck.php");
 require("functions/cmum.php");
 
-$counters=explode(";",counter());
-
 if(isset($_POST["value"]) && $_POST["value"]=="baddadm") {
 	$status=addadmin($_POST["user"],$_POST["pass"],$_POST["name"],$_POST["admlvl"],$_POST["ugroup"]);
 		if($status=="0") {
-			$counters=explode(";",counter());
 			$notice="toastr.success('Admin successfully created');";
-		} elseif($status=="1") {
-			$notice="toastr.error('You must enter a username and a password'); $('#modalNewAdmin').modal({ show: true });";
-		} elseif($status=="2") {
-			$notice="toastr.error('Admin already exists'); $('#modalNewAdmin').modal({ show: true });";
-		} elseif($status=="3") {
-			$notice="toastr.error('You must select a group'); $('#modalNewAdmin').modal({ show: true });";
+		} else {
+			$notice="toastr.error('Something went wrong, please try again')";
 		}
 }
 
@@ -83,6 +76,8 @@ if(mysqli_connect_errno()) {
 			$tblcond="";
 		}
 mysqli_close($mysqli);
+
+$counters=explode(";",counter());
 ?>
 <html>
 	<head>

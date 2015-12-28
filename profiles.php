@@ -8,10 +8,8 @@ if(isset($_POST["value"]) && $_POST["value"]=="baddprf") {
 		if($status=="0") {
 			$counters=explode(";",counter());
 			$notice="toastr.success('Profile successfully created');";
-		} elseif($status=="1") {
-			$notice="toastr.error('You must enter a profile name'); $('#modalNewProfile').modal({ show: true });";
-		} elseif($status=="2") {
-			$notice="toastr.error('Profile already exists'); $('#modalNewProfile').modal({ show: true });";
+		} else {
+			$notice="toastr.error('Something went wrong, please try again')";
 		}
 }
 
@@ -49,8 +47,6 @@ if(isset($_POST["value"]) && $_POST["value"]=="beditprf") {
 		}
 }
 
-$counters=explode(";",counter());
-
 $mysqli=new mysqli($dbhost,$dbuser,$dbpass,$dbname);
 if(mysqli_connect_errno()) {
 	errorpage("MYSQL DATABASE ERROR",mysqli_connect_error(),$charset,CMUM_TITLE,$_SERVER["REQUEST_URI"],CMUM_VERSION,CMUM_BUILD,CMUM_MOD);
@@ -64,6 +60,8 @@ if(mysqli_connect_errno()) {
 			$tblcond="";
 		}
 mysqli_close($mysqli);
+
+$counters=explode(";",counter());
 ?>
 <html>
 	<head>

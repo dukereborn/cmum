@@ -3,8 +3,6 @@
 require("functions/admincheck.php");
 require("functions/cmum.php");
 
-$counters=explode(";",counter());
-
 if(isset($_POST["bsave"]) && $_POST["bsave"]=="Save Changes") {
 	if(!isset($_POST["def_profiles"])) {
 		$def_profiles="";
@@ -18,12 +16,14 @@ if(isset($_POST["bsave"]) && $_POST["bsave"]=="Save Changes") {
 }
 
 $mysqli=new mysqli($dbhost,$dbuser,$dbpass,$dbname);
-if(mysqli_connect_errno()) {
-	errorpage("MYSQL DATABASE ERROR",mysqli_connect_error(),$charset,CMUM_TITLE,$_SERVER["REQUEST_URI"],CMUM_VERSION,CMUM_BUILD,CMUM_MOD);
-	exit;
-}
-	$sqls=$mysqli->query("SELECT * FROM settings WHERE id='1'");
-	$setres=$sqls->fetch_array();
+	if(mysqli_connect_errno()) {
+		errorpage("MYSQL DATABASE ERROR",mysqli_connect_error(),$charset,CMUM_TITLE,$_SERVER["REQUEST_URI"],CMUM_VERSION,CMUM_BUILD,CMUM_MOD);
+		exit;
+	}
+$sqls=$mysqli->query("SELECT * FROM settings WHERE id='1'");
+$setres=$sqls->fetch_array();
+	
+$counters=explode(";",counter());
 ?>
 <html>
 	<head>
