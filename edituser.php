@@ -152,13 +152,13 @@ $counters=explode(";",counter());
 									<div class="control-group">
 										<label class="control-label" for="user">Username</label>
 										<div class="controls">
-											<input type="text" name="user" id="user" autocomplete="off" ondblclick="autouser('user');" value="<?php print($usrres["user"]); ?>" maxlength="30">
+											<input type="text" name="user" id="user" autocapitalize="off" autocomplete="off" autocorrect="off" spellcheck="false" ondblclick="autouser('user');" value="<?php print($usrres["user"]); ?>" maxlength="30">
 										</div>
 									</div>
 									<div class="control-group">
 										<label class="control-label" for="password">Password</label>
 										<div class="controls">
-											<input type="text" name="password" id="password" autocomplete="off" ondblclick="autouser('password');" value="<?php print($usrres["password"]); ?>" maxlength="30">
+											<input type="text" name="password" id="password" autocapitalize="off" autocomplete="off" autocorrect="off" spellcheck="false" ondblclick="autouser('password');" value="<?php print($usrres["password"]); ?>" maxlength="30">
 										</div>
 									</div>
 									<div class="control-group">
