@@ -96,6 +96,7 @@ $counters=explode(";",counter());
 						print("document.getElementById('".$defprofres["id"]."').checked=".$checked.";");
 					}
 				?>
+				toastr.success('Defaults loaded');
 			}
 		</script>
 	</head>
