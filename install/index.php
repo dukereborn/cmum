@@ -1,8 +1,8 @@
-<!DOCTYPE html>
 <?php
 require("../includes/settings.php");
 require("functions/install.php");
 ?>
+<!DOCTYPE html>
 <html>
 	<head>
 		<meta charset="utf-8">

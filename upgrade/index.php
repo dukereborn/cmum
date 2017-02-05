@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <?php
 if(file_exists("config.php")) {
 	require("config.php");
@@ -17,6 +16,7 @@ if(isset($_GET["override"])) {
 	$currver=getversion($dbhost,$dbuser,$dbpass,$dbname);
 }
 ?>
+<!DOCTYPE html>
 <html>
 	<head>
 		<meta charset="utf-8">

@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <?php
 require("functions/admincheck.php");
 require("functions/cmum.php");
@@ -79,6 +78,7 @@ mysqli_close($mysqli);
 
 $counters=explode(";",counter());
 ?>
+<!DOCTYPE html>
 <html>
 	<head>
 		<meta charset="<?php print($charset); ?>">

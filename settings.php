@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <?php
 require("functions/admincheck.php");
 require("functions/cmum.php");
@@ -25,6 +24,7 @@ $setres=$sqls->fetch_array();
 	
 $counters=explode(";",counter());
 ?>
+<!DOCTYPE html>
 <html>
 	<head>
 		<meta charset="<?php print($charset); ?>">

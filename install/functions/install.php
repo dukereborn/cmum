@@ -38,7 +38,6 @@ return($status);
 
 function downloadconfig($sqlhost,$sqlname,$sqluser,$sqlpass,$charset,$timezone,$seckey) {
 	$config="<?php\n\$dbhost=\"".$sqlhost."\";\n\$dbname=\"".$sqlname."\";\n\$dbuser=\"".$sqluser."\";\n\$dbpass=\"".$sqlpass."\";\n\$charset=\"".$charset."\";\n\$secretkey=\"".$seckey."\";\ndate_default_timezone_set(\"".$timezone."\");\n?>";
-	ob_end_clean();
 		header('Content-type: text/plain; charset='.$charset);
 		header('Content-Disposition: attachment; filename="config.php"');
 		echo $config;

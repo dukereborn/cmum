@@ -6,8 +6,7 @@
 		if($_SESSION[$secretkey."sessid"]<>session_id() || $_SESSION[$secretkey."admin"]=="" || $_SESSION[$secretkey."admid"]=="" || $_SESSION[$secretkey."admlvl"]<>"0") {
 			session_unset ();
 			session_destroy ();
-			header("Location:index.php?error=1");
-			exit;
+			exit(header("Location: /index.php?error=1"));
 		}
 		
 		if(isset($_SESSION[$secretkey."sys_timeout"]) ) {
@@ -15,13 +14,15 @@
 				if($sesslife>$_SESSION[$secretkey."timeout"]) {
 					session_unset ();
 					session_destroy ();
-					header("Location:index.php?error=3");
-					exit;
+					exit(header("Location: /index.php?error=3"));
 				}
 		}
 		$_SESSION[$secretkey."sys_timeout"]=time();
 		
-		// Logout function
+		// logout function
+		if(isset($_GET["dologout"]) && stripslashes($_GET["dologout"])=="1") {
+			logout();
+		}
 		print("<div id=\"modalLogout\" class=\"modal hide fade\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\" aria-hidden=\"true\">");
 			print("<div class=\"modal-header\">");
 				print("<h3 id=\"myModalLabel\">Logout</h3>");
@@ -35,7 +36,3 @@
 				print("<a class=\"btn btn-primary\" aria-hidden=\"true\" name=\"blogout\" value=\"logout\" href=\"?dologout=1\">Logout</a>");
 			print("</div>");
 		print("</div>");
-		
-		if(isset($_GET["dologout"]) && stripslashes($_GET["dologout"])=="1") {
-			logout();
-		}

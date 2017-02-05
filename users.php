@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <?php
 require("functions/logincheck.php");
 require("functions/cmum.php");
@@ -27,6 +26,7 @@ mysqli_close($mysqli);
 $emailsettings=checkemailsettings();
 $counters=explode(";",counter());
 ?>
+<!DOCTYPE html>
 <html>
 	<head>
 		<meta charset="<?php print($charset); ?>">

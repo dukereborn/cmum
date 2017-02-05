@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <?php
 if(file_exists("config.php")) {
 	require("config.php");
@@ -15,6 +14,7 @@ if(isset($_POST["bupg"]) && $_POST["bupg"]=="Start upgrade") {
 	$upgstatus=upgradecmumdb($dbhost,$dbuser,$dbpass,$dbname,$_POST["cmumver"],$charset);
 }
 ?>
+<!DOCTYPE html>
 <html>
 	<head>
 		<meta charset="utf-8">

@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <?php
 require("functions/logincheck.php");
 require("functions/cmum.php");
@@ -11,6 +10,7 @@ if(mysqli_connect_errno()) {
 
 $counters=explode(";",counter());
 ?>
+<!DOCTYPE html>
 <html>
 	<head>
 		<meta charset="<?php print($charset); ?>">
