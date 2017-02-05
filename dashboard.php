@@ -10,7 +10,6 @@ if(mysqli_connect_errno()) {
 
 $counters=explode(";",counter());
 ?>
-<!DOCTYPE html>
 <html>
 	<head>
 		<meta charset="<?php print($charset); ?>">

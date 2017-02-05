@@ -26,7 +26,6 @@ mysqli_close($mysqli);
 $emailsettings=checkemailsettings();
 $counters=explode(";",counter());
 ?>
-<!DOCTYPE html>
 <html>
 	<head>
 		<meta charset="<?php print($charset); ?>">

@@ -23,6 +23,7 @@
 		if(isset($_GET["dologout"]) && stripslashes($_GET["dologout"])=="1") {
 			logout();
 		}
+		print("<!DOCTYPE html>");
 		print("<div id=\"modalLogout\" class=\"modal hide fade\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\" aria-hidden=\"true\">");
 			print("<div class=\"modal-header\">");
 				print("<h3 id=\"myModalLabel\">Logout</h3>");
