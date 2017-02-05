@@ -1,3 +1,2 @@
 <?php
-	// enjoy the silence	
-?>
+	// enjoy the silence
