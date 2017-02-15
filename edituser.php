@@ -48,6 +48,7 @@ if($_SESSION[$secretkey."admlvl"]=="2" && $_SESSION[$secretkey."admgrp"]<>$usrre
 
 $counters=explode(";",counter());
 ?>
+<!DOCTYPE html>
 <html>
 	<head>
 		<meta charset="<?php print($charset); ?>">
@@ -382,6 +383,7 @@ $counters=explode(";",counter());
 			</div>
 		</div>
 		<?php
+			require("includes/modal-logout.php");
 			require("includes/footer.php");
 		?>
 		<script src="js/jquery.js"></script>

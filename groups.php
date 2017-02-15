@@ -58,6 +58,7 @@ mysqli_close($mysqli);
 
 $counters=explode(";",counter());
 ?>
+<!DOCTYPE html>
 <html>
 	<head>
 		<meta charset="<?php print($charset); ?>">
@@ -169,6 +170,7 @@ $counters=explode(";",counter());
 			require("includes/modal-newgroup.php");
 			require("includes/modal-editgroup.php");
 			require("includes/modal-delgroup.php");
+			require("includes/modal-logout.php");
 			require("includes/footer.php");
 		?>
 		<script src="js/jquery.js"></script>

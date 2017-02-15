@@ -19,21 +19,6 @@
 		}
 		$_SESSION[$secretkey."sys_timeout"]=time();
 		
-		// logout function
 		if(isset($_GET["dologout"]) && stripslashes($_GET["dologout"])=="1") {
 			logout();
 		}
-		print("<!DOCTYPE html>");
-		print("<div id=\"modalLogout\" class=\"modal hide fade\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\" aria-hidden=\"true\">");
-			print("<div class=\"modal-header\">");
-				print("<h3 id=\"myModalLabel\">Logout</h3>");
-			print("</div>");
-			print("<div class=\"modal-body\">");
-				print("Are you sure you want to log out?");
-			print("</div>");
-			print("<div class=\"modal-footer\">");
-				print("<button class=\"btn\" data-dismiss=\"modal\" aria-hidden=\"true\">Cancel</button>");
-				print("&nbsp;");
-				print("<a class=\"btn btn-primary\" aria-hidden=\"true\" name=\"blogout\" value=\"logout\" href=\"?dologout=1\">Logout</a>");
-			print("</div>");
-		print("</div>");

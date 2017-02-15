@@ -227,6 +227,7 @@ mysqli_close($mysqli);
 
 $counters=explode(";",counter());
 ?>
+<!DOCTYPE html>
 <html>
 	<head>
 		<meta charset="<?php print($charset); ?>">
@@ -374,6 +375,7 @@ $counters=explode(";",counter());
 		<?php
 			require("includes/modal-impusrres.php");
 			require("includes/modal-impprofres.php");
+			require("includes/modal-logout.php");
 			require("includes/footer.php");
 		?>
 		<script src="js/jquery.js"></script>

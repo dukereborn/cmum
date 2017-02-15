@@ -26,6 +26,7 @@ mysqli_close($mysqli);
 $emailsettings=checkemailsettings();
 $counters=explode(";",counter());
 ?>
+<!DOCTYPE html>
 <html>
 	<head>
 		<meta charset="<?php print($charset); ?>">
@@ -217,6 +218,7 @@ $counters=explode(";",counter());
 			require("includes/modal-cspuserinfo.php");
 			require("includes/modal-cspuseripinfo.php");
 			require("includes/modal-sendemail.php");
+			require("includes/modal-logout.php");
 			require("includes/footer.php");
 		?>
 		<script src="js/jquery.js"></script>

@@ -78,6 +78,7 @@ mysqli_close($mysqli);
 
 $counters=explode(";",counter());
 ?>
+<!DOCTYPE html>
 <html>
 	<head>
 		<meta charset="<?php print($charset); ?>">
@@ -192,6 +193,7 @@ $counters=explode(";",counter());
 			require("includes/modal-editadmin.php");
 			require("includes/modal-deladmin.php");
 			require("includes/modal-chpassadmin.php");
+			require("includes/modal-logout.php");
 			require("includes/footer.php");
 		?>
 		<script src="js/jquery.js"></script>
