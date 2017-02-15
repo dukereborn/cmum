@@ -384,6 +384,7 @@ $counters=explode(";",counter());
 		<script src="js/toastr.min.js"></script>
 		<script src="js/tablesorter.min.js"></script>
 		<script src="js/datepicker.js"></script>
+		<script src="js/ajaxcalls.js"></script>
 		<script>
 			$('#expdate').datepicker({
 				format: 'yyyy-mm-dd',
