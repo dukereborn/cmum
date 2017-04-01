@@ -1355,16 +1355,6 @@ function impusrcspxml($cspxml,$usrgrp,$createprof) {
 												$xml_debug=truefalse($cspxmldata->attributes()->debug);
 												$xml_email=$cspxmldata->attributes()->emailaddress;
 												$xml_ecmrate=$cspxmldata->attributes()->ecmrate;
-												if($cspxmldata->attributes()->startdate<>"") {
-													$xml_startdate=date("Y-m-d", strtotime($cspxmldata->attributes()->startdate));
-												} else {
-													$xml_startdate="";
-												}
-												if($cspxmldata->attributes()->expiredate<>"") {
-													$xml_expiredate=date("Y-m-d", strtotime($cspxmldata->attributes()->expiredate));
-												} else {
-													$xml_expiredate="";
-												}
 												$xml_improfiles=explode(" ",$xml_profiles);
 													foreach($xml_improfiles as $profvalue) {
 														if(isset($createprof) && $createprof=="1" && isset($profvalue) && $profvalue<>"") {
@@ -1387,8 +1377,18 @@ function impusrcspxml($cspxml,$usrgrp,$createprof) {
 												} else {
 													$convporf=serialize($convporf);
 												}
-												$mysqli->query("INSERT INTO users (user,password,displayname,ipmask,profiles,maxconn,admin,enabled,mapexclude,debug,comment,email,customvalues,ecmrate,startdate,expiredate,usrgroup,boxtype,macaddress,serialnumber,addedby,changed,changedby) VALUES ('".stripslashes(trim($xml_username))."','".stripslashes(trim($xml_password))."','".stripslashes(trim($xml_displayname))."','".stripslashes(trim($xml_ipmask))."','".$convporf."','".stripslashes(trim($xml_maxconn))."','".trim($xml_admin)."','".trim($xml_enabled)."','".trim($xml_mapexclude)."','".trim($xml_debug)."','','".stripslashes(trim($xml_email))."','','".stripslashes(trim($xml_ecmrate))."','".$xml_startdate."','".$xml_expiredate."','".$usrgrp."','','','','".$_SESSION[$secretkey."admid"]."','','')");
+												$mysqli->query("INSERT INTO users (user,password,displayname,ipmask,profiles,maxconn,admin,enabled,mapexclude,debug,comment,email,customvalues,ecmrate,usrgroup,boxtype,macaddress,serialnumber,addedby,changed,changedby) VALUES ('".stripslashes(trim($xml_username))."','".stripslashes(trim($xml_password))."','".stripslashes(trim($xml_displayname))."','".stripslashes(trim($xml_ipmask))."','".$convporf."','".stripslashes(trim($xml_maxconn))."','".trim($xml_admin)."','".trim($xml_enabled)."','".trim($xml_mapexclude)."','".trim($xml_debug)."','','".stripslashes(trim($xml_email))."','','".stripslashes(trim($xml_ecmrate))."','".$usrgrp."','','','','".$_SESSION[$secretkey."admid"]."','','')");
+												$impuid=$mysqli->insert_id;
+												if($cspxmldata->attributes()->startdate<>"") {
+													$xml_startdate=date("Y-m-d", strtotime($cspxmldata->attributes()->startdate));
+													$mysqli->query("UPDATE users SET startdate='".$xml_startdate."' WHERE id='".$impuid."'");
+												}
+												if($cspxmldata->attributes()->expiredate<>"") {
+													$xml_expiredate=date("Y-m-d", strtotime($cspxmldata->attributes()->expiredate));
+													$mysqli->query("UPDATE users SET expiredate='".$xml_expiredate."' WHERE id='".$impuid."'");
+												}
 												unset($convporf);
+												$impuid="";
 												$sql="";
 												$psql="";
 												$impusers=$impusers.$xml_username."<br>";
@@ -1474,16 +1474,6 @@ function impusrcsv($csv,$creategrp,$createprof,$cmumcsvver) {
 													$g++;
 												}
 										}
-										if(!empty($csvuser[14]) && $csvuser[14]<>"") {
-											$ustrdate=date("Y-m-d",strtotime($csvuser[14]));
-										} else {
-											$ustrdate="";
-										}
-										if(!empty($csvuser[15]) && $csvuser[15]<>"") {
-											$uexpdate=date("Y-m-d",strtotime($csvuser[15]));
-										} else {
-											$uexpdate="";
-										}
 									} elseif($cmumcsvver=="2") {
 										if(isset($_POST["creategrp"]) && $_POST["creategrp"]=="1" && !empty($csvuser[12]) && $csvuser[12]<>"") {
 											$gsql=$mysqli->query("SELECT id FROM groups WHERE name='".$csvuser[12]."'");
@@ -1494,28 +1484,42 @@ function impusrcsv($csv,$creategrp,$createprof,$cmumcsvver) {
 													$g++;
 												}
 										}
-										if(!empty($csvuser[15]) && $csvuser[15]<>"") {
-											$ustrdate=date("Y-m-d",strtotime($csvuser[15]));
-										} else {
-											$ustrdate="";
-										}
-										if(!empty($csvuser[16]) && $csvuser[16]<>"") {
-											$uexpdate=date("Y-m-d",strtotime($csvuser[16]));
-										} else {
-											$uexpdate="";
-										}
 									}
 									if($cmumcsvver=="3") {
-										$mysqli->query("INSERT INTO users (user,password,displayname,ipmask,profiles,maxconn,admin,enabled,mapexclude,debug,comment,email,customvalues,ecmrate,startdate,expiredate,usrgroup,boxtype,macaddress,serialnumber,added,addedby,changed,changedby) VALUES ('".stripslashes(trim($csvuser[0]))."','".stripslashes(trim($csvuser[1]))."','".stripslashes(trim($csvuser[2]))."','".stripslashes(trim($csvuser[3]))."','".$usrprof."','".stripslashes(trim($csvuser[5]))."','".trim($csvuser[6])."','".trim($csvuser[7])."','".trim($csvuser[8])."','".trim($csvuser[9])."','".stripslashes(trim($csvuser[10]))."','".stripslashes(trim($csvuser[11]))."','".$mysqli->real_escape_string(trim($csvuser[12]))."','".stripslashes(trim($csvuser[13]))."','".$ustrdate."','".$uexpdate."','".trim(grptoid($csvuser[16]))."','".stripslashes(trim($csvuser[17]))."','".stripslashes(trim($csvuser[18]))."','".stripslashes(trim($csvuser[19]))."','".$csvuser[20]."','".admintoid($csvuser[21])."','".$csvuser[22]."','".admintoid($csvuser[23])."')");
+										$mysqli->query("INSERT INTO users (user,password,displayname,ipmask,profiles,maxconn,admin,enabled,mapexclude,debug,comment,email,customvalues,ecmrate,usrgroup,boxtype,macaddress,serialnumber,added,addedby,changed,changedby) VALUES ('".stripslashes(trim($csvuser[0]))."','".stripslashes(trim($csvuser[1]))."','".stripslashes(trim($csvuser[2]))."','".stripslashes(trim($csvuser[3]))."','".$usrprof."','".stripslashes(trim($csvuser[5]))."','".trim($csvuser[6])."','".trim($csvuser[7])."','".trim($csvuser[8])."','".trim($csvuser[9])."','".stripslashes(trim($csvuser[10]))."','".stripslashes(trim($csvuser[11]))."','".$mysqli->real_escape_string(trim($csvuser[12]))."','".stripslashes(trim($csvuser[13]))."','".trim(grptoid($csvuser[16]))."','".stripslashes(trim($csvuser[17]))."','".stripslashes(trim($csvuser[18]))."','".stripslashes(trim($csvuser[19]))."','".$csvuser[20]."','".admintoid($csvuser[21])."','".$csvuser[22]."','".admintoid($csvuser[23])."')");
+										$impuid=$mysqli->insert_id;
+										if(!empty($csvuser[14]) && $csvuser[14]<>"") {
+											$ustrdate=date("Y-m-d",strtotime($csvuser[14]));
+											$mysqli->query("UPDATE users SET startdate='".$ustrdate."' WHERE id='".$impuid."'");
+										}
+										if(!empty($csvuser[15]) && $csvuser[15]<>"") {
+											$uexpdate=date("Y-m-d",strtotime($csvuser[15]));
+											$mysqli->query("UPDATE users SET expiredate='".$uexpdate."' WHERE id='".$impuid."'");
+										}
 										unset($usrprof);
+										$impuid="";
 										$sql="";
 										$psql="";
 										$gsql="";
 										$impusers=$impusers.$csvuser[0]."<br>";
 										$x++;
 									} elseif($cmumcsvver=="2") {
-										$mysqli->query("INSERT INTO users (user,password,displayname,ipmask,profiles,maxconn,admin,enabled,mapexclude,debug,comment,email,customvalues,ecmrate,startdate,expiredate,usrgroup,boxtype,macaddress,serialnumber,added,addedby,changed,changedby) VALUES ('".stripslashes(trim($csvuser[0]))."','".stripslashes(trim($csvuser[1]))."','".stripslashes(trim($csvuser[2]))."','".stripslashes(trim($csvuser[3]))."','".$usrprof."','".stripslashes(trim($csvuser[5]))."','".truefalse(trim($csvuser[6]))."','".truefalse(trim($csvuser[7]))."','".truefalse(trim($csvuser[8]))."','".truefalse(trim($csvuser[9]))."','".stripslashes(trim($csvuser[10]))."','".stripslashes(trim($csvuser[11]))."','".$mysqli->real_escape_string(trim($csvuser[13]))."','".stripslashes(trim($csvuser[14]))."','".$ustrdate."','".$uexpdate."','".trim(grptoid($csvuser[12]))."','','','','".$csvuser[17]."','".admintoid($csvuser[18])."','".$csvuser[19]."','".admintoid($csvuser[20])."')");
+										$mysqli->query("INSERT INTO users (user,password,displayname,ipmask,profiles,maxconn,admin,enabled,mapexclude,debug,comment,email,customvalues,ecmrate,usrgroup,boxtype,macaddress,serialnumber,added,addedby,changed,changedby) VALUES ('".stripslashes(trim($csvuser[0]))."','".stripslashes(trim($csvuser[1]))."','".stripslashes(trim($csvuser[2]))."','".stripslashes(trim($csvuser[3]))."','".$usrprof."','".stripslashes(trim($csvuser[5]))."','".truefalse(trim($csvuser[6]))."','".truefalse(trim($csvuser[7]))."','".truefalse(trim($csvuser[8]))."','".truefalse(trim($csvuser[9]))."','".stripslashes(trim($csvuser[10]))."','".stripslashes(trim($csvuser[11]))."','".$mysqli->real_escape_string(trim($csvuser[13]))."','".stripslashes(trim($csvuser[14]))."','".trim(grptoid($csvuser[12]))."','','','','".$csvuser[17]."','".admintoid($csvuser[18])."','".$csvuser[19]."','".admintoid($csvuser[20])."')");
+										$impuid=$mysqli->insert_id;
+										if(!empty($csvuser[15]) && $csvuser[15]<>"") {
+											$ustrdate=date("Y-m-d",strtotime($csvuser[15]));
+											mysqli->query("UPDATE users SET startdate='".$ustrdate."' WHERE id='".$impuid."'");
+										} else {
+											$ustrdate="";
+										}
+										if(!empty($csvuser[16]) && $csvuser[16]<>"") {
+											$uexpdate=date("Y-m-d",strtotime($csvuser[16]));
+											$mysqli->query("UPDATE users SET expiredate='".$uexpdate."' WHERE id='".$impuid."'");
+										} else {
+											$uexpdate="";
+										}
 										unset($usrprof);
+										$impuid="";
 										$sql="";
 										$psql="";
 										$gsql="";
