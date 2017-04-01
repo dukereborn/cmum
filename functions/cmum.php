@@ -269,10 +269,21 @@ function enableadmin($aid) {
 	} else {
 		require("../config.php");
 	}
-		$mysqli=new mysqli($dbhost,$dbuser,$dbpass,$dbname);
-			$mysqli->query("UPDATE admins SET enabled='1' WHERE id='".$aid."'");
-		mysqli_close($mysqli);
-		$status="0";
+		@session_start();
+		$admlvl=$_SESSION[$secretkey."admlvl"];
+		$admid=$_SESSION[$secretkey."admid"];
+			if(trim($aid)=="") {
+				$status="2";
+			} else {
+				if($admlvl<>"0" || $admid=="") {
+					$status="1";
+				} else {
+					$mysqli=new mysqli($dbhost,$dbuser,$dbpass,$dbname);
+						$mysqli->query("UPDATE admins SET enabled='1' WHERE id='".$aid."'");
+					mysqli_close($mysqli);
+					$status="0";
+				}
+			}
 return($status);
 }
 
@@ -282,10 +293,21 @@ function disableadmin($aid) {
 	} else {
 		require("../config.php");
 	}
-		$mysqli=new mysqli($dbhost,$dbuser,$dbpass,$dbname);
-			$mysqli->query("UPDATE admins SET enabled='0' WHERE id='".$aid."'");
-		mysqli_close($mysqli);
-		$status="0";
+		@session_start();
+		$admlvl=$_SESSION[$secretkey."admlvl"];
+		$admid=$_SESSION[$secretkey."admid"];
+			if(trim($aid)=="") {
+				$status="2";
+			} else {
+				if($admlvl<>"0" || $admid=="") {
+					$status="1";
+				} else {
+					$mysqli=new mysqli($dbhost,$dbuser,$dbpass,$dbname);
+						$mysqli->query("UPDATE admins SET enabled='0' WHERE id='".$aid."'");
+					mysqli_close($mysqli);
+					$status="0";
+				}
+			}
 return($status);
 }
 
@@ -781,10 +803,21 @@ function enablegroup($gid) {
 	} else {
 		require("../config.php");
 	}
-		$mysqli=new mysqli($dbhost,$dbuser,$dbpass,$dbname);
-			$mysqli->query("UPDATE groups SET enabled='1' WHERE id='".$gid."'");
-		mysqli_close($mysqli);
-		$status="0";
+		@session_start();
+		$admlvl=$_SESSION[$secretkey."admlvl"];
+		$admid=$_SESSION[$secretkey."admid"];
+			if(trim($gid)=="") {
+				$status="2";
+			} else {
+				if($admlvl<>"0" || $admid=="") {
+					$status="1";
+				} else {
+					$mysqli=new mysqli($dbhost,$dbuser,$dbpass,$dbname);
+						$mysqli->query("UPDATE groups SET enabled='1' WHERE id='".$gid."'");
+					mysqli_close($mysqli);
+					$status="0";
+				}
+			}
 return($status);
 }
 
@@ -794,10 +827,21 @@ function disablegroup($gid) {
 	} else {
 		require("../config.php");
 	}
-		$mysqli=new mysqli($dbhost,$dbuser,$dbpass,$dbname);
-			$mysqli->query("UPDATE groups SET enabled='0' WHERE id='".$gid."'");
-		mysqli_close($mysqli);
-		$status="0";
+		@session_start();
+		$admlvl=$_SESSION[$secretkey."admlvl"];
+		$admid=$_SESSION[$secretkey."admid"];
+			if(trim($gid)=="") {
+				$status="2";
+			} else {
+				if($admlvl<>"0" || $admid=="") {
+					$status="1";
+				} else {
+					$mysqli=new mysqli($dbhost,$dbuser,$dbpass,$dbname);
+						$mysqli->query("UPDATE groups SET enabled='0' WHERE id='".$gid."'");
+					mysqli_close($mysqli);
+					$status="0";
+				}
+			}
 return($status);
 }
 
