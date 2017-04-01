@@ -1459,7 +1459,7 @@ function impusrcsv($csv,$creategrp,$createprof,$cmumcsvver) {
 										}
 									$csvchk="0";
 										do {
-											if(empty($csvuser[$csvchk])) {
+											if(empty($csvuser[$csvchk]) && strlen($csvuser[$csvchk])==0) {
 												$csvuser[$csvchk]="";
 											}
 											$csvchk++;
