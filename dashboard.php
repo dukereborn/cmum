@@ -134,7 +134,7 @@ $counters=explode(";",counter());
 								$expu30sql="";
 							}
 								if($expu30sql->num_rows<>"0") {
-									print("<h4 class=\"header\">Expired Users Within 30 Days</h4>");
+									print("<h4 class=\"header\">Expiring Users Within 30 Days</h4>");
 									print("<table class=\"table table-dash table-striped table-condensed\">");
 										while($expu30res=$expu30sql->fetch_array()) {
 											print("<tr><td width=\"50%\">".$expu30res["user"]."</td><td width=\"40%\">".$expu30res["expiredate"]."</td><td width=\"10%\"><a href=\"edituser.php?uid=".$expu30res["id"]."\" class=\"btn btn-mini pull-right\">Edit</a></td></tr>");
