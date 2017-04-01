@@ -76,7 +76,7 @@ return($status);
 }
 
 function formatdate($format,$date) {
-	if($date<>"0000-00-00") {
+	if(!is_null($date)) {
 		$newdate=date($format,strtotime($date));	
 	} else {
 		$newdate="";
@@ -116,7 +116,7 @@ return($status);
 }
 
 function printdate($value) {
-	if($value=="0000-00-00") {
+	if(is_null($value)) {
 		$status="";
 	} else {
 		$status=$value;
@@ -679,9 +679,9 @@ function countusers($type) {
 			}
 			if($type=="3") {
 				if($_SESSION[$secretkey."admlvl"]=="0" ||  $_SESSION[$secretkey."admlvl"]=="1") {
-					$sql=$mysqli->query("SELECT id FROM users WHERE expiredate<='".date("Y-m-d")."' AND expiredate<>'0000-00-00'");
+					$sql=$mysqli->query("SELECT id FROM users WHERE expiredate<='".date("Y-m-d")."' AND expiredate IS NOT NULL");
 				} elseif($_SESSION[$secretkey."admlvl"]=="2" && $_SESSION[$secretkey."admgrp"]<>"0") {
-					$sql=$mysqli->query("SELECT id FROM users WHERE expiredate<='".date("Y-m-d")."' AND expiredate<>'0000-00-00' AND usrgroup='".$_SESSION[$secretkey."admgrp"]."'");
+					$sql=$mysqli->query("SELECT id FROM users WHERE expiredate<='".date("Y-m-d")."' AND expiredate IS NOT NULL AND usrgroup='".$_SESSION[$secretkey."admgrp"]."'");
 				} else {
 					$sql="";
 				}
@@ -1163,7 +1163,7 @@ function delexpusr($uid,$passwd,$expdate) {
 			$sql=$mysqli->query("SELECT user FROM admins WHERE id='".$uid."' AND pass='".hash("sha256",$passwd.$secretkey)."'");
 				$rowcheck=$sql->num_rows;
 					if($rowcheck==1) {
-						$mysqli->query("DELETE FROM users WHERE expiredate<>'0000-00-00' AND expiredate<'".$expdate."'");
+						$mysqli->query("DELETE FROM users WHERE expiredate IS NOT NULL AND expiredate<'".$expdate."'");
 						$status="1";
 					} elseif($rowcheck==0) {
 						$status="2";
@@ -1820,20 +1820,18 @@ function adduser($user,$password,$displayname,$email,$ipmask,$maxconn,$ecmrate,$
 				} else {
 					$profiles=serialize($profiles);
 				}
+				$mysqli->query("INSERT INTO users (user,password,displayname,ipmask,profiles,maxconn,admin,enabled,mapexclude,debug,comment,email,customvalues,ecmrate,usrgroup,boxtype,macaddress,serialnumber,addedby,changedby) VALUES ('".stripslashes(trim($user))."','".stripslashes(trim($password))."','".stripslashes(trim($displayname))."','".stripslashes(trim($ipmask))."','".$profiles."','".stripslashes(trim($maxconn))."','".trim($admin)."','".trim($enabled)."','".trim($mapexclude)."','".trim($debug)."','".stripslashes(trim($comment))."','".stripslashes(trim($email))."','".$mysqli->real_escape_string(trim($customvalues))."','".stripslashes(trim($ecmrate))."','".trim($usrgroup)."','".stripslashes(trim($boxtype))."','".stripslashes(trim($macaddress))."','".stripslashes(trim($serialnumber))."','".$_SESSION[$secretkey."admid"]."','')");
+				$newuid=$mysqli->insert_id;
 				if($startdate<>"") {
 					$startdate=strtotime($startdate);
 					$startdate=date('Y-m-d',$startdate);
-				} else {
-					$startdate="";
+					$mysqli->query("UPDATE users SET startdate='".$startdate."' WHERE id='".$newuid."'");
 				}
 				if($expiredate<>"") {
 					$expiredate=strtotime($expiredate);
 					$expiredate=date('Y-m-d',$expiredate);
-				} else {
-					$expiredate="";
+					$mysqli->query("UPDATE users SET expiredate='".$expiredate."' WHERE id='".$newuid."'");
 				}
-				$mysqli->query("INSERT INTO users (user,password,displayname,ipmask,profiles,maxconn,admin,enabled,mapexclude,debug,comment,email,customvalues,ecmrate,startdate,expiredate,usrgroup,boxtype,macaddress,serialnumber,addedby,changed,changedby) VALUES ('".stripslashes(trim($user))."','".stripslashes(trim($password))."','".stripslashes(trim($displayname))."','".stripslashes(trim($ipmask))."','".$profiles."','".stripslashes(trim($maxconn))."','".trim($admin)."','".trim($enabled)."','".trim($mapexclude)."','".trim($debug)."','".stripslashes(trim($comment))."','".stripslashes(trim($email))."','".$mysqli->real_escape_string(trim($customvalues))."','".stripslashes(trim($ecmrate))."','".$startdate."','".$expiredate."','".trim($usrgroup)."','".stripslashes(trim($boxtype))."','".stripslashes(trim($macaddress))."','".stripslashes(trim($serialnumber))."','".$_SESSION[$secretkey."admid"]."','','')");
-				$newuid=$mysqli->insert_id;
 				if(checksetting("logactivity")=="1") {
 					logactivity("1",$_SESSION[$secretkey."admid"],$_SESSION[$secretkey."admlvl"],$newuid,$user);
 				}
@@ -1858,19 +1856,21 @@ function edituser($uid,$user,$password,$displayname,$email,$ipmask,$maxconn,$ecm
 				} else {
 					$profiles=serialize($profiles);
 				}
+				$mysqli->query("UPDATE users SET user='".stripslashes(trim($user))."',password='".stripslashes(trim($password))."',displayname='".stripslashes(trim($displayname))."',ipmask='".stripslashes(trim($ipmask))."',profiles='".$profiles."',maxconn='".trim($maxconn)."',admin='".trim($admin)."',enabled='".trim($enabled)."',mapexclude='".trim($mapexclude)."',debug='".trim($debug)."',user='".stripslashes(trim($user))."',comment='".stripslashes(trim($comment))."',email='".stripslashes(trim($email))."',customvalues='".$mysqli->real_escape_string(trim($customvalues))."',ecmrate='".stripslashes(trim($ecmrate))."',usrgroup='".trim($usrgroup)."',boxtype='".stripslashes(trim($boxtype))."',macaddress='".stripslashes(trim($macaddress))."',serialnumber='".stripslashes(trim($serialnumber))."',changed='".date('Y-m-d H:i:s')."',changedby='".$_SESSION[$secretkey."admid"]."' WHERE id='".$uid."'");
 				if($startdate<>"") {
 					$startdate=strtotime($startdate);
 					$startdate=date('Y-m-d',$startdate);
+					$mysqli->query("UPDATE users SET startdate='".$startdate."' WHERE id='".$uid."'");
 				} else {
-					$startdate="";
+					$mysqli->query("UPDATE users SET startdate=NULL WHERE id='".$uid."'");
 				}
 				if($expiredate<>"") {
 					$expiredate=strtotime($expiredate);
 					$expiredate=date('Y-m-d',$expiredate);
+					$mysqli->query("UPDATE users SET expiredate='".$expiredate."' WHERE id='".$uid."'");
 				} else {
-					$expiredate="";
+					$mysqli->query("UPDATE users SET expiredate=NULL WHERE id='".$uid."'");
 				}
-				$mysqli->query("UPDATE users SET user='".stripslashes(trim($user))."',password='".stripslashes(trim($password))."',displayname='".stripslashes(trim($displayname))."',ipmask='".stripslashes(trim($ipmask))."',profiles='".$profiles."',maxconn='".trim($maxconn)."',admin='".trim($admin)."',enabled='".trim($enabled)."',mapexclude='".trim($mapexclude)."',debug='".trim($debug)."',user='".stripslashes(trim($user))."',comment='".stripslashes(trim($comment))."',email='".stripslashes(trim($email))."',customvalues='".$mysqli->real_escape_string(trim($customvalues))."',ecmrate='".stripslashes(trim($ecmrate))."',startdate='".$startdate."',expiredate='".$expiredate."',usrgroup='".trim($usrgroup)."',boxtype='".stripslashes(trim($boxtype))."',macaddress='".stripslashes(trim($macaddress))."',serialnumber='".stripslashes(trim($serialnumber))."',changed='".date('Y-m-d H:i:s')."',changedby='".$_SESSION[$secretkey."admid"]."' WHERE id='".$uid."'");
 				if(checksetting("logactivity")=="1") {
 					logactivity("2",$_SESSION[$secretkey."admid"],$_SESSION[$secretkey."admlvl"],$uid,$user);
 				}
@@ -1927,7 +1927,7 @@ function enableuser($uid) {
 						if($usrexp=="2") {
 							$mysqli->query("UPDATE users SET enabled='1',startdate='".date('Y-m-d')."',changed='".date('Y-m-d H:i:s')."',changedby='".$admid."' WHERE id='".$uid."'");
 						} elseif($usrexp=="3") {
-							$mysqli->query("UPDATE users SET enabled='1',expiredate='0000-00-00',changed='".date('Y-m-d H:i:s')."',changedby='".$admid."' WHERE id='".$uid."'");
+							$mysqli->query("UPDATE users SET enabled='1',expiredate=NULL,changed='".date('Y-m-d H:i:s')."',changedby='".$admid."' WHERE id='".$uid."'");
 						} else {
 							$mysqli->query("UPDATE users SET enabled='1',changed='".date('Y-m-d H:i:s')."',changedby='".$admid."' WHERE id='".$uid."'");
 						}
@@ -1972,7 +1972,7 @@ function checkstartexpire($start,$expire,$enabled) {
 	// 1 = enabled
 	// 2 = not started
 	// 3 = expired
-	if($start<>"0000-00-00" && $expire<>"0000-00-00") {
+	if(!is_null($start) && !is_null($expire)) {
 		if(time()>=strtotime($start) && time()<=strtotime($expire) && $enabled<>"0") {
 			$status="1";
 		} elseif(time()<=strtotime($start) && $enabled<>"0") {
@@ -1986,7 +1986,7 @@ function checkstartexpire($start,$expire,$enabled) {
 				$status="0";
 			}
 		}
-	} elseif($start<>"0000-00-00" && $expire=="0000-00-00") {
+	} elseif(!is_null($start) && is_null($expire)) {
 		if(time()>=strtotime($start) && $enabled<>"0") {
 			$status="1";
 		} elseif(time()<=strtotime($start) && $enabled<>"0") {
@@ -1998,7 +1998,7 @@ function checkstartexpire($start,$expire,$enabled) {
 				$status="0";
 			}
 		}
-	} elseif($start=="0000-00-00" && $expire<>"0000-00-00") {
+	} elseif(is_null($start) && !is_null($expire)) {
 		if(time()<=strtotime($expire) && $enabled<>"0") {
 			$status="1";
 		} elseif(time()>=strtotime($expire) && $enabled<>"0") {
@@ -2010,7 +2010,7 @@ function checkstartexpire($start,$expire,$enabled) {
 				$status="0";
 			}
 		}
-	} elseif($start=="0000-00-00" && $expire=="0000-00-00") {
+	} elseif(is_null($start) && is_null($expire)) {
 		if($enabled=="1" || $enabled=="") {
 			$status="1";
 		} else {

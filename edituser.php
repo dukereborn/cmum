@@ -258,13 +258,13 @@ $counters=explode(";",counter());
 									<div class="control-group">
 										<label class="control-label" for="startdate">Start date</label>
 										<div class="controls">
-											<input type="text" name="startdate" id="startdate" data-date-format="yyyy-mm-dd" value="<?php if($usrres["startdate"]<>"0000-00-00") { print($usrres["startdate"]); } ?>">
+											<input type="text" name="startdate" id="startdate" data-date-format="yyyy-mm-dd" value="<?php if(!is_null($usrres["startdate"])) { print($usrres["startdate"]); } ?>">
 										</div>
 									</div>
 									<div class="control-group">
 										<label class="control-label" for="expiredate">Expire date</label>
 										<div class="controls">
-											<input type="text" name="expiredate" id="expiredate" data-date-format="yyyy-mm-dd" value="<?php if($usrres["expiredate"]<>"0000-00-00") { print($usrres["expiredate"]); } ?>">
+											<input type="text" name="expiredate" id="expiredate" data-date-format="yyyy-mm-dd" value="<?php if(!is_null($usrres["expiredate"])) { print($usrres["expiredate"]); } ?>">
 										</div>
 									</div>
 								</div>
@@ -359,7 +359,7 @@ $counters=explode(";",counter());
 								<div class="span5">
 									<div class="control-group">
 										<div class="controls">
-											Added: <?php if($usrres["added"]<>"0000-00-00 00:00:00") { print($usrres["added"]); } ?>
+											Added: <?php if(!is_null($usrres["added"])) { print($usrres["added"]); } ?>
 												<br>
 											Added by: <?php if($usrres["addedby"]<>"") { print(idtoadmin($usrres["addedby"])); } ?>
 										</div>
@@ -368,7 +368,7 @@ $counters=explode(";",counter());
 								<div class="span5">
 									<div class="control-group">
 										<div class="controls">
-											Last changed: <?php if($usrres["changed"]<>"0000-00-00 00:00:00") { print($usrres["changed"]); } ?>
+											Last changed: <?php if(!is_null($usrres["changed"])) { print($usrres["changed"]); } ?>
 												<br>
 											Last changed by: <?php if($usrres["changedby"]<>"") { print(idtoadmin($usrres["changedby"])); } ?>
 										</div>

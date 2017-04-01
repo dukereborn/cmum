@@ -95,9 +95,9 @@ $counters=explode(";",counter());
 						
 						<?php
 							if($_SESSION[$secretkey."admlvl"]=="0" ||  $_SESSION[$secretkey."admlvl"]=="1") {
-								$nstrusql=$mysqli->query("SELECT id,user,startdate FROM users WHERE startdate>'".date("Y-m-d")."' AND startdate<>'0000-00-00' ORDER BY startdate ".checksetting("notstartusrorder"));
+								$nstrusql=$mysqli->query("SELECT id,user,startdate FROM users WHERE startdate>'".date("Y-m-d")."' AND startdate IS NOT NULL ORDER BY startdate ".checksetting("notstartusrorder"));
 							} elseif($_SESSION[$secretkey."admlvl"]=="2" && $_SESSION[$secretkey."admgrp"]<>"0") {
-								$nstrusql=$mysqli->query("SELECT id,user,startdate FROM users WHERE startdate>'".date("Y-m-d")."' AND startdate<>'0000-00-00' AND usrgroup='".$mysqli->real_escape_string($_SESSION[$secretkey."admgrp"])."' ORDER BY startdate ".checksetting("notstartusrorder"));
+								$nstrusql=$mysqli->query("SELECT id,user,startdate FROM users WHERE startdate>'".date("Y-m-d")."' AND startdate IS NOT NULL AND usrgroup='".$mysqli->real_escape_string($_SESSION[$secretkey."admgrp"])."' ORDER BY startdate ".checksetting("notstartusrorder"));
 							} else {
 								$nstrusql="";
 							}
@@ -111,9 +111,9 @@ $counters=explode(";",counter());
 								}
 							
 							if($_SESSION[$secretkey."admlvl"]=="0" ||  $_SESSION[$secretkey."admlvl"]=="1") {
-								$expusql=$mysqli->query("SELECT id,user,expiredate FROM users WHERE expiredate<='".date("Y-m-d")."' AND expiredate<>'0000-00-00' ORDER BY expiredate ".checksetting("expusrorder"));
+								$expusql=$mysqli->query("SELECT id,user,expiredate FROM users WHERE expiredate<='".date("Y-m-d")."' AND expiredate IS NOT NULL ORDER BY expiredate ".checksetting("expusrorder"));
 							} elseif($_SESSION[$secretkey."admlvl"]=="2" && $_SESSION[$secretkey."admgrp"]<>"0") {
-								$expusql=$mysqli->query("SELECT id,user,expiredate FROM users WHERE expiredate<='".date("Y-m-d")."' AND expiredate<>'0000-00-00' AND usrgroup='".$mysqli->real_escape_string($_SESSION[$secretkey."admgrp"])."' ORDER BY expiredate ".checksetting("expusrorder"));
+								$expusql=$mysqli->query("SELECT id,user,expiredate FROM users WHERE expiredate<='".date("Y-m-d")."' AND expiredate IS NOT NULL AND usrgroup='".$mysqli->real_escape_string($_SESSION[$secretkey."admgrp"])."' ORDER BY expiredate ".checksetting("expusrorder"));
 							} else {
 								$expusql="";
 							}
@@ -127,9 +127,9 @@ $counters=explode(";",counter());
 								}	
 							$day30p=date("Y-m-d",strtotime("+30 days"));
 							if($_SESSION[$secretkey."admlvl"]=="0" ||  $_SESSION[$secretkey."admlvl"]=="1") {
-								$expu30sql=$mysqli->query("SELECT id,user,expiredate FROM users WHERE expiredate<='".$day30p."' AND expiredate>'".date("Y-m-d")."' AND expiredate<>'0000-00-00' ORDER BY expiredate ".checksetting("soonexpusrorder"));
+								$expu30sql=$mysqli->query("SELECT id,user,expiredate FROM users WHERE expiredate<='".$day30p."' AND expiredate>'".date("Y-m-d")."' AND expiredate IS NOT NULL ORDER BY expiredate ".checksetting("soonexpusrorder"));
 							} elseif($_SESSION[$secretkey."admlvl"]=="2" && $_SESSION[$secretkey."admgrp"]<>"0") {
-								$expu30sql=$mysqli->query("SELECT id,user,expiredate FROM users WHERE expiredate<='".$day30p."' AND expiredate>'".date("Y-m-d")."' AND expiredate<>'0000-00-00' AND usrgroup='".$mysqli->real_escape_string($_SESSION[$secretkey."admgrp"])."' ORDER BY expiredate ".checksetting("soonexpusrorder"));
+								$expu30sql=$mysqli->query("SELECT id,user,expiredate FROM users WHERE expiredate<='".$day30p."' AND expiredate>'".date("Y-m-d")."' AND expiredate IS NOT NULL AND usrgroup='".$mysqli->real_escape_string($_SESSION[$secretkey."admgrp"])."' ORDER BY expiredate ".checksetting("soonexpusrorder"));
 							} else {
 								$expu30sql="";
 							}
