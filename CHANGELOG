@@ -14,8 +14,9 @@ CSP MySQL User Manager Changelog
 [#] Improved admin-/group-/profile-/user delete handling
 [#] Changed api for ip lookup on connected users
 [-] Enable/disable button in userlist shows wrong state
-[-] Fixed various header issues
-[-] Fixed date issue with newer mysql versions
+[-] Various header issues
+[-] Date issue with newer mysql versions
+[-] Some data was ignored when importing users from csv
 
 
 3.2.0 [2015-06-27]
