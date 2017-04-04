@@ -329,7 +329,7 @@ $counters=explode(";",counter());
 								</div>
 							</div>
 						</form>
-							<button class="btn" name="badd" value="Add User" onclick="checkusername();">Add User</button>	
+							<button class="btn" name="badd" value="Add User" onclick="checkusername(<?php echo checksetting("invalidcharcheck"); ?>);">Add User</button>	
 						</div>
 					</div>
 				</div>

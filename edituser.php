@@ -376,7 +376,7 @@ $counters=explode(";",counter());
 								</div>
 							</div>
 						</form>
-							<button class="btn" name="bedit" value="Save" onclick="checkeditusername();">Save</button>
+							<button class="btn" name="bedit" value="Save" onclick="checkeditusername(<?php echo checksetting("invalidcharcheck"); ?>);">Save</button>
 						</div>
 					</div>
 				</div>

@@ -637,7 +637,7 @@ function deleteprofile(pid) {
 //
 // user functions
 //
-function checkusername() {
+function checkusername(validatechar) {
 	var username=$('#newuser input[name=user]').val();
 	var password=$('#newuser input[name=password]').val();
 		if(username=="" || password=="") {
@@ -647,7 +647,7 @@ function checkusername() {
 				} else if(password=="") {
 					newuser.password.focus();
 				}
-		} else if(alphanumeric(username)==false || alphanumeric(password)==false) {
+		} else if(validatechar==1 && (alphanumeric(username)==false || alphanumeric(password)==false)) {
 			if(alphanumeric(username)==false) {
 				toastr.error('Username contains invalid characters');
 				newuser.user.focus();
@@ -673,7 +673,7 @@ function checkusername() {
 		}
 }
 
-function checkeditusername() {
+function checkeditusername(validatechar) {
 	var username=$('#edituser input[name=user]').val();
 	var rusername=$('#edituser input[name=ruser]').val();
 	var password=$('#edituser input[name=password]').val();
@@ -685,7 +685,7 @@ function checkeditusername() {
 				if(username=="") {
 					edituser.user.focus();
 				}
-		} else if(alphanumeric(username)==false || alphanumeric(password)==false) {
+		} else if(validatechar==1 && (alphanumeric(username)==false || alphanumeric(password)==false)) {
 			if(alphanumeric(username)==false) {
 				toastr.error('Username contains invalid characters');
 				newuser.user.focus();
