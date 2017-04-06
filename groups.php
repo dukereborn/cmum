@@ -1,6 +1,4 @@
-<!DOCTYPE html>
 <?php
-require("config.php");
 require("functions/admincheck.php");
 require("functions/cmum.php");
 
@@ -8,10 +6,8 @@ if(isset($_POST["value"]) && $_POST["value"]=="baddgrp") {
 	$status=addgroup($_POST["name"],$_POST["comment"]);
 		if($status=="0") {
 			$notice="toastr.success('Group successfully created');";
-		} elseif($status=="1") {
-			$notice="toastr.error('You must enter a group name'); $('#modalNewGroup').modal({ show: true });";
-		} elseif($status=="2") {
-			$notice="toastr.error('Group already exists'); $('#modalNewGroup').modal({ show: true });";
+		} else {
+			$notice="toastr.error('Something went wrong, please try again')";
 		}
 }
 
@@ -27,7 +23,7 @@ if(isset($_GET["action"]) && stripslashes($_GET["action"])=="edit" && isset($_GE
 			$eg_name=$eg_res["name"];
 			$eg_comment=$eg_res["comment"];
 	mysqli_close($mysqli);
-	$notice="$('#modalEditGroup').modal({ show: true });";
+	$notice="$('#modalEditGroup').modal('show');";
 }
 if(isset($_POST["value"]) && $_POST["value"]=="beditgrp") {
 	$status=editgroup($_POST["gid"],$_POST["name"],$_POST["comment"]);
@@ -37,38 +33,14 @@ if(isset($_POST["value"]) && $_POST["value"]=="beditgrp") {
 			$eg_id=$_POST["gid"];
 			$eg_name=$_POST["name"];
 			$eg_comment=$_POST["comment"];
-			$notice="toastr.error('You must enter a group name'); $('#modalEditGroup').modal({ show: true });";
+			$notice="toastr.error('You must enter a group name'); $('#modalEditGroup').modal('show');";
 		} elseif($status=="2") {
 			$eg_id=$_POST["gid"];
 			$eg_name=$_POST["name"];
 			$eg_comment=$_POST["comment"];
-			$notice="toastr.error('Group already exists'); $('#modalEditGroup').modal({ show: true });";
+			$notice="toastr.error('Group already exists'); $('#modalEditGroup').modal('show');";
 		}
 }
-
-if(isset($_GET["action"]) && stripslashes($_GET["action"])=="delete" && isset($_GET["gid"]) && $_GET["gid"]<>"") {
-	$mysqli=new mysqli($dbhost,$dbuser,$dbpass,$dbname);
-	if(mysqli_connect_errno()) {
-		errorpage("MYSQL DATABASE ERROR",mysqli_connect_error(),$charset,CMUM_TITLE,$_SERVER["REQUEST_URI"],CMUM_VERSION,CMUM_BUILD,CMUM_MOD);
-		exit;
-	}
-		$sql=$mysqli->query("SELECT id,name FROM groups WHERE id='".$mysqli->real_escape_string($_GET["gid"])."'");
-		$eg_res=$sql->fetch_array();
-			$eg_id=$eg_res["id"];
-			$eg_name=$eg_res["name"];
-	mysqli_close($mysqli);
-	$notice="$('#modalDelGroup').modal({ show: true });";
-}
-if(isset($_POST["bdelgrp"]) && $_POST["bdelgrp"]=="Delete") {
-	$status=delgroup($_POST["gid"]);
-		if($status=="0") {
-			$notice="toastr.success('Group successfully deleted');";
-		} elseif($status=="1") {
-			$notice="toastr.error('Group not given, please try again');";
-		}
-}
-
-$counters=explode(";",counter());
 
 $mysqli=new mysqli($dbhost,$dbuser,$dbpass,$dbname);
 if(mysqli_connect_errno()) {
@@ -83,7 +55,10 @@ if(mysqli_connect_errno()) {
 			$tblcond="";
 		}
 mysqli_close($mysqli);
+
+$counters=explode(";",counter());
 ?>
+<!DOCTYPE html>
 <html>
 	<head>
 		<meta charset="<?php print($charset); ?>">
@@ -113,8 +88,8 @@ mysqli_close($mysqli);
 							<li><?php if($_SESSION[$secretkey."fetchcsp"]=="1") { print(dashcheckcspconn($cspconnstatus)); } ?><a href="dashboard.php"><i class="batch home"></i><br>Dashboard</a></li>
 							<li><span class="label label-info pull-right"><?php print($counters[0]); ?></span><a href="users.php"><i class="batch users"></i><br>Users</a></li>
 								<?php
-									if($_SESSION[$secretkey."userlvl"]=="0") {
-										print("<li><span class=\"label label-info pull-right\">".$counters[1]."</span><a href=\"groups.php\" class=\"active\"><i class=\"batch database\"></i><br>Groups</a></li>");
+									if($_SESSION[$secretkey."admlvl"]=="0") {
+										print("<li><span class=\"label label-info pull-right\" id=\"numgroups\">".$counters[1]."</span><a href=\"groups.php\" class=\"active\"><i class=\"batch database\"></i><br>Groups</a></li>");
 										print("<li><span class=\"label label-info pull-right\">".$counters[2]."</span><a href=\"profiles.php\"><i class=\"batch tables\"></i><br>Profiles</a></li>");
 										print("<li><span class=\"label label-info pull-right\">".$counters[3]."</span><a href=\"admins.php\"><i class=\"batch star\"></i><br>Admins</a></li>");
 										print("<li><a href=\"tools.php\"><i class=\"batch console\"></i><br>Tools</a></li>");
@@ -152,7 +127,7 @@ mysqli_close($mysqli);
 											}
 												$sql=$mysqli->query("SELECT id,name,comment,enabled FROM groups ORDER BY name");
 												while($res=$sql->fetch_array()) {
-													print("<tr>");
+													print("<tr id=group-".$res["id"].">");
 														print("<td>".$res["name"]."</td>");
 														print("<td>".usersingroup($res["id"])."</td>");
 														print("<td>".$res["comment"]."</td>");
@@ -166,9 +141,9 @@ mysqli_close($mysqli);
 																print("<button data-toggle=\"dropdown\" class=\"btn btn-small\">Actions <span class=\"caret\"></span></button>");
 																print("<ul class=\"dropdown-menu\">");
 																	if($res["enabled"]=="1") {
-																		print("<li><a href=\"groups.php?action=edit&gid=".$res["id"]."\">Edit</a><a id=\"agrpenabled-".$res["id"]."\" href=\"javascript:void(0);\" onclick=\"disablegroup('".$res["id"]."');\">Disable</a><a href=\"groups.php?action=delete&gid=".$res["id"]."\">Delete</a></li>");
+																		print("<li><a href=\"groups.php?action=edit&gid=".$res["id"]."\">Edit</a><a id=\"agrpenabled-".$res["id"]."\" href=\"javascript:void(0);\" onclick=\"disablegroup('".$res["id"]."');\">Disable</a><a href=\"javascript:void(0);\" onclick=\"getdeletegroup('".$res["id"]."','".$res["name"]."');\">Delete</a></li>");
 																	} else {
-																		print("<li><a href=\"groups.php?action=edit&gid=".$res["id"]."\">Edit</a><a id=\"agrpenabled-".$res["id"]."\" href=\"javascript:void(0);\" onclick=\"enablegroup('".$res["id"]."');\">Enable</a><a href=\"groups.php?action=delete&gid=".$res["id"]."\">Delete</a></li>");
+																		print("<li><a href=\"groups.php?action=edit&gid=".$res["id"]."\">Edit</a><a id=\"agrpenabled-".$res["id"]."\" href=\"javascript:void(0);\" onclick=\"enablegroup('".$res["id"]."');\">Enable</a><a href=\"javascript:void(0);\" onclick=\"getdeletegroup('".$res["id"]."','".$res["name"]."');\">Delete</a></li>");
 																	}
 																print("</ul>");
 															print("</div>");
@@ -195,6 +170,7 @@ mysqli_close($mysqli);
 			require("includes/modal-newgroup.php");
 			require("includes/modal-editgroup.php");
 			require("includes/modal-delgroup.php");
+			require("includes/modal-logout.php");
 			require("includes/footer.php");
 		?>
 		<script src="js/jquery.js"></script>

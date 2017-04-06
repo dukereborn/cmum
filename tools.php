@@ -1,10 +1,9 @@
-<!DOCTYPE html>
 <?php
 require("functions/admincheck.php");
 require("functions/cmum.php");
 
 if(isset($_POST["baction"]) && $_POST["baction"]=="Enable all users") {
-	$status=enallusr($_SESSION[$secretkey."userid"],$_POST["admpasswd"]);
+	$status=enallusr($_SESSION[$secretkey."admid"],$_POST["admpasswd"]);
 		if($status=="1") {
 			$notice="toastr.success('All users enabled');";
 		} elseif($status=="2") {
@@ -14,7 +13,7 @@ if(isset($_POST["baction"]) && $_POST["baction"]=="Enable all users") {
 		}
 }
 if(isset($_POST["baction"]) && $_POST["baction"]=="Disable all users") {
-	$status=disallusr($_SESSION[$secretkey."userid"],$_POST["admpasswd"]);
+	$status=disallusr($_SESSION[$secretkey."admid"],$_POST["admpasswd"]);
 		if($status=="1") {
 			$notice="toastr.success('All users disabled');";
 		} elseif($status=="2") {
@@ -24,7 +23,7 @@ if(isset($_POST["baction"]) && $_POST["baction"]=="Disable all users") {
 		}
 }
 if(isset($_POST["baction"]) && $_POST["baction"]=="Delete disabled users") {
-	$status=deldisusr($_SESSION[$secretkey."userid"],$_POST["admpasswd"]);
+	$status=deldisusr($_SESSION[$secretkey."admid"],$_POST["admpasswd"]);
 		if($status=="1") {
 			$notice="toastr.success('All disabled users deleted');";
 		} elseif($status=="2") {
@@ -34,7 +33,7 @@ if(isset($_POST["baction"]) && $_POST["baction"]=="Delete disabled users") {
 		}
 }
 if(isset($_POST["baction"]) && $_POST["baction"]=="Delete expired users") {
-	$status=delexpusr($_SESSION[$secretkey."userid"],$_POST["admpasswd"],$_POST["expdate"]);
+	$status=delexpusr($_SESSION[$secretkey."admid"],$_POST["admpasswd"],$_POST["expdate"]);
 		if($status=="1") {
 			$notice="toastr.success('All expired users deleted');";
 		} elseif($status=="2") {
@@ -44,7 +43,7 @@ if(isset($_POST["baction"]) && $_POST["baction"]=="Delete expired users") {
 		}
 }
 if(isset($_POST["baction"]) && $_POST["baction"]=="Empty user database") {
-	$status=emptyudb($_SESSION[$secretkey."userid"],$_POST["admpasswd"]);
+	$status=emptyudb($_SESSION[$secretkey."admid"],$_POST["admpasswd"]);
 		if($status=="1") {
 			$notice="toastr.success('User database emptied');";
 		} elseif($status=="2") {
@@ -54,7 +53,7 @@ if(isset($_POST["baction"]) && $_POST["baction"]=="Empty user database") {
 		}
 }
 if(isset($_POST["baction"]) && $_POST["baction"]=="Empty group database") {
-	$status=emptygdb($_SESSION[$secretkey."userid"],$_POST["admpasswd"]);
+	$status=emptygdb($_SESSION[$secretkey."admid"],$_POST["admpasswd"]);
 		if($status=="1") {
 			$notice="toastr.success('Group database emptied');";
 		} elseif($status=="2") {
@@ -64,7 +63,7 @@ if(isset($_POST["baction"]) && $_POST["baction"]=="Empty group database") {
 		}
 }
 if(isset($_POST["baction"]) && $_POST["baction"]=="Empty profile database") {
-	$status=emptypdb($_SESSION[$secretkey."userid"],$_POST["admpasswd"]);
+	$status=emptypdb($_SESSION[$secretkey."admid"],$_POST["admpasswd"]);
 		if($status=="1") {
 			$notice="toastr.success('Profile database emptied');";
 		} elseif($status=="2") {
@@ -105,7 +104,7 @@ if(isset($_POST["bimpxml"]) && $_POST["bimpxml"]=="Import users") {
 	}
 	$impstatus=impusrcspxml($_POST["cspxml"],$_POST["usrgrp"],$createprof);
 		if(!empty($impstatus["usrimp"]) || !empty($impstatus["usrexi"])) {
-			$notice="$('#modalImpUsrRes').modal({ show: true });";
+			$notice="$('#modalImpUsrRes').modal('show');";
 		} else {
 			$notice="toastr.error('Something went wrong, try again');";
 		}
@@ -123,7 +122,7 @@ if(isset($_POST["bimpcsv"]) && $_POST["bimpcsv"]=="Import users") {
 	}
 	$impstatus=impusrcsv($_POST["csv"],$creategrp,$createprof,$_POST["cmumcsvver"]);
 		if(!empty($impstatus["usrimp"]) || !empty($impstatus["usrexi"])) {
-			$notice="$('#modalImpUsrRes').modal({ show: true });";
+			$notice="$('#modalImpUsrRes').modal('show');";
 		} else {
 			$notice="toastr.error('Something went wrong, try again');";
 		}
@@ -198,9 +197,17 @@ if(isset($_POST["bexpxmldown"]) && $_POST["bexpxmldown"]=="Download") {
 if(isset($_POST["bimpprof"]) && $_POST["bimpprof"]=="Import profiles") {
 	$impstatus=impcspprofiles($_POST["profvalue"],$_POST["profname"]);
 		if(!empty($impstatus["profimp"]) || !empty($impstatus["profexi"])) {
-			$notice="$('#modalImpProfRes').modal({ show: true });";
+			$notice="$('#modalImpProfRes').modal('show');";
 		} else {
 			$notice="toastr.error('Something went wrong, try again');";
+		}
+}
+if(isset($_POST["baction"]) && $_POST["baction"]=="Send emails") {
+	$status=sendemailtoall($_POST["email_subject"],$_POST["email_body"]);
+		if($status=="1") {
+			$notice="toastr.error('Emails not sent, please try again or check settings');";
+		} else {
+			$notice="toastr.success('Emails sent');";
 		}
 }
 
@@ -220,6 +227,7 @@ mysqli_close($mysqli);
 
 $counters=explode(";",counter());
 ?>
+<!DOCTYPE html>
 <html>
 	<head>
 		<meta charset="<?php print($charset); ?>">
@@ -250,7 +258,7 @@ $counters=explode(";",counter());
 							<li><?php if($_SESSION[$secretkey."fetchcsp"]=="1") { print(dashcheckcspconn($cspconnstatus)); } ?><a href="dashboard.php"><i class="batch home"></i><br>Dashboard</a></li>
 							<li><span class="label label-info pull-right"><?php print($counters[0]); ?></span><a href="users.php"><i class="batch users"></i><br>Users</a></li>
 								<?php
-									if($_SESSION[$secretkey."userlvl"]=="0") {
+									if($_SESSION[$secretkey."admlvl"]=="0") {
 										print("<li><span class=\"label label-info pull-right\">".$counters[1]."</span><a href=\"groups.php\"><i class=\"batch database\"></i><br>Groups</a></li>");
 										print("<li><span class=\"label label-info pull-right\">".$counters[2]."</span><a href=\"profiles.php\"><i class=\"batch tables\"></i><br>Profiles</a></li>");
 										print("<li><span class=\"label label-info pull-right\">".$counters[3]."</span><a href=\"admins.php\"><i class=\"batch star\"></i><br>Admins</a></li>");
@@ -310,7 +318,7 @@ $counters=explode(";",counter());
 												print("<ul>");
 													print("<li class=\"sidebar-inner\">");
 														print("<a href=\"tools.php?menu=3&tool=301\"><span>Update CSP Users</span></a>");
-														print("<a href=\"tools.php?menu=3&tool=302\"><span>Send OSD To All Users</span></a>");
+														print("<a href=\"tools.php?menu=3&tool=302\"><span>Send OSD to All Users</span></a>");
 														print("<a href=\"tools.php?menu=3&tool=303\"><span>Shutdown CSP Server</span></a>");
 													print("</li>");
 												print("</ul>");
@@ -333,6 +341,11 @@ $counters=explode(";",counter());
 												<li class="sidebar-inner">
 													<a href="tools.php?menu=5&tool=501"><span>Empty Group Database</span></a>
 													<a href="tools.php?menu=5&tool=502"><span>Empty Profile Database</span></a>
+													<?php
+														if(checkemailsettings()=="0") {
+															print("<a href=\"tools.php?menu=5&tool=503\"><span>Send Email to All Users</span></a>");
+														}
+													?>
 												</li>
 											</ul>
 										</li>
@@ -362,6 +375,7 @@ $counters=explode(";",counter());
 		<?php
 			require("includes/modal-impusrres.php");
 			require("includes/modal-impprofres.php");
+			require("includes/modal-logout.php");
 			require("includes/footer.php");
 		?>
 		<script src="js/jquery.js"></script>
@@ -370,6 +384,7 @@ $counters=explode(";",counter());
 		<script src="js/toastr.min.js"></script>
 		<script src="js/tablesorter.min.js"></script>
 		<script src="js/datepicker.js"></script>
+		<script src="js/ajaxcalls.js"></script>
 		<script>
 			$('#expdate').datepicker({
 				format: 'yyyy-mm-dd',

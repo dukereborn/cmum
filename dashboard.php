@@ -1,16 +1,16 @@
-<!DOCTYPE html>
 <?php
 require("functions/logincheck.php");
 require("functions/cmum.php");
-
-$counters=explode(";",counter());
 
 $mysqli=new mysqli($dbhost,$dbuser,$dbpass,$dbname);
 if(mysqli_connect_errno()) {
 	errorpage("MYSQL DATABASE ERROR",mysqli_connect_error(),$charset,CMUM_TITLE,$_SERVER["REQUEST_URI"],CMUM_VERSION,CMUM_BUILD,CMUM_MOD);
 	exit;
 }
+
+$counters=explode(";",counter());
 ?>
+<!DOCTYPE html>
 <html>
 	<head>
 		<meta charset="<?php print($charset); ?>">
@@ -39,7 +39,7 @@ if(mysqli_connect_errno()) {
 							<li><?php if($_SESSION[$secretkey."fetchcsp"]=="1") { print(dashcheckcspconn($cspconnstatus)); } ?><a href="dashboard.php" class="active"><i class="batch home"></i><br>Dashboard</a></li>
 							<li><span class="label label-info pull-right"><?php print($counters[0]); ?></span><a href="users.php"><i class="batch users"></i><br>Users</a></li>
 								<?php
-									if($_SESSION[$secretkey."userlvl"]=="0") {
+									if($_SESSION[$secretkey."admlvl"]=="0") {
 										print("<li><span class=\"label label-info pull-right\">".$counters[1]."</span><a href=\"groups.php\"><i class=\"batch database\"></i><br>Groups</a></li>");
 										print("<li><span class=\"label label-info pull-right\">".$counters[2]."</span><a href=\"profiles.php\"><i class=\"batch tables\"></i><br>Profiles</a></li>");
 										print("<li><span class=\"label label-info pull-right\">".$counters[3]."</span><a href=\"admins.php\"><i class=\"batch star\"></i><br>Admins</a></li>");
@@ -94,10 +94,10 @@ if(mysqli_connect_errno()) {
 							</table>
 						
 						<?php
-							if($_SESSION[$secretkey."userlvl"]=="0" ||  $_SESSION[$secretkey."userlvl"]=="1") {
-								$nstrusql=$mysqli->query("SELECT id,user,startdate FROM users WHERE startdate>'".date("Y-m-d")."' AND startdate<>'0000-00-00' ORDER BY startdate ".checksetting("notstartusrorder"));
-							} elseif($_SESSION[$secretkey."userlvl"]=="2" && $_SESSION[$secretkey."usergrp"]<>"0") {
-								$nstrusql=$mysqli->query("SELECT id,user,startdate FROM users WHERE startdate>'".date("Y-m-d")."' AND startdate<>'0000-00-00' AND usrgroup='".$mysqli->real_escape_string($_SESSION[$secretkey."usergrp"])."' ORDER BY startdate ".checksetting("notstartusrorder"));
+							if($_SESSION[$secretkey."admlvl"]=="0" ||  $_SESSION[$secretkey."admlvl"]=="1") {
+								$nstrusql=$mysqli->query("SELECT id,user,startdate FROM users WHERE startdate>'".date("Y-m-d")."' AND startdate IS NOT NULL ORDER BY startdate ".checksetting("notstartusrorder"));
+							} elseif($_SESSION[$secretkey."admlvl"]=="2" && $_SESSION[$secretkey."admgrp"]<>"0") {
+								$nstrusql=$mysqli->query("SELECT id,user,startdate FROM users WHERE startdate>'".date("Y-m-d")."' AND startdate IS NOT NULL AND usrgroup='".$mysqli->real_escape_string($_SESSION[$secretkey."admgrp"])."' ORDER BY startdate ".checksetting("notstartusrorder"));
 							} else {
 								$nstrusql="";
 							}
@@ -110,10 +110,10 @@ if(mysqli_connect_errno()) {
 									print("</table>");
 								}
 							
-							if($_SESSION[$secretkey."userlvl"]=="0" ||  $_SESSION[$secretkey."userlvl"]=="1") {
-								$expusql=$mysqli->query("SELECT id,user,expiredate FROM users WHERE expiredate<='".date("Y-m-d")."' AND expiredate<>'0000-00-00' ORDER BY expiredate ".checksetting("expusrorder"));
-							} elseif($_SESSION[$secretkey."userlvl"]=="2" && $_SESSION[$secretkey."usergrp"]<>"0") {
-								$expusql=$mysqli->query("SELECT id,user,expiredate FROM users WHERE expiredate<='".date("Y-m-d")."' AND expiredate<>'0000-00-00' AND usrgroup='".$mysqli->real_escape_string($_SESSION[$secretkey."usergrp"])."' ORDER BY expiredate ".checksetting("expusrorder"));
+							if($_SESSION[$secretkey."admlvl"]=="0" ||  $_SESSION[$secretkey."admlvl"]=="1") {
+								$expusql=$mysqli->query("SELECT id,user,expiredate FROM users WHERE expiredate<='".date("Y-m-d")."' AND expiredate IS NOT NULL ORDER BY expiredate ".checksetting("expusrorder"));
+							} elseif($_SESSION[$secretkey."admlvl"]=="2" && $_SESSION[$secretkey."admgrp"]<>"0") {
+								$expusql=$mysqli->query("SELECT id,user,expiredate FROM users WHERE expiredate<='".date("Y-m-d")."' AND expiredate IS NOT NULL AND usrgroup='".$mysqli->real_escape_string($_SESSION[$secretkey."admgrp"])."' ORDER BY expiredate ".checksetting("expusrorder"));
 							} else {
 								$expusql="";
 							}
@@ -126,15 +126,15 @@ if(mysqli_connect_errno()) {
 									print("</table>");
 								}	
 							$day30p=date("Y-m-d",strtotime("+30 days"));
-							if($_SESSION[$secretkey."userlvl"]=="0" ||  $_SESSION[$secretkey."userlvl"]=="1") {
-								$expu30sql=$mysqli->query("SELECT id,user,expiredate FROM users WHERE expiredate<='".$day30p."' AND expiredate>'".date("Y-m-d")."' AND expiredate<>'0000-00-00' ORDER BY expiredate ".checksetting("soonexpusrorder"));
-							} elseif($_SESSION[$secretkey."userlvl"]=="2" && $_SESSION[$secretkey."usergrp"]<>"0") {
-								$expu30sql=$mysqli->query("SELECT id,user,expiredate FROM users WHERE expiredate<='".$day30p."' AND expiredate>'".date("Y-m-d")."' AND expiredate<>'0000-00-00' AND usrgroup='".$mysqli->real_escape_string($_SESSION[$secretkey."usergrp"])."' ORDER BY expiredate ".checksetting("soonexpusrorder"));
+							if($_SESSION[$secretkey."admlvl"]=="0" ||  $_SESSION[$secretkey."admlvl"]=="1") {
+								$expu30sql=$mysqli->query("SELECT id,user,expiredate FROM users WHERE expiredate<='".$day30p."' AND expiredate>'".date("Y-m-d")."' AND expiredate IS NOT NULL ORDER BY expiredate ".checksetting("soonexpusrorder"));
+							} elseif($_SESSION[$secretkey."admlvl"]=="2" && $_SESSION[$secretkey."admgrp"]<>"0") {
+								$expu30sql=$mysqli->query("SELECT id,user,expiredate FROM users WHERE expiredate<='".$day30p."' AND expiredate>'".date("Y-m-d")."' AND expiredate IS NOT NULL AND usrgroup='".$mysqli->real_escape_string($_SESSION[$secretkey."admgrp"])."' ORDER BY expiredate ".checksetting("soonexpusrorder"));
 							} else {
 								$expu30sql="";
 							}
 								if($expu30sql->num_rows<>"0") {
-									print("<h4 class=\"header\">Expired Users Within 30 Days</h4>");
+									print("<h4 class=\"header\">Expiring Users Within 30 Days</h4>");
 									print("<table class=\"table table-dash table-striped table-condensed\">");
 										while($expu30res=$expu30sql->fetch_array()) {
 											print("<tr><td width=\"50%\">".$expu30res["user"]."</td><td width=\"40%\">".$expu30res["expiredate"]."</td><td width=\"10%\"><a href=\"edituser.php?uid=".$expu30res["id"]."\" class=\"btn btn-mini pull-right\">Edit</a></td></tr>");
@@ -178,6 +178,7 @@ if(mysqli_connect_errno()) {
 			</div>
 		</div>
 		<?php
+			require("includes/modal-logout.php");
 			require("includes/footer.php");
 			mysqli_close($mysqli);
 		?>

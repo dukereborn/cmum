@@ -1,10 +1,8 @@
-<!DOCTYPE html>
 <?php
 if(file_exists("config.php")) {
 	require("config.php");
 } else {
-	header("Location:install/");
-	exit;
+	exit(header("Location: /install/"));
 }
 require("includes/settings.php");
 require("functions/cmum.php");
@@ -54,8 +52,7 @@ if(isset($_GET["logout"]) && stripslashes($_GET["logout"])=="1") {
 if(isset($_POST["blogin"]) && $_POST["blogin"]=="Login") {
 	$login=login($_POST["user"],$_POST["pass"]);
 		if($login=="0") {
-			header("Location:dashboard.php");
-			exit;
+			exit(header("Location: /dashboard.php"));
 		} elseif($login=="1") {
 			$notice="toastr.error('Unknown username or bad password');";
 		} elseif($login=="2") {
@@ -67,6 +64,7 @@ if(isset($_POST["blogin"]) && $_POST["blogin"]=="Login") {
 		}
 }
 ?>
+<!DOCTYPE html>
 <html>
 	<head>
 		<meta charset="<?php print($charset); ?>">

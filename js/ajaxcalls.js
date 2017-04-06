@@ -1,81 +1,368 @@
-function checkusername() {
-	var username=$('#newuser input[name=user]').val();
-	var password=$('#newuser input[name=password]').val();
-		if(username=="" || password=="") {
+//
+// admin functions
+//
+function checkadminname() {
+	var adminname=$('#newadmin input[name=user]').val();
+	var adminpass=$('#newadmin input[name=pass]').val();
+	var adminlevel=$('#newadmin select[name=admlvl]').val();
+	var usergroup=$('#newadmin select[name=ugroup]').val();
+		if(adminname=="" || adminpass=="") {
 			toastr.error('You must enter a username and a password');
-				if(username=="") {
-					newuser.user.focus();
-				} else if(password=="") {
-					newuser.password.focus();
+				if(adminname=="") {
+					newadmin.user.focus();
+				} else if(adminpass=="") {
+					newadmin.pass.focus();
 				}
-		} else if(alphanumeric(username)==false || alphanumeric(password)==false) {
-			if(alphanumeric(username)==false) {
-				toastr.error('Username contains invalid characters');
-				newuser.user.focus();
-			} else if(alphanumeric(password)==false) {
-				toastr.error('Password contains invalid characters');
-				newuser.password.focus();
-			}
 		} else {
 			jQuery.ajax({
 				type: 'post',
 				url: 'functions/ajaxhelper.php',
-				data: 'function=1&username='+username,
+				data: 'function=4&adminname='+adminname,
 				cache: false,
 				success: function(response) {
 					if(response==1) {
-						toastr.error('Username already exists');
-						newuser.user.focus();
+						toastr.error('Admin already exists');
+						newadmin.user.focus();
 					} else {
-						$('#newuser').trigger('submit', true);
+						if(adminlevel=="2" && usergroup=="0" || adminlevel=="2" && usergroup=="") {
+							toastr.error('You must select a group');
+							newadmin.ugroup.focus();
+						} else {
+							$('#newadmin').trigger('submit', true);
+						}
 					}
 				}
 			});
 		}
 }
 
-function checkeditusername() {
-	var username=$('#edituser input[name=user]').val();
-	var rusername=$('#edituser input[name=ruser]').val();
-	var password=$('#edituser input[name=password]').val();
-		if(username=="" || password=="") {
-			toastr.error('You must enter a username and a password');
-				if(password=="") {
-					edituser.password.focus();
+function checkeditadminname() {
+	var adminname=$('#editadmin input[name=user]').val();
+	var radminname=$('#editadmin input[name=ruser]').val();
+		if(adminname=="") {
+			toastr.error('You must enter a username');
+				if(adminname=="") {
+					editadmin.user.focus();
 				}
-				if(username=="") {
-					edituser.user.focus();
-				}
-		} else if(alphanumeric(username)==false || alphanumeric(password)==false) {
-			if(alphanumeric(username)==false) {
-				toastr.error('Username contains invalid characters');
-				newuser.user.focus();
-			} else if(alphanumeric(password)==false) {
-				toastr.error('Password contains invalid characters');
-				newuser.password.focus();
-			}
 		} else {
-			if(username!=rusername) {
+			if(adminname!=radminname) {
 				jQuery.ajax({
 					type: 'post',
 					url: 'functions/ajaxhelper.php',
-					data: 'function=1&username='+username,
+					data: 'function=4&adminname='+adminname,
 					cache: false,
 					success: function(response) {
 						if(response==1) {
-							toastr.error('Username already exists');
-							edituser.user.focus();
+							toastr.error('Admin already exists');
+							editadmin.user.focus();
 						} else {
-							$('#edituser').trigger('submit', true);
+							$('#editadmin').trigger('submit', true);
 						}
 					}
 				});
 			} else {
-				$('#edituser').trigger('submit', true);
+				$('#editadmin').trigger('submit', true);
 			}
 		}
 }
 
+function checkchpassadminname() {
+	var adminpass1=$('#chpassadmin input[name=pass1]').val();
+	var adminpass2=$('#chpassadmin input[name=pass2]').val();
+		if(adminpass1=="" || adminpass2=="") {
+			toastr.error('You must fill in both fields');
+				if(adminpass1=="") {
+					chpassadmin.pass1.focus();
+				}
+				if(adminpass2=="") {
+					chpassadmin.pass2.focus();
+				}
+		} else {
+			if(adminpass1==adminpass2) {
+				$('#chpassadmin').trigger('submit', true);
+			} else {
+				toastr.error('Passwords dont match');
+				chpassadmin.pass1.focus();
+			}
+		}
+}
+
+function enableadmin(aid) {
+	if(aid!="") {
+		jQuery.ajax({
+			type: 'post',
+			url: 'functions/ajaxhelper.php',
+			data: 'function=8&aid='+aid,
+			cache: false,
+			success: function(response) {
+				if(response==0) {
+					$('#admenabled-'+aid).html('<span class=\"label label-success\">Enabled</span>');
+					$('#admlnkenabled-'+aid).attr('onclick','disableadmin(\''+aid+'\');');
+					$('#aadmenabled-'+aid).html('Disable');
+					$('#aadmenabled-'+aid).attr('onclick','disableadmin(\''+aid+'\');');
+				}
+			}
+		});
+	}
+}
+
+function disableadmin(aid) {
+	if(aid!="") {
+		jQuery.ajax({
+			type: 'post',
+			url: 'functions/ajaxhelper.php',
+			data: 'function=9&aid='+aid,
+			cache: false,
+			success: function(response) {
+				if(response==0) {
+					$('#admenabled-'+aid).html('<span class=\"label label-important\">Disabled</span>');
+					$('#admlnkenabled-'+aid).attr('onclick','enableadmin(\''+aid+'\');');
+					$('#aadmenabled-'+aid).html('Enable');
+					$('#aadmenabled-'+aid).attr('onclick','enableadmin(\''+aid+'\');');
+				}
+			}
+		});
+	}
+}
+
+function getdeleteadmin(aid,adminname) {
+	if(aid!="" || adminname!="") {
+		$('#modal-body').html('Are your sure you want to delete admin <strong>'+adminname+'</strong>?');
+		$('#btndeladmin').attr('onclick','deleteadmin(\''+aid+'\');');
+		$('#modalDelAdmin').modal('show');
+	} else {
+		toastr.error('Something went wrong, please try again');
+	}
+}
+
+function deleteadmin(aid) {
+	if(aid!="") {
+		$('#modalDelAdmin').modal('hide');
+			jQuery.ajax({
+				type: 'post',
+				url: 'functions/ajaxhelper.php',
+				data: 'function=20&aid='+aid,
+				cache: false,
+				success: function(response) {
+					if(response!="") {
+						if(response==0) {
+							var numadmins=$('#numadmins').html()-1;
+							$('#numadmins').html(numadmins);
+							$('#admin-'+aid).remove();
+							toastr.success('Admin successfully deleted');
+						}
+						if(response==1) {
+							toastr.error('This admin does not belong to you');
+						}
+					} else {
+						toastr.error('Something went wrong, please try again');
+					}
+				}
+			});
+	} else {
+		toastr.error('Something went wrong, please try again');
+	}
+}
+
+//
+// csp server functions
+//
+function cspkickuser(username) {
+	if(username!="") {
+		jQuery.ajax({
+			type: 'post',
+			url: 'functions/ajaxhelper.php',
+			data: 'function=11&username='+username,
+			cache: false,
+			success: function(response) {
+				if(response==1) {
+					$('#cspstate-'+username).html('');
+					toastr.success(username+' kicked');
+				}
+			}
+		});
+	}
+}
+
+function csploadsendosd(username) {
+	if(username!="") {
+		$('#osdusr').val(username);
+		$('#osdmsg').val('');
+		$('#osdusrlabel').html('<label>Message to <strong>'+username+'</strong></label>');
+		$('#modalCspSendOsd').modal('show');
+			$('#modalCspSendOsd').on('shown', function () {
+				$('#osdmsg').focus()
+			});
+	}
+}
+
+function checkcspsendosd() {
+	var username=$('input[name=osdusr]').val();
+	var message=$('input[name=osdmsg]').val();
+		if(message=="") {
+			toastr.error('Please enter a message');
+			$('#osdmsg').focus();
+		} else {
+			jQuery.ajax({
+				type: 'post',
+				url: 'functions/ajaxhelper.php',
+				data: 'function=12&username='+username+'&message='+message,
+				cache: false,
+				success: function(response) {
+					if(response==1) {
+						$('#modalCspSendOsd').modal('hide');
+						toastr.success('Message sent');
+					} 
+					if(response==2) {
+						$('#modalCspSendOsd').modal('hide');
+						toastr.warning('No active/compatible newcamd sessions found');
+					}
+					if(response==0) {
+						$('#modalCspSendOsd').modal('hide');
+						toastr.error('Message not sent, please try again');
+					}
+				}
+			});
+		}
+}
+
+function cspgetuserinfo(username) {
+	if(username!="") {
+		jQuery.ajax({
+			type: 'post',
+			url: 'functions/ajaxhelper.php',
+			data: 'function=13&username='+username,
+			cache: false,
+			success: function(response) {
+				if(response!="") {
+					var cspdata=response.split(";");
+						$('#cspusr-headusr').html('CSP User Info - '+username);
+						$('#cspusr-loginfailures').html(ifempty(cspdata[0]));
+						$('#cspusr-sessions').html(ifempty(cspdata[1]));
+						$('#cspusr-host').html(ifempty(cspdata[2]));
+						$('#cspusr-id').html(ifempty(cspdata[3]));
+						$('#cspusr-count').html(ifempty(cspdata[4]));
+						$('#cspusr-profile').html(ifempty(cspdata[5]));
+						$('#cspusr-clientid').html(ifempty(cspdata[6]));
+						$('#cspusr-protocol').html(ifempty(cspdata[7]));
+						$('#cspusr-context').html(ifempty(cspdata[8]));
+						$('#cspusr-connected').html(ifempty(cspdata[9]));
+						$('#cspusr-duration').html(ifempty(cspdata[10]));
+						$('#cspusr-ecmcount').html(ifempty(cspdata[11]));
+						$('#cspusr-emmcount').html(ifempty(cspdata[12]));
+						$('#cspusr-pendingcount').html(ifempty(cspdata[13]));
+						$('#cspusr-keepalivecount').html(ifempty(cspdata[14]));
+						$('#cspusr-lasttransaction').html(ifempty(cspdata[15]));
+						$('#cspusr-lastzap').html(ifempty(cspdata[16]));
+						$('#cspusr-idletime').html(ifempty(cspdata[17]));
+						$('#cspusr-flags').html(ifempty(cspdata[18]));
+						$('#cspusr-avgecminterval').html(ifempty(cspdata[19]));
+						$('#cspusr-sessionid').html(ifempty(cspdata[20]));
+						$('#cspusr-sessioncdata').html(ifempty(cspdata[21]));
+						$('#cspusr-sessionname').html(ifempty(cspdata[22]));
+					$('#modalCspUserInfo').modal('show');
+				} else {
+					toastr.error('Something went wrong, please try again');
+				}
+			}
+		});
+	}
+}
+
+function cspgetuseripinfo(username) {
+	if(username!="") {
+		jQuery.ajax({
+			type: 'post',
+			url: 'functions/ajaxhelper.php',
+			data: 'function=14&username='+username,
+			cache: false,
+			success: function(response) {
+				if(response!="") {
+					var cspdata=response.split(";");
+						$('#cspusrip-headusr').html('CSP User IP Info - '+username);
+						$('#cspusrip-ip').html(ifempty(cspdata[0]));
+						$('#cspusrip-hostname').html(ifempty(cspdata[1]));
+						$('#cspusrip-country').html(ifempty(cspdata[2]));
+						$('#cspusrip-region').html(ifempty(cspdata[3]));
+						$('#cspusrip-city').html(ifempty(cspdata[4]));
+						$('#cspusrip-zipcode').html(ifempty(cspdata[5]));
+						$('#cspusrip-timezone').html(ifempty(cspdata[6]));
+					$('#modalCspUserIpInfo').modal('show');
+				} else {
+					toastr.error('Something went wrong, please try again');
+				}
+			}
+		});
+	}
+}
+
+//
+// email function
+//
+function loadsendemail(email) {
+	if(email!="") {
+		$('#email_to').val(email);
+		$('#email_subject').val('');
+		$('#email_body').val('');
+		$('#emailusrlabel').html('<label>Recipient<br><strong>'+email+'</strong></label>');
+		$('#modalSendEmail').modal('show');
+			$('#modalSendEmail').on('shown', function () {
+				$('#email_subject').focus()
+			});
+	}
+}
+
+function checksendemail() {
+	var email_to=$('#email_to').val();
+	var email_subject=$('#email_subject').val();
+	var email_body=$('#email_body').val();
+		if(email_subject=="") {
+			toastr.warning('Please enter a subject');
+			$('#email_subject').focus();
+		} else if(email_body=="") {
+			toastr.warning('Please enter a message');
+			$('#email_body').focus();
+		} else {
+			jQuery.ajax({
+				type: 'post',
+				url: 'functions/ajaxhelper.php',
+				data: 'function=21&email_to='+email_to+'&email_subject='+email_subject+'&email_body='+email_body,
+				cache: false,
+				success: function(response) {
+					if(response==1) {
+						$('#modalSendEmail').modal('hide');
+						toastr.error('No to address given');
+					} 
+					if(response==2) {
+						$('#modalSendEmail').modal('hide');
+						toastr.error('Email not sent, please try again or check settings');
+					}
+					if(response==0) {
+						$('#modalSendEmail').modal('hide');
+						toastr.success('Email sent');
+					}
+				}
+			});
+		}
+}
+
+function checkemailfields() {
+	var email_subject=$('#email_subject').val();
+	var email_body=$('#email_body').val();
+		if(email_subject=="") {
+			toastr.warning('Please enter a subject');
+			$('#email_subject').focus();
+		} else if(email_body=="") {
+			toastr.warning('Please enter a message');
+			$('#email_body').focus();
+		} else {
+			$('#sendemailtoall').trigger('submit', true);
+		}
+}
+
+//
+// group functions
+//
 function checkgroupname() {
 	var groupname=$('#newgroup input[name=name]').val();
 		if(groupname=="") {
@@ -127,6 +414,86 @@ function checkeditgroupname() {
 		}
 }
 
+function enablegroup(gid) {
+	if(gid!="") {
+		jQuery.ajax({
+			type: 'post',
+			url: 'functions/ajaxhelper.php',
+			data: 'function=15&gid='+gid,
+			cache: false,
+			success: function(response) {
+				if(response==0) {
+					$('#grpenabled-'+gid).html('<span class=\"label label-success\">Enabled</span>');
+					$('#grplnkenabled-'+gid).attr('onclick','disablegroup(\''+gid+'\');');
+					$('#agrpenabled-'+gid).html('Disable');
+					$('#agrpenabled-'+gid).attr('onclick','disablegroup(\''+gid+'\');');
+				}
+			}
+		});
+	}
+}
+
+function disablegroup(gid) {
+	if(gid!="") {
+		jQuery.ajax({
+			type: 'post',
+			url: 'functions/ajaxhelper.php',
+			data: 'function=16&gid='+gid,
+			cache: false,
+			success: function(response) {
+				if(response==0) {
+					$('#grpenabled-'+gid).html('<span class=\"label label-important\">Disabled</span>');
+					$('#grplnkenabled-'+gid).attr('onclick','enablegroup(\''+gid+'\');');
+					$('#agrpenabled-'+gid).html('Enable');
+					$('#agrpenabled-'+gid).attr('onclick','enablegroup(\''+gid+'\');');
+				}
+			}
+		});
+	}
+}
+
+function getdeletegroup(gid,groupname) {
+	if(gid!="" || groupname!="") {
+		$('#modal-body').html('Are your sure you want to delete group <strong>'+groupname+'</strong>?<br><br><strong>WARNING!</strong><br>All users in this group will also be deleted and group managers for this group will be disabled.');
+		$('#btndelgroup').attr('onclick','deletegroup(\''+gid+'\');');
+		$('#modalDelGroup').modal('show');
+	} else {
+		toastr.error('Something went wrong, please try again');
+	}
+}
+
+function deletegroup(gid) {
+	if(gid!="") {
+		$('#modalDelGroup').modal('hide');
+			jQuery.ajax({
+				type: 'post',
+				url: 'functions/ajaxhelper.php',
+				data: 'function=18&gid='+gid,
+				cache: false,
+				success: function(response) {
+					if(response!="") {
+						if(response==0) {
+							var numgroups=$('#numgroups').html()-1;
+							$('#numgroups').html(numgroups);
+							$('#group-'+gid).remove();
+							toastr.success('Group successfully deleted');
+						}
+						if(response==1) {
+							toastr.error('This group does not belong to you');
+						}
+					} else {
+						toastr.error('Something went wrong, please try again');
+					}
+				}
+			});
+	} else {
+		toastr.error('Something went wrong, please try again');
+	}
+}
+
+//
+// profile functions
+// 
 function checkprofilename() {
 	var profilename=$('#newprofile input[name=name]').val();
 	var cspvalue=$('#newprofile input[name=cspvalue]').val();
@@ -228,105 +595,139 @@ function checkeditprofilename() {
 		}
 }
 
-function checkadminname() {
-	var adminname=$('#newadmin input[name=user]').val();
-	var adminpass=$('#newadmin input[name=pass]').val();
-	var adminlevel=$('#newadmin select[name=admlvl]').val();
-	var usergroup=$('#newadmin select[name=ugroup]').val();
-		if(adminname=="" || adminpass=="") {
-			toastr.error('You must enter a username and a password');
-				if(adminname=="") {
-					newadmin.user.focus();
-				} else if(adminpass=="") {
-					newadmin.pass.focus();
+function getdeleteprofile(pid,profname,cspvalue) {
+	if(pid!="" || profname!="" || cspvalue!="") {
+		$('#modal-body').html('Are your sure you want to delete profile <strong>'+profname+' ('+cspvalue+')</strong>?');
+		$('#btndelprofile').attr('onclick','deleteprofile(\''+pid+'\');');
+		$('#modalDelProfile').modal('show');
+	} else {
+		toastr.error('Something went wrong, please try again');
+	}
+}
+
+function deleteprofile(pid) {
+	if(pid!="") {
+		$('#modalDelProfile').modal('hide');
+			jQuery.ajax({
+				type: 'post',
+				url: 'functions/ajaxhelper.php',
+				data: 'function=19&pid='+pid,
+				cache: false,
+				success: function(response) {
+					if(response!="") {
+						if(response==0) {
+							var numprofs=$('#numprofs').html()-1;
+							$('#numprofs').html(numprofs);
+							$('#profile-'+pid).remove();
+							toastr.success('Profile successfully deleted');
+						}
+						if(response==1) {
+							toastr.error('This profile does not belong to you');
+						}
+					} else {
+						toastr.error('Something went wrong, please try again');
+					}
 				}
+			});
+	} else {
+		toastr.error('Something went wrong, please try again');
+	}
+}
+
+//
+// user functions
+//
+function checkusername(validatechar) {
+	var username=$('#newuser input[name=user]').val();
+	var password=$('#newuser input[name=password]').val();
+		if(username=="" || password=="") {
+			toastr.error('You must enter a username and a password');
+				if(username=="") {
+					newuser.user.focus();
+				} else if(password=="") {
+					newuser.password.focus();
+				}
+		} else if(validatechar==1 && (alphanumeric(username)==false || alphanumeric(password)==false)) {
+			if(alphanumeric(username)==false) {
+				toastr.error('Username contains invalid characters');
+				newuser.user.focus();
+			} else if(alphanumeric(password)==false) {
+				toastr.error('Password contains invalid characters');
+				newuser.password.focus();
+			}
 		} else {
 			jQuery.ajax({
 				type: 'post',
 				url: 'functions/ajaxhelper.php',
-				data: 'function=4&adminname='+adminname,
+				data: 'function=1&username='+username,
 				cache: false,
 				success: function(response) {
 					if(response==1) {
-						toastr.error('Admin already exists');
-						newadmin.user.focus();
+						toastr.error('Username already exists');
+						newuser.user.focus();
 					} else {
-						if(adminlevel=="2" && usergroup=="0" || adminlevel=="2" && usergroup=="") {
-							toastr.error('You must select a group');
-							newadmin.ugroup.focus();
-						} else {
-							$('#newadmin').trigger('submit', true);
-						}
+						$('#newuser').trigger('submit', true);
 					}
 				}
 			});
 		}
 }
 
-function checkeditadminname() {
-	var adminname=$('#editadmin input[name=user]').val();
-	var radminname=$('#editadmin input[name=ruser]').val();
-		if(adminname=="") {
-			toastr.error('You must enter a username');
-				if(adminname=="") {
-					editadmin.user.focus();
+function checkeditusername(validatechar) {
+	var username=$('#edituser input[name=user]').val();
+	var rusername=$('#edituser input[name=ruser]').val();
+	var password=$('#edituser input[name=password]').val();
+		if(username=="" || password=="") {
+			toastr.error('You must enter a username and a password');
+				if(password=="") {
+					edituser.password.focus();
 				}
+				if(username=="") {
+					edituser.user.focus();
+				}
+		} else if(validatechar==1 && (alphanumeric(username)==false || alphanumeric(password)==false)) {
+			if(alphanumeric(username)==false) {
+				toastr.error('Username contains invalid characters');
+				newuser.user.focus();
+			} else if(alphanumeric(password)==false) {
+				toastr.error('Password contains invalid characters');
+				newuser.password.focus();
+			}
 		} else {
-			if(adminname!=radminname) {
+			if(username!=rusername) {
 				jQuery.ajax({
 					type: 'post',
 					url: 'functions/ajaxhelper.php',
-					data: 'function=4&adminname='+adminname,
+					data: 'function=1&username='+username,
 					cache: false,
 					success: function(response) {
 						if(response==1) {
-							toastr.error('Admin already exists');
-							editadmin.user.focus();
+							toastr.error('Username already exists');
+							edituser.user.focus();
 						} else {
-							$('#editadmin').trigger('submit', true);
+							$('#edituser').trigger('submit', true);
 						}
 					}
 				});
 			} else {
-				$('#editadmin').trigger('submit', true);
+				$('#edituser').trigger('submit', true);
 			}
 		}
 }
 
-function checkchpassadminname() {
-	var adminpass1=$('#chpassadmin input[name=pass1]').val();
-	var adminpass2=$('#chpassadmin input[name=pass2]').val();
-		if(adminpass1=="" || adminpass2=="") {
-			toastr.error('You must fill in both fields');
-				if(adminpass1=="") {
-					chpassadmin.pass1.focus();
-				}
-				if(adminpass2=="") {
-					chpassadmin.pass2.focus();
-				}
-		} else {
-			if(adminpass1==adminpass2) {
-				$('#chpassadmin').trigger('submit', true);
-			} else {
-				toastr.error('Passwords dont match');
-				chpassadmin.pass1.focus();
-			}
-		}
-}
-
-function enableuser(uid,admlvl,admgrp,admid) {
+function enableuser(uid) {
 	if(uid!="") {
 		jQuery.ajax({
 			type: 'post',
 			url: 'functions/ajaxhelper.php',
-			data: 'function=6&uid='+uid+'&admlvl='+admlvl+'&admgrp='+admgrp+'&admid='+admid,
+			data: 'function=6&uid='+uid,
 			cache: false,
 			success: function(response) {
 				if(response==0) {
 					$('#usrenabled-'+uid).html('<span class=\"label label-success\">Enabled</span>');
-					$('#usrlnkenabled-'+uid).attr('onclick','disableuser(\''+uid+'\',\''+admlvl+'\',\''+admgrp+'\',\''+admid+'\');');
+					$('#usrlnkenabled-'+uid).attr('onclick','disableuser(\''+uid+'\');');
 					$('#ausrenabled-'+uid).html('Disable');
-					$('#ausrenabled-'+uid).attr('onclick','disableuser(\''+uid+'\',\''+admlvl+'\',\''+admgrp+'\',\''+admid+'\');');
+					$('#ausrenabled-'+uid).attr('onclick','disableuser(\''+uid+'\');');
 				}
 				if(response==1) {
 					toastr.error('This user does not belong to you');
@@ -336,98 +737,22 @@ function enableuser(uid,admlvl,admgrp,admid) {
 	}
 }
 
-function disableuser(uid,admlvl,admgrp,admid) {
+function disableuser(uid) {
 	if(uid!="") {
 		jQuery.ajax({
 			type: 'post',
 			url: 'functions/ajaxhelper.php',
-			data: 'function=7&uid='+uid+'&admlvl='+admlvl+'&admgrp='+admgrp+'&admid='+admid,
+			data: 'function=7&uid='+uid,
 			cache: false,
 			success: function(response) {
 				if(response==0) {
 					$('#usrenabled-'+uid).html('<span class=\"label label-important\">Disabled</span>');
-					$('#usrlnkenabled-'+uid).attr('onclick','enableuser(\''+uid+'\',\''+admlvl+'\',\''+admgrp+'\',\''+admid+'\');');
+					$('#usrlnkenabled-'+uid).attr('onclick','enableuser(\''+uid+'\');');
 					$('#ausrenabled-'+uid).html('Enable');
-					$('#ausrenabled-'+uid).attr('onclick','enableuser(\''+uid+'\',\''+admlvl+'\',\''+admgrp+'\',\''+admid+'\');');
+					$('#ausrenabled-'+uid).attr('onclick','enableuser(\''+uid+'\');');
 				}
 				if(response==1) {
 					toastr.error('This user does not belong to you');
-				}
-			}
-		});
-	}
-}
-
-function enableadmin(aid) {
-	if(aid!="") {
-		jQuery.ajax({
-			type: 'post',
-			url: 'functions/ajaxhelper.php',
-			data: 'function=8&aid='+aid,
-			cache: false,
-			success: function(response) {
-				if(response==0) {
-					$('#admenabled-'+aid).html('<span class=\"label label-success\">Enabled</span>');
-					$('#admlnkenabled-'+aid).attr('onclick','disableadmin(\''+aid+'\');');
-					$('#aadmenabled-'+aid).html('Disable');
-					$('#aadmenabled-'+aid).attr('onclick','disableadmin(\''+aid+'\');');
-				}
-			}
-		});
-	}
-}
-
-function disableadmin(aid) {
-	if(aid!="") {
-		jQuery.ajax({
-			type: 'post',
-			url: 'functions/ajaxhelper.php',
-			data: 'function=9&aid='+aid,
-			cache: false,
-			success: function(response) {
-				if(response==0) {
-					$('#admenabled-'+aid).html('<span class=\"label label-important\">Disabled</span>');
-					$('#admlnkenabled-'+aid).attr('onclick','enableadmin(\''+aid+'\');');
-					$('#aadmenabled-'+aid).html('Enable');
-					$('#aadmenabled-'+aid).attr('onclick','enableadmin(\''+aid+'\');');
-				}
-			}
-		});
-	}
-}
-
-function enablegroup(gid) {
-	if(gid!="") {
-		jQuery.ajax({
-			type: 'post',
-			url: 'functions/ajaxhelper.php',
-			data: 'function=15&gid='+gid,
-			cache: false,
-			success: function(response) {
-				if(response==0) {
-					$('#grpenabled-'+gid).html('<span class=\"label label-success\">Enabled</span>');
-					$('#grplnkenabled-'+gid).attr('onclick','disablegroup(\''+gid+'\');');
-					$('#agrpenabled-'+gid).html('Disable');
-					$('#agrpenabled-'+gid).attr('onclick','disablegroup(\''+gid+'\');');
-				}
-			}
-		});
-	}
-}
-
-function disablegroup(gid) {
-	if(gid!="") {
-		jQuery.ajax({
-			type: 'post',
-			url: 'functions/ajaxhelper.php',
-			data: 'function=16&gid='+gid,
-			cache: false,
-			success: function(response) {
-				if(response==0) {
-					$('#grpenabled-'+gid).html('<span class=\"label label-important\">Disabled</span>');
-					$('#grplnkenabled-'+gid).attr('onclick','enablegroup(\''+gid+'\');');
-					$('#agrpenabled-'+gid).html('Enable');
-					$('#agrpenabled-'+gid).attr('onclick','enablegroup(\''+gid+'\');');
 				}
 			}
 		});
@@ -457,129 +782,56 @@ function checkquickedit() {
 		}
 }
 
-function cspkickuser(username) {
-	if(username!="") {
-		jQuery.ajax({
-			type: 'post',
-			url: 'functions/ajaxhelper.php',
-			data: 'function=11&username='+username,
-			cache: false,
-			success: function(response) {
-				if(response==1) {
-					$('#cspstate-'+username).html('');
-					toastr.success(username+' kicked');
-				}
+function checksearch(e) {
+	if(window.event)
+		var keyCode=window.event.keyCode;
+	else
+		var keyCode=e.which;
+	if(keyCode==13) {
+		var searchfor=$('#newsearch input[name=searchfor]').val();
+			if(searchfor=="") {
+				newsearch.searchfor.focus();
+			} else {
+				$('#newsearch').trigger('submit', true);
 			}
-		});
 	}
 }
 
-function csploadsendosd(username) {
-	if(username!="") {
-		$('#osdusr').val(username);
-		$('#osdmsg').val('');
-		$('#osdusrlabel').html('<label>Message to <strong>'+username+'</strong></label>');
-		$('#modalCspSendOsd').modal({ show: true });
+function getdeleteuser(uid,username) {
+	if(uid!="" || username!="") {
+		$('#modal-body').html('Are your sure you want to delete user <strong>'+username+'</strong>?');
+		$('#btndeluser').attr('onclick','deleteuser(\''+uid+'\');');
+		$('#modalDelUser').modal('show');
+	} else {
+		toastr.error('Something went wrong, please try again');
 	}
 }
 
-function checkcspsendosd() {
-	var username=$('input[name=osdusr]').val();
-	var message=$('input[name=osdmsg]').val();
-		if(message=="") {
-			toastr.error('Please enter a message');
-			$('#osdmsg').focus();
-		} else {
+function deleteuser(uid) {
+	if(uid!="") {
+		$('#modalDelUser').modal('hide');
 			jQuery.ajax({
 				type: 'post',
 				url: 'functions/ajaxhelper.php',
-				data: 'function=12&username='+username+'&message='+message,
+				data: 'function=17&uid='+uid,
 				cache: false,
 				success: function(response) {
-					if(response==1) {
-						$('#modalCspSendOsd').modal('hide');
-						toastr.success('Message sent');
-					} 
-					if(response==2) {
-						$('#modalCspSendOsd').modal('hide');
-						toastr.warning('No active/compatible newcamd sessions found');
-					}
-					if(response==0) {
-						$('#modalCspSendOsd').modal('hide');
-						toastr.error('Message not sent, please try again');
+					if(response!="") {
+						if(response==0) {
+							var numusers=$('#numusers').html()-1;
+							$('#numusers').html(numusers);
+							$('#user-'+uid).remove();
+							toastr.success('User successfully deleted');
+						}
+						if(response==1) {
+							toastr.error('This user does not belong to you');
+						}
+					} else {
+						toastr.error('Something went wrong, please try again');
 					}
 				}
 			});
-		}
-}
-
-function cspgetuserinfo(username) {
-	if(username!="") {
-		jQuery.ajax({
-			type: 'post',
-			url: 'functions/ajaxhelper.php',
-			data: 'function=13&username='+username,
-			cache: false,
-			success: function(response) {
-				if(response!="") {
-					var cspdata=response.split(";");
-						$('#cspusr-headusr').html('CSP User Info - '+username);
-						$('#cspusr-loginfailures').html(ifempty(cspdata[0]));
-						$('#cspusr-sessions').html(ifempty(cspdata[1]));
-						$('#cspusr-host').html(ifempty(cspdata[2]));
-						$('#cspusr-id').html(ifempty(cspdata[3]));
-						$('#cspusr-count').html(ifempty(cspdata[4]));
-						$('#cspusr-profile').html(ifempty(cspdata[5]));
-						$('#cspusr-clientid').html(ifempty(cspdata[6]));
-						$('#cspusr-protocol').html(ifempty(cspdata[7]));
-						$('#cspusr-context').html(ifempty(cspdata[8]));
-						$('#cspusr-connected').html(ifempty(cspdata[9]));
-						$('#cspusr-duration').html(ifempty(cspdata[10]));
-						$('#cspusr-ecmcount').html(ifempty(cspdata[11]));
-						$('#cspusr-emmcount').html(ifempty(cspdata[12]));
-						$('#cspusr-pendingcount').html(ifempty(cspdata[13]));
-						$('#cspusr-keepalivecount').html(ifempty(cspdata[14]));
-						$('#cspusr-lasttransaction').html(ifempty(cspdata[15]));
-						$('#cspusr-lastzap').html(ifempty(cspdata[16]));
-						$('#cspusr-idletime').html(ifempty(cspdata[17]));
-						$('#cspusr-flags').html(ifempty(cspdata[18]));
-						$('#cspusr-avgecminterval').html(ifempty(cspdata[19]));
-						$('#cspusr-sessionid').html(ifempty(cspdata[20]));
-						$('#cspusr-sessioncdata').html(ifempty(cspdata[21]));
-						$('#cspusr-sessionname').html(ifempty(cspdata[22]));
-					$('#modalCspUserInfo').modal({ show: true });
-				} else {
-					toastr.error('Something went wrong, please try again');
-				}
-			}
-		});
-	}
-}
-
-function cspgetuseripinfo(username) {
-	if(username!="") {
-		jQuery.ajax({
-			type: 'post',
-			url: 'functions/ajaxhelper.php',
-			data: 'function=14&username='+username,
-			cache: false,
-			success: function(response) {
-				if(response!="") {
-					var cspdata=response.split(";");
-						$('#cspusrip-headusr').html('CSP User IP Info - '+username);
-						$('#cspusrip-ip').html(ifempty(cspdata[0]));
-						$('#cspusrip-hostname').html(ifempty(cspdata[1]));
-						$('#cspusrip-continent').html(ifempty(cspdata[2]));
-						$('#cspusrip-country').html(ifempty(cspdata[3]));
-						$('#cspusrip-region').html(ifempty(cspdata[4]));
-						$('#cspusrip-city').html(ifempty(cspdata[5]));
-						$('#cspusrip-timezone').html(ifempty(cspdata[6]));
-						$('#cspusrip-isp').html(ifempty(cspdata[7]));
-					$('#modalCspUserIpInfo').modal({ show: true });
-				} else {
-					toastr.error('Something went wrong, please try again');
-				}
-			}
-		});
+	} else {
+		toastr.error('Something went wrong, please try again');
 	}
 }

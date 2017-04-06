@@ -35,10 +35,10 @@ function login($user,$pass) {
 							@session_start();
 								session_regenerate_id(true);
 								$_SESSION[$secretkey."sessid"]=session_id();
-								$_SESSION[$secretkey."user"]=$loginuser;
-								$_SESSION[$secretkey."userid"]=$line["id"];
-								$_SESSION[$secretkey."userlvl"]=$line["admlvl"];
-								$_SESSION[$secretkey."usergrp"]=$line["ugroup"];
+								$_SESSION[$secretkey."admin"]=$loginuser;
+								$_SESSION[$secretkey."admid"]=$line["id"];
+								$_SESSION[$secretkey."admlvl"]=$line["admlvl"];
+								$_SESSION[$secretkey."admgrp"]=$line["ugroup"];
 								$_SESSION[$secretkey."timeout"]=$sline["timeout"];
 								$_SESSION[$secretkey."servername"]=$sline["servername"];
 								$_SESSION[$secretkey."fetchcsp"]=$sline["fetchcsp"];
@@ -65,6 +65,5 @@ function logout() {
 		@session_start();
 			session_unset(); 
 			session_destroy();
-		header("Location:index.php?logout=1");
-		exit;
+		exit(header("Location: /index.php?logout=1"));
 }

@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <?php
 require("functions/logincheck.php");
 require("functions/cmum.php");
@@ -11,8 +10,7 @@ if(isset($_POST["uid"]) && $_POST["uid"]<>"") {
 	}
 	$status=edituser($_POST["uid"],$_POST["user"],$_POST["password"],$_POST["displayname"],$_POST["email"],$_POST["ipmask"],$_POST["maxconn"],$_POST["ecmrate"],$_POST["customvalues"],$_POST["usrgroup"],$_POST["admin"],$_POST["enabled"],$_POST["mapexclude"],$_POST["debug"],$_POST["startdate"],$_POST["expiredate"],$profiles,$_POST["boxtype"],$_POST["macaddress"],$_POST["serialnumber"],$_POST["comment"]);
 		if($status=="0") {
-			header("Location: users.php?edit=1");
-			exit;
+			exit(header("Location: /users.php?edit=1"));
 		} elseif($status=="1") {
 			$notice="toastr.error('You must enter a username and a password');";
 		} elseif($status=="2") {
@@ -21,21 +19,18 @@ if(isset($_POST["uid"]) && $_POST["uid"]<>"") {
 }
 
 if(!isset($_GET["uid"]) || $_GET["uid"]=="") {
-	header("Location: users.php");
-	exit;
+	exit(header("Location: /users.php"));
 }
-
-$counters=explode(";",counter());
 
 $mysqli=new mysqli($dbhost,$dbuser,$dbpass,$dbname);
 if(mysqli_connect_errno()) {
 	errorpage("MYSQL DATABASE ERROR",mysqli_connect_error(),$charset,CMUM_TITLE,$_SERVER["REQUEST_URI"],CMUM_VERSION,CMUM_BUILD,CMUM_MOD);
 	exit;
 }
-	if($_SESSION[$secretkey."userlvl"]=="0" ||  $_SESSION[$secretkey."userlvl"]=="1") {
+	if($_SESSION[$secretkey."admlvl"]=="0" ||  $_SESSION[$secretkey."admlvl"]=="1") {
 		$grpsql=$mysqli->query("SELECT id,name FROM groups");	
-	} elseif($_SESSION[$secretkey."userlvl"]=="2" && $_SESSION[$secretkey."usergrp"]<>"0") {
-		$grpsql=$mysqli->query("SELECT id,name FROM groups WHERE id='".$mysqli->real_escape_string($_SESSION[$secretkey."usergrp"])."'");
+	} elseif($_SESSION[$secretkey."admlvl"]=="2" && $_SESSION[$secretkey."admgrp"]<>"0") {
+		$grpsql=$mysqli->query("SELECT id,name FROM groups WHERE id='".$mysqli->real_escape_string($_SESSION[$secretkey."admgrp"])."'");
 	} else {
 		$grpsql="";
 	}
@@ -47,11 +42,13 @@ if(mysqli_connect_errno()) {
 		$setres=$setsql->fetch_array();
 mysqli_close($mysqli);
 
-if($_SESSION[$secretkey."userlvl"]=="2" && $_SESSION[$secretkey."usergrp"]<>$usrres["usrgroup"]) {
-	header("Location: users.php?error=1");
-	exit;
+if($_SESSION[$secretkey."admlvl"]=="2" && $_SESSION[$secretkey."admgrp"]<>$usrres["usrgroup"]) {
+	exit(header("Location: /users.php?error=1"));
 }
+
+$counters=explode(";",counter());
 ?>
+<!DOCTYPE html>
 <html>
 	<head>
 		<meta charset="<?php print($charset); ?>">
@@ -124,7 +121,7 @@ if($_SESSION[$secretkey."userlvl"]=="2" && $_SESSION[$secretkey."usergrp"]<>$usr
 							<li><?php if($_SESSION[$secretkey."fetchcsp"]=="1") { print(dashcheckcspconn($cspconnstatus)); } ?><a href="dashboard.php"><i class="batch home"></i><br>Dashboard</a></li>
 							<li><span class="label label-info pull-right"><?php print($counters[0]); ?></span><a href="users.php" class="active"><i class="batch users"></i><br>Users</a></li>
 								<?php
-									if($_SESSION[$secretkey."userlvl"]=="0") {
+									if($_SESSION[$secretkey."admlvl"]=="0") {
 										print("<li><span class=\"label label-info pull-right\">".$counters[1]."</span><a href=\"groups.php\"><i class=\"batch database\"></i><br>Groups</a></li>");
 										print("<li><span class=\"label label-info pull-right\">".$counters[2]."</span><a href=\"profiles.php\"><i class=\"batch tables\"></i><br>Profiles</a></li>");
 										print("<li><span class=\"label label-info pull-right\">".$counters[3]."</span><a href=\"admins.php\"><i class=\"batch star\"></i><br>Admins</a></li>");
@@ -152,13 +149,13 @@ if($_SESSION[$secretkey."userlvl"]=="2" && $_SESSION[$secretkey."usergrp"]<>$usr
 									<div class="control-group">
 										<label class="control-label" for="user">Username</label>
 										<div class="controls">
-											<input type="text" name="user" id="user" autocomplete="off" ondblclick="autouser('user');" value="<?php print($usrres["user"]); ?>" maxlength="30">
+											<input type="text" name="user" id="user" autocapitalize="off" autocomplete="off" autocorrect="off" spellcheck="false" ondblclick="autouser('user');" value="<?php print($usrres["user"]); ?>" maxlength="30">
 										</div>
 									</div>
 									<div class="control-group">
 										<label class="control-label" for="password">Password</label>
 										<div class="controls">
-											<input type="text" name="password" id="password" autocomplete="off" ondblclick="autouser('password');" value="<?php print($usrres["password"]); ?>" maxlength="30">
+											<input type="text" name="password" id="password" autocapitalize="off" autocomplete="off" autocorrect="off" spellcheck="false" ondblclick="autouser('password');" value="<?php print($usrres["password"]); ?>" maxlength="30">
 										</div>
 									</div>
 									<div class="control-group">
@@ -204,7 +201,7 @@ if($_SESSION[$secretkey."userlvl"]=="2" && $_SESSION[$secretkey."usergrp"]<>$usr
 										<div class="controls">
 											<select name="usrgroup" id="usrgroup">
 												<?php
-													if($_SESSION[$secretkey."userlvl"]=="0" ||  $_SESSION[$secretkey."userlvl"]=="1") {
+													if($_SESSION[$secretkey."admlvl"]=="0" ||  $_SESSION[$secretkey."admlvl"]=="1") {
 														print("<option value=\"\"></option>");
 													}
 													while($grpres=$grpsql->fetch_array()) {
@@ -261,13 +258,13 @@ if($_SESSION[$secretkey."userlvl"]=="2" && $_SESSION[$secretkey."usergrp"]<>$usr
 									<div class="control-group">
 										<label class="control-label" for="startdate">Start date</label>
 										<div class="controls">
-											<input type="text" name="startdate" id="startdate" data-date-format="yyyy-mm-dd" value="<?php if($usrres["startdate"]<>"0000-00-00") { print($usrres["startdate"]); } ?>">
+											<input type="text" name="startdate" id="startdate" data-date-format="yyyy-mm-dd" value="<?php if(!is_null($usrres["startdate"])) { print($usrres["startdate"]); } ?>">
 										</div>
 									</div>
 									<div class="control-group">
 										<label class="control-label" for="expiredate">Expire date</label>
 										<div class="controls">
-											<input type="text" name="expiredate" id="expiredate" data-date-format="yyyy-mm-dd" value="<?php if($usrres["expiredate"]<>"0000-00-00") { print($usrres["expiredate"]); } ?>">
+											<input type="text" name="expiredate" id="expiredate" data-date-format="yyyy-mm-dd" value="<?php if(!is_null($usrres["expiredate"])) { print($usrres["expiredate"]); } ?>">
 										</div>
 									</div>
 								</div>
@@ -362,7 +359,7 @@ if($_SESSION[$secretkey."userlvl"]=="2" && $_SESSION[$secretkey."usergrp"]<>$usr
 								<div class="span5">
 									<div class="control-group">
 										<div class="controls">
-											Added: <?php if($usrres["added"]<>"0000-00-00 00:00:00") { print($usrres["added"]); } ?>
+											Added: <?php if(!is_null($usrres["added"])) { print($usrres["added"]); } ?>
 												<br>
 											Added by: <?php if($usrres["addedby"]<>"") { print(idtoadmin($usrres["addedby"])); } ?>
 										</div>
@@ -371,7 +368,7 @@ if($_SESSION[$secretkey."userlvl"]=="2" && $_SESSION[$secretkey."usergrp"]<>$usr
 								<div class="span5">
 									<div class="control-group">
 										<div class="controls">
-											Last changed: <?php if($usrres["changed"]<>"0000-00-00 00:00:00") { print($usrres["changed"]); } ?>
+											Last changed: <?php if(!is_null($usrres["changed"])) { print($usrres["changed"]); } ?>
 												<br>
 											Last changed by: <?php if($usrres["changedby"]<>"") { print(idtoadmin($usrres["changedby"])); } ?>
 										</div>
@@ -379,13 +376,14 @@ if($_SESSION[$secretkey."userlvl"]=="2" && $_SESSION[$secretkey."usergrp"]<>$usr
 								</div>
 							</div>
 						</form>
-							<button class="btn" name="bedit" value="Save" onclick="checkeditusername();">Save</button>
+							<button class="btn" name="bedit" value="Save" onclick="checkeditusername(<?php echo checksetting("invalidcharcheck"); ?>);">Save</button>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 		<?php
+			require("includes/modal-logout.php");
 			require("includes/footer.php");
 		?>
 		<script src="js/jquery.js"></script>

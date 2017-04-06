@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <?php
 require("functions/logincheck.php");
 require("functions/cmum.php");
@@ -19,17 +18,15 @@ if(isset($_POST["user"]) && $_POST["user"]<>"") {
 		}
 }
 
-$counters=explode(";",counter());
-
 $mysqli=new mysqli($dbhost,$dbuser,$dbpass,$dbname);
 if(mysqli_connect_errno()) {
 	errorpage("MYSQL DATABASE ERROR",mysqli_connect_error(),$charset,CMUM_TITLE,$_SERVER["REQUEST_URI"],CMUM_VERSION,CMUM_BUILD,CMUM_MOD);
 	exit;
 }
-	if($_SESSION[$secretkey."userlvl"]=="0" ||  $_SESSION[$secretkey."userlvl"]=="1") {
+	if($_SESSION[$secretkey."admlvl"]=="0" ||  $_SESSION[$secretkey."admlvl"]=="1") {
 		$grpsql=$mysqli->query("SELECT id,name FROM groups ORDER BY name ASC");	
-	} elseif($_SESSION[$secretkey."userlvl"]=="2" && $_SESSION[$secretkey."usergrp"]<>"0") {
-		$grpsql=$mysqli->query("SELECT id,name FROM groups WHERE id='".$mysqli->real_escape_string($_SESSION[$secretkey."usergrp"])."' ORDER BY name ASC");
+	} elseif($_SESSION[$secretkey."admlvl"]=="2" && $_SESSION[$secretkey."admgrp"]<>"0") {
+		$grpsql=$mysqli->query("SELECT id,name FROM groups WHERE id='".$mysqli->real_escape_string($_SESSION[$secretkey."admgrp"])."' ORDER BY name ASC");
 	} else {
 		$grpsql="";
 	}
@@ -38,7 +35,10 @@ if(mysqli_connect_errno()) {
 	$setsql=$mysqli->query("SELECT rndstring,rndstringlength,def_autoload,def_ipmask,def_profiles,def_maxconn,def_admin,def_enabled,def_mapexc,def_debug,def_custcspval,def_ecmrate FROM settings WHERE id='1'");
 		$setres=$setsql->fetch_array();
 mysqli_close($mysqli);
+
+$counters=explode(";",counter());
 ?>
+<!DOCTYPE html>
 <html>
 	<head>
 		<meta charset="<?php print($charset); ?>">
@@ -96,6 +96,7 @@ mysqli_close($mysqli);
 						print("document.getElementById('".$defprofres["id"]."').checked=".$checked.";");
 					}
 				?>
+				toastr.success('Defaults loaded');
 			}
 		</script>
 	</head>
@@ -111,7 +112,7 @@ mysqli_close($mysqli);
 							<li><?php if($_SESSION[$secretkey."fetchcsp"]=="1") { print(dashcheckcspconn($cspconnstatus)); } ?><a href="dashboard.php"><i class="batch home"></i><br>Dashboard</a></li>
 							<li><span class="label label-info pull-right"><?php print($counters[0]); ?></span><a href="users.php" class="active"><i class="batch users"></i><br>Users</a></li>
 								<?php
-									if($_SESSION[$secretkey."userlvl"]=="0") {
+									if($_SESSION[$secretkey."admlvl"]=="0") {
 										print("<li><span class=\"label label-info pull-right\">".$counters[1]."</span><a href=\"groups.php\"><i class=\"batch database\"></i><br>Groups</a></li>");
 										print("<li><span class=\"label label-info pull-right\">".$counters[2]."</span><a href=\"profiles.php\"><i class=\"batch tables\"></i><br>Profiles</a></li>");
 										print("<li><span class=\"label label-info pull-right\">".$counters[3]."</span><a href=\"admins.php\"><i class=\"batch star\"></i><br>Admins</a></li>");
@@ -137,13 +138,13 @@ mysqli_close($mysqli);
 									<div class="control-group">
 										<label class="control-label" for="user" ondblclick="autouser('user');">Username</label>
 										<div class="controls">
-											<input type="text" name="user" id="user" autocomplete="off" ondblclick="autouser('user');" maxlength="30" autofocus>
+											<input type="text" name="user" id="user" autocapitalize="off" autocomplete="off" autocorrect="off" spellcheck="false" ondblclick="autouser('user');" maxlength="30" autofocus>
 										</div>
 									</div>
 									<div class="control-group">
 										<label class="control-label" for="password" ondblclick="autouser('password');">Password</label>
 										<div class="controls">
-											<input type="text" name="password" id="password" autocomplete="off" ondblclick="autouser('password');" maxlength="30">
+											<input type="text" name="password" id="password" autocapitalize="off" autocomplete="off" autocorrect="off" spellcheck="false" ondblclick="autouser('password');" maxlength="30">
 										</div>
 									</div>
 									<div class="control-group">
@@ -189,7 +190,7 @@ mysqli_close($mysqli);
 										<div class="controls">
 											<select name="usrgroup" id="usrgroup">
 												<?php
-													if($_SESSION[$secretkey."userlvl"]=="0" ||  $_SESSION[$secretkey."userlvl"]=="1") {
+													if($_SESSION[$secretkey."admlvl"]=="0" ||  $_SESSION[$secretkey."admlvl"]=="1") {
 														print("<option value=\"\"></option>");
 													}
 													while($grpres=$grpsql->fetch_array()) {
@@ -328,13 +329,14 @@ mysqli_close($mysqli);
 								</div>
 							</div>
 						</form>
-							<button class="btn" name="badd" value="Add User" onclick="checkusername();">Add User</button>	
+							<button class="btn" name="badd" value="Add User" onclick="checkusername(<?php echo checksetting("invalidcharcheck"); ?>);">Add User</button>	
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 		<?php
+			require("includes/modal-logout.php");
 			require("includes/footer.php");
 		?>
 		<script src="js/jquery.js"></script>

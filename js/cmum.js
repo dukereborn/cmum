@@ -41,21 +41,6 @@ function checkedallprof(value) {
 		}
 }
 
-function checksearch(e) {
-	if(window.event)
-		var keyCode=window.event.keyCode;
-	else
-		var keyCode=e.which;
-	if(keyCode==13) {
-		var searchfor=$('#newsearch input[name=searchfor]').val();
-			if(searchfor=="") {
-				newsearch.searchfor.focus();
-			} else {
-				$('#newsearch').trigger('submit', true);
-			}
-	}
-}
-
 function alphanumeric(inputtxt) { 
 	var letters = /^[0-9a-zA-Z]+$/;
 		if(letters.test(inputtxt)) {

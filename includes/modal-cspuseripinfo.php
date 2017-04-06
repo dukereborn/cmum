@@ -9,18 +9,16 @@
 					<div id="cspusrip-ip" class="cspuserinfobox">%ip%</div>
 				<strong>Hostname</strong>
 					<div id="cspusrip-hostname" class="cspuserinfobox">%hostname%</div>
-				<strong>Continent</strong>
-					<div id="cspusrip-continent" class="cspuserinfobox">%continent%</div>
 				<strong>Country</strong>
 					<div id="cspusrip-country" class="cspuserinfobox">%country%</div>
 				<strong>Region</strong>
 					<div id="cspusrip-region" class="cspuserinfobox">%region%</div>
 				<strong>City</strong>
 					<div id="cspusrip-city" class="cspuserinfobox">%city%</div>
+				<strong>Zipcode</strong>
+					<div id="cspusrip-zipcode" class="cspuserinfobox">%zipcode%</div>
 				<strong>Timezone</strong>
 					<div id="cspusrip-timezone" class="cspuserinfobox">%timezone%</div>
-				<strong>ISP</strong>
-					<div id="cspusrip-isp" class="cspuserinfobox">%isp%</div>
 			</div>
 		</div>
 	</div>

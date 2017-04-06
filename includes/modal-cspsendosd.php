@@ -4,8 +4,8 @@
 	</div>
 	<div class="modal-body">
 		<div id="osdusrlabel"><label>Message to <strong>%user%</strong></label></div>
-			<input type="hidden" class="span5" name="osdusr" id="osdusr" value="">
-			<input type="text" class="span5" name="osdmsg" id="osdmsg" value="" onkeypress="submitCspSendOsd(event);">
+			<input type="hidden" class="form-control" name="osdusr" id="osdusr" value="">
+			<input type="text" class="form-control" style="min-width: 98%" name="osdmsg" id="osdmsg" value="" onkeypress="submitCspSendOsd(event);">
 	</div>
 	<div class="modal-footer">
 		<button class="btn btn-success pull-right" name="bsendosd" id="bsendosd" value="Send" onclick="checkcspsendosd();">Send</button>

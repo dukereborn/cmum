@@ -1,9 +1,6 @@
-<!DOCTYPE html>
 <?php
 require("functions/admincheck.php");
 require("functions/cmum.php");
-
-$counters=explode(";",counter());
 
 if(isset($_POST["bsave"]) && $_POST["bsave"]=="Save Changes") {
 	if(!isset($_POST["def_profiles"])) {
@@ -11,20 +8,23 @@ if(isset($_POST["bsave"]) && $_POST["bsave"]=="Save Changes") {
 	} else {
 		$def_profiles=$_POST["def_profiles"];
 	}
-	$updnotice=updatesettings($_POST["servername"],$_POST["timeout"],$_POST["rndstring"],$_POST["rndstringlength"],$_POST["loglogins"],$_POST["logactivity"],$_POST["cleanlogin"],$_POST["genxmlkey"],$_POST["genxmllogreq"],$_POST["genxmlusrgrp"],$_POST["genxmldateformat"],$_POST["genxmlintstrexp"],$_POST["def_autoload"],$_POST["def_ipmask"],$def_profiles,$_POST["def_maxconn"],$_POST["def_admin"],$_POST["def_enabled"],$_POST["def_mapexc"],$_POST["def_debug"],$_POST["def_custcspval"],$_POST["def_ecmrate"],$_POST["fetchcsp"],$_POST["cspsrv_ip"],$_POST["cspsrv_port"],$_POST["cspsrv_user"],$_POST["cspsrv_pass"],$_POST["cspsrv_protocol"],$_POST["comptables"],$_POST["extrausrtbl"],$_POST["notstartusrorder"],$_POST["expusrorder"],$_POST["soonexpusrorder"],$_POST["autoupdcheck"],$_POST["usrorderby"],$_POST["usrorder"]);
+	$updnotice=updatesettings($_POST["servername"],$_POST["timeout"],$_POST["rndstring"],$_POST["rndstringlength"],$_POST["invalidcharcheck"],$_POST["loglogins"],$_POST["logactivity"],$_POST["cleanlogin"],$_POST["genxmlkey"],$_POST["genxmllogreq"],$_POST["genxmlusrgrp"],$_POST["genxmldateformat"],$_POST["genxmlintstrexp"],$_POST["def_autoload"],$_POST["def_ipmask"],$def_profiles,$_POST["def_maxconn"],$_POST["def_admin"],$_POST["def_enabled"],$_POST["def_mapexc"],$_POST["def_debug"],$_POST["def_custcspval"],$_POST["def_ecmrate"],$_POST["fetchcsp"],$_POST["cspsrv_ip"],$_POST["cspsrv_port"],$_POST["cspsrv_user"],$_POST["cspsrv_pass"],$_POST["cspsrv_protocol"],$_POST["comptables"],$_POST["extrausrtbl"],$_POST["notstartusrorder"],$_POST["expusrorder"],$_POST["soonexpusrorder"],$_POST["autoupdcheck"],$_POST["usrorderby"],$_POST["usrorder"],$_POST["email_host"],$_POST["email_port"],$_POST["email_secure"],$_POST["email_auth"],$_POST["email_authuser"],$_POST["email_authpass"],$_POST["email_fromname"],$_POST["email_fromaddr"]);
 		if($updnotice=="0") {
 			$notice="toastr.success('Settings saved successfully');";
 		}
 }
 
 $mysqli=new mysqli($dbhost,$dbuser,$dbpass,$dbname);
-if(mysqli_connect_errno()) {
-	errorpage("MYSQL DATABASE ERROR",mysqli_connect_error(),$charset,CMUM_TITLE,$_SERVER["REQUEST_URI"],CMUM_VERSION,CMUM_BUILD,CMUM_MOD);
-	exit;
-}
-	$sqls=$mysqli->query("SELECT * FROM settings WHERE id='1'");
-	$setres=$sqls->fetch_array();
+	if(mysqli_connect_errno()) {
+		errorpage("MYSQL DATABASE ERROR",mysqli_connect_error(),$charset,CMUM_TITLE,$_SERVER["REQUEST_URI"],CMUM_VERSION,CMUM_BUILD,CMUM_MOD);
+		exit;
+	}
+$sqls=$mysqli->query("SELECT * FROM settings WHERE id='1'");
+$setres=$sqls->fetch_array();
+	
+$counters=explode(";",counter());
 ?>
+<!DOCTYPE html>
 <html>
 	<head>
 		<meta charset="<?php print($charset); ?>">
@@ -67,7 +67,7 @@ if(mysqli_connect_errno()) {
 							<li><?php if($_SESSION[$secretkey."fetchcsp"]=="1") { print(dashcheckcspconn($cspconnstatus)); } ?><a href="dashboard.php"><i class="batch home"></i><br>Dashboard</a></li>
 							<li><span class="label label-info pull-right"><?php print($counters[0]); ?></span><a href="users.php"><i class="batch users"></i><br>Users</a></li>
 								<?php
-									if($_SESSION[$secretkey."userlvl"]=="0") {
+									if($_SESSION[$secretkey."admlvl"]=="0") {
 										print("<li><span class=\"label label-info pull-right\">".$counters[1]."</span><a href=\"groups.php\"><i class=\"batch database\"></i><br>Groups</a></li>");
 										print("<li><span class=\"label label-info pull-right\">".$counters[2]."</span><a href=\"profiles.php\"><i class=\"batch tables\"></i><br>Profiles</a></li>");
 										print("<li><span class=\"label label-info pull-right\">".$counters[3]."</span><a href=\"admins.php\"><i class=\"batch star\"></i><br>Admins</a></li>");
@@ -102,15 +102,24 @@ if(mysqli_connect_errno()) {
 												</div>
 										</div>
 										<div class="control-group">
-											<label class="control-label" for="rndstring">Random string chars</label>
+											<label class="control-label" for="rndstring">Random String Chars</label>
 												<div class="controls">
 													<input type="text" name="rndstring" id="rndstring" value="<?php print($setres["rndstring"]); ?>" maxlength="75">
 												</div>
 										</div>
 										<div class="control-group">
-											<label class="control-label" for="rndstringlength">Random string length</label>
+											<label class="control-label" for="rndstringlength">Random String Length</label>
 												<div class="controls">
 													<input type="text" name="rndstringlength" id="rndstringlength" value="<?php print($setres["rndstringlength"]); ?>" maxlength="2">
+												</div>
+										</div>
+										<div class="control-group">
+											<label class="control-label" for="invalidcharcheck">Invalid Character Check</label>
+												<div class="controls">
+													<select name="invalidcharcheck" id="invalidcharcheck">
+														<option value="1" <?php if($setres["invalidcharcheck"]=="1") { print("selected"); } ?>>Yes</option>
+														<option value="0" <?php if($setres["invalidcharcheck"]=="0") { print("selected"); } ?>>No</option>
+													</select>
 												</div>
 										</div>
 										<div class="control-group">
@@ -132,7 +141,7 @@ if(mysqli_connect_errno()) {
 								<div class="row">
 									<div class="span5">
 										<div class="control-group">
-											<label class="control-label" for="autoupdcheck">Auto update check</label>
+											<label class="control-label" for="autoupdcheck">Auto Update Check</label>
 												<div class="controls">
 													<select name="autoupdcheck" id="autoupdcheck">
 														<option value="1" <?php if($setres["autoupdcheck"]=="1") { print("selected"); } ?>>Yes</option>
@@ -141,7 +150,7 @@ if(mysqli_connect_errno()) {
 												</div>
 										</div>
 										<div class="control-group">
-											<label class="control-label" for="notstartusrorder">Not started user order</label>
+											<label class="control-label" for="notstartusrorder">Not Started User Order</label>
 												<div class="controls">
 													<select name="notstartusrorder" id="notstartusrorder">
 														<option value="asc" <?php if($setres["notstartusrorder"]=="asc") { print("selected"); } ?>>Ascending</option>
@@ -150,7 +159,7 @@ if(mysqli_connect_errno()) {
 												</div>
 										</div>
 										<div class="control-group">
-											<label class="control-label" for="expusrorder">Expired user order</label>
+											<label class="control-label" for="expusrorder">Expired User Order</label>
 												<div class="controls">
 													<select name="expusrorder" id="expusrorder">
 														<option value="asc" <?php if($setres["expusrorder"]=="asc") { print("selected"); } ?>>Ascending</option>
@@ -159,7 +168,7 @@ if(mysqli_connect_errno()) {
 												</div>
 										</div>
 										<div class="control-group">
-											<label class="control-label" for="soonexpusrorder">Soon expired user order</label>
+											<label class="control-label" for="soonexpusrorder">Soon Expired User Order</label>
 												<div class="controls">
 													<select name="soonexpusrorder" id="soonexpusrorder">
 														<option value="asc" <?php if($setres["soonexpusrorder"]=="asc") { print("selected"); } ?>>Ascending</option>
@@ -186,7 +195,7 @@ if(mysqli_connect_errno()) {
 								<div class="row">
 									<div class="span5">
 										<div class="control-group">
-											<label class="control-label" for="comptables">Compact tables</label>
+											<label class="control-label" for="comptables">Compact Tables</label>
 												<div class="controls">
 													<select name="comptables" id="comptables">
 														<option value="1" <?php if($setres["comptables"]=="1") { print("selected"); } ?>>Yes</option>
@@ -195,7 +204,7 @@ if(mysqli_connect_errno()) {
 												</div>
 										</div>
 										<div class="control-group">
-											<label class="control-label" for="extrausrtbl">Extra user table</label>
+											<label class="control-label" for="extrausrtbl">Extra User Table</label>
 												<div class="controls">
 													<select name="extrausrtbl" id="extrausrtbl">
 														<option value="0" <?php if($setres["extrausrtbl"]=="0") { print("selected"); } ?>>None</option>
@@ -207,7 +216,7 @@ if(mysqli_connect_errno()) {
 												</div>
 										</div>
 										<div class="control-group">
-											<label class="control-label" for="usrorderby">User order by</label>
+											<label class="control-label" for="usrorderby">User Order By</label>
 												<div class="controls">
 													<select name="usrorderby" id="usrorderby">
 														<option value="user" <?php if($setres["usrorderby"]=="user") { print("selected"); } ?>>Username</option>
@@ -223,7 +232,7 @@ if(mysqli_connect_errno()) {
 												</div>
 										</div>
 										<div class="control-group">
-											<label class="control-label" for="usrorder">User order</label>
+											<label class="control-label" for="usrorder">User Order</label>
 												<div class="controls">
 													<select name="usrorder" id="usrorder">
 														<option value="asc" <?php if($setres["usrorder"]=="asc") { print("selected"); } ?>>Ascending</option>
@@ -250,7 +259,7 @@ if(mysqli_connect_errno()) {
 								<div class="row">
 									<div class="span5">
 										<div class="control-group">
-											<label class="control-label" for="loglogins">Log logins</label>
+											<label class="control-label" for="loglogins">Log Logins</label>
 												<div class="controls">
 													<select name="loglogins" id="loglogins">
 														<option value="1" <?php if($setres["loglogins"]=="1") { print("selected"); } ?>>Yes</option>
@@ -260,7 +269,7 @@ if(mysqli_connect_errno()) {
 												</div>
 										</div>
 										<div class="control-group">
-											<label class="control-label" for="logactivity">Log manager activity</label>
+											<label class="control-label" for="logactivity">Log Manager Activity</label>
 												<div class="controls">
 													<select name="logactivity" id="logactivity">
 														<option value="1" <?php if($setres["logactivity"]=="1") { print("selected"); } ?>>Yes</option>
@@ -269,7 +278,7 @@ if(mysqli_connect_errno()) {
 												</div>
 										</div>
 										<div class="control-group">
-											<label class="control-label" for="cleanlogin">Clean loginpage</label>
+											<label class="control-label" for="cleanlogin">Clean Loginpage</label>
 												<div class="controls">
 													<select name="cleanlogin" id="cleanlogin">
 														<option value="1" <?php if($setres["cleanlogin"]=="1") { print("selected"); } ?>>Yes</option>
@@ -296,13 +305,13 @@ if(mysqli_connect_errno()) {
 								<div class="row">
 									<div class="span5">
 										<div class="control-group">
-											<label class="control-label" for="genxmlkey" ondblclick="autovalue('genxmlkey');">Genxml key</label>
+											<label class="control-label" for="genxmlkey" ondblclick="autovalue('genxmlkey');">Genxml Key</label>
 												<div class="controls">
 													<input type="text" name="genxmlkey" id="genxmlkey" value="<?php print($setres["genxmlkey"]); ?>" maxlength="50" ondblclick="autovalue('genxmlkey');">
 												</div>
 										</div>
 										<div class="control-group">
-											<label class="control-label" for="genxmllogreq">Log requests</label>
+											<label class="control-label" for="genxmllogreq">Log Requests</label>
 												<div class="controls">
 													<select name="genxmllogreq" id="genxmllogreq">
 														<option value="1" <?php if($setres["genxmllogreq"]=="1") { print("selected"); } ?>>Yes</option>
@@ -312,7 +321,7 @@ if(mysqli_connect_errno()) {
 												</div>
 										</div>
 										<div class="control-group">
-											<label class="control-label" for="genxmlusrgrp">Include usergroups</label>
+											<label class="control-label" for="genxmlusrgrp">Include Usergroups</label>
 												<div class="controls">
 													<select name="genxmlusrgrp" id="genxmlusrgrp">
 														<option value="1" <?php if($setres["genxmlusrgrp"]=="1") { print("selected"); } ?>>Yes</option>
@@ -321,7 +330,7 @@ if(mysqli_connect_errno()) {
 												</div>
 										</div>
 										<div class="control-group">
-											<label class="control-label" for="genxmldateformat">Start-/expiredate format</label>
+											<label class="control-label" for="genxmldateformat">Start-/Expiredate Format</label>
 												<div class="controls">
 													<select name="genxmldateformat" id="genxmldateformat">
 														<option value="d-m-Y" <?php if($setres["genxmldateformat"]=="d-m-Y") { print("selected"); } ?>>dd-mm-yyyy</option>
@@ -332,7 +341,7 @@ if(mysqli_connect_errno()) {
 												</div>
 										</div>
 										<div class="control-group">
-											<label class="control-label" for="genxmlintstrexp">Internal start-/expiredate</label>
+											<label class="control-label" for="genxmlintstrexp">Internal Start-/Expiredate</label>
 												<div class="controls">
 													<select name="genxmlintstrexp" id="genxmlintstrexp">
 														<option value="1" <?php if($setres["genxmlintstrexp"]=="1") { print("selected"); } ?>>Yes</option>
@@ -359,7 +368,7 @@ if(mysqli_connect_errno()) {
 								<div class="row">
 									<div class="span5">
 										<div class="control-group">
-											<label class="control-label" for="def_autoload">Auto load default values</label>
+											<label class="control-label" for="def_autoload">Auto Load Default Values</label>
 												<div class="controls">
 													<select name="def_autoload" id="def_autoload">
 														<option value="1" <?php if($setres["def_autoload"]=="1") { print("selected"); } ?>>Yes</option>
@@ -368,7 +377,7 @@ if(mysqli_connect_errno()) {
 												</div>
 										</div>
 										<div class="control-group">
-											<label class="control-label" for="def_ipmask">IP mask</label>
+											<label class="control-label" for="def_ipmask">IP Mask</label>
 												<div class="controls">
 													<input type="text" name="def_ipmask" id="def_ipmask" value="<?php print($setres["def_ipmask"]); ?>" maxlength="15">
 												</div>
@@ -400,7 +409,7 @@ if(mysqli_connect_errno()) {
 												</div>
 										</div>
 										<div class="control-group">
-											<label class="control-label" for="def_maxconn">Max connections</label>
+											<label class="control-label" for="def_maxconn">Max Connections</label>
 												<div class="controls">
 													<input type="text" name="def_maxconn" id="def_maxconn" onkeypress="return onlynumbers(event);" value="<?php print($setres["def_maxconn"]); ?>" maxlength="4">
 												</div>
@@ -426,7 +435,7 @@ if(mysqli_connect_errno()) {
 												</div>
 										</div>
 										<div class="control-group">
-											<label class="control-label" for="def_mapexc">Map exclude</label>
+											<label class="control-label" for="def_mapexc">Map Exclude</label>
 												<div class="controls">
 													<select name="def_mapexc" id="def_mapexc">
 														<option value=""></option>
@@ -446,13 +455,13 @@ if(mysqli_connect_errno()) {
 												</div>
 										</div>
 										<div class="control-group">
-											<label class="control-label" for="def_custcspval">Custom csp values</label>
+											<label class="control-label" for="def_custcspval">Custom CSP Values</label>
 												<div class="controls">
 													<input type="text" name="def_custcspval" id="def_custcspval" value="<?php print(htmlspecialchars(($setres["def_custcspval"]))); ?>" maxlength="255">
 												</div>
 										</div>
 										<div class="control-group">
-											<label class="control-label" for="def_ecmrate">Ecm rate</label>
+											<label class="control-label" for="def_ecmrate">ECM Rate</label>
 												<div class="controls">
 													<input type="text" name="def_ecmrate" id="def_ecmrate" value="<?php print($setres["def_ecmrate"]); ?>" maxlength="4">
 												</div>
@@ -476,7 +485,7 @@ if(mysqli_connect_errno()) {
 								<div class="row">
 									<div class="span5">
 										<div class="control-group">
-											<label class="control-label" for="fetchcsp">Fetch data from CSP</label>
+											<label class="control-label" for="fetchcsp">Fetch Data from CSP</label>
 												<div class="controls">
 													<select name="fetchcsp" id="fetchcsp">
 														<option value="1" <?php if($setres["fetchcsp"]=="1") { print("selected"); } ?>>Yes</option>
@@ -532,6 +541,79 @@ if(mysqli_connect_errno()) {
 								<div class="row">
 									<div class="span9">&nbsp;</div>
 								</div>
+							<h4 class="header">Email SMTP Server</h4>
+								<div class="row">
+									<div class="span5">
+										<div class="control-group">
+											<label class="control-label" for="email_host">SMTP Host</label>
+												<div class="controls">
+													<input type="text" name="email_host" id="email_host" value="<?php print($setres["email_host"]); ?>" maxlength="255">
+												</div>
+										</div>
+										<div class="control-group">
+											<label class="control-label" for="email_port">SMTP Port</label>
+												<div class="controls">
+													<input type="text" name="email_port" id="email_port" value="<?php print($setres["email_port"]); ?>" maxlength="6">
+												</div>
+										</div>
+										<div class="control-group">
+											<label class="control-label" for="email_secure">Encryption</label>
+												<div class="controls">
+													<select name="email_secure" id="email_secure">
+														<option value="0" <?php if($setres["email_secure"]=="0") { print("selected"); } ?>>None</option>
+														<option value="1" <?php if($setres["email_secure"]=="1") { print("selected"); } ?>>SSL</option>
+														<option value="2" <?php if($setres["email_secure"]=="2") { print("selected"); } ?>>TLS</option>
+													</select>
+												</div>
+										</div>
+										<div class="control-group">
+											<label class="control-label" for="email_auth">Authentication</label>
+												<div class="controls">
+													<select name="email_auth" id="email_auth">
+														<option value="0" <?php if($setres["email_auth"]=="0") { print("selected"); } ?>>No</option>
+														<option value="1" <?php if($setres["email_auth"]=="1") { print("selected"); } ?>>Yes</option>
+													</select>
+												</div>
+										</div>
+										<div class="control-group">
+											<label class="control-label" for="email_authuser">Username</label>
+												<div class="controls">
+													<input type="text" name="email_authuser" id="email_authuser" value="<?php print($setres["email_authuser"]); ?>" maxlength="254">
+												</div>
+										</div>
+										<div class="control-group">
+											<label class="control-label" for="email_authpass">Password</label>
+												<div class="controls">
+													<input type="text" name="email_authpass" id="email_authpass" value="<?php print($setres["email_authpass"]); ?>" maxlength="50">
+												</div>
+										</div>
+										<div class="control-group">
+											<label class="control-label" for="email_fromname">From Name</label>
+												<div class="controls">
+													<input type="text" name="email_fromname" id="email_fromname" value="<?php print($setres["email_fromname"]); ?>" maxlength="50">
+												</div>
+										</div>
+										<div class="control-group">
+											<label class="control-label" for="email_fromaddr">From Email</label>
+												<div class="controls">
+													<input type="text" name="email_fromaddr" id="email_fromaddr" value="<?php print($setres["email_fromaddr"]); ?>" maxlength="254">
+												</div>
+										</div>
+										<div class="control-group">
+											<div class="controls">
+												<input type="submit" name="bsave" value="Save Changes" class="btn">
+											</div>
+										</div>
+									</div>
+									<div class="span6">
+										<p>
+											&nbsp;
+										</p>
+									</div>
+								</div>
+								<div class="row">
+									<div class="span9">&nbsp;</div>
+								</div>
 						</form>						
 						</div>
 					</div>
@@ -539,6 +621,7 @@ if(mysqli_connect_errno()) {
 			</div>
 		</div>
 		<?php
+			require("includes/modal-logout.php");
 			require("includes/footer.php");
 			mysqli_close($mysqli);
 		?>

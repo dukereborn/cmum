@@ -8,6 +8,11 @@ function checkinstall() {
 	var inst_timezone=$('#install select[name=inst_timezone]').val();
 	var admin_name=$('#install input[name=admin_name]').val();
 	var admin_pass=$('#install input[name=admin_pass]').val();
+	if($('#inst_seckeyasgxk').is(":checked")) {
+		inst_seckeyasgxk="1";
+	} else {
+		inst_seckeyasgxk="0";
+	}
 		if(mysql_host=="" || mysql_name=="" || mysql_user=="" || mysql_pass=="" || inst_seckey=="" || inst_charset=="" || inst_timezone=="" || admin_name=="" || admin_pass=="") {
 			toastr.error('Please fill out all of the fields');
 			install.mysql_host.focus();
@@ -39,7 +44,7 @@ function checkinstall() {
 									jQuery.ajax({
 										type: 'post',
 										url: 'functions/install.php',
-										data: 'function=dbinstall&host='+mysql_host+'&name='+mysql_name+'&user='+mysql_user+'&pass='+mysql_pass+'&charset='+inst_charset+'&aname='+admin_name+'&apass='+admin_pass+'&skey='+inst_seckey,
+										data: 'function=dbinstall&host='+mysql_host+'&name='+mysql_name+'&user='+mysql_user+'&pass='+mysql_pass+'&charset='+inst_charset+'&aname='+admin_name+'&apass='+admin_pass+'&skey='+inst_seckey+'&skeygxk='+inst_seckeyasgxk,
 										cache: false,
 										timeout: 8000,
 										success: function(response3) {

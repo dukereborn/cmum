@@ -4,7 +4,7 @@ CSP MySQL User Manager
 A set of PHP-scripts to manage users in CardserverProxy (CSP)
 
 ## Requirements
-* Web server with PHP support (such as Apache, IIS)
+* Web server with PHP support (such as Apache, Nginx, IIS)
 * MySQL 5.0 or newer
 * PHP 5.3.0 or newer, with session support
 * A web browser with cookies and javascript enabled
@@ -20,9 +20,10 @@ If you prefer to follow the git repository, the following branch and tag names m
 ## Installation
 1. Upload all the files to your web server
 2. Browse to the install-dir to start the installation, http://your.cmum.url/install/
-3. Download the generated config.php and place in the root of you cmum dir
-4. Remove the install dir from the cmum dir
-5. Setup csp to fetch users from cmum, described bellow
+3. Follow the installation steps
+4. Download the generated config.php and place in the root of you cmum-dir
+5. Remove the install-dir and upgrade-dir from the cmum-dir
+6. Setup csp to fetch users from cmum, described bellow
 
 CSP config example for use on a local webserver
 ```
@@ -49,10 +50,10 @@ CSP config example for use on a remote (or local) secure webserver
 ```
 
 ## Upgrading from version 3.x
-1. Delete all files (except config.php) from your cmum dir
-2. Upload the new files into your cmum dir
+1. Delete all files (except config.php) from your cmum-dir
+2. Upload the new files into your cmum-dir
 3. Open cmum in your browser and you will get a notice to upgrade your installation
-4. Remove the upgrade-dir from your cmum dir
+4. Remove the upgrade-dir and install-dir from your cmum dir
 
 ## Upgrading from version 2.x
 Due to a complete rework of the whole system and database, a complete reinstallation is required if you want to upgrade from version 2.x to 3.x.
@@ -141,10 +142,7 @@ Full config example for the above part, so you place it correctly
 If you find any bugs, got an idea or just wanna say "Hi!", send me a email on dukereborn@gmail.com. You can also follow me on twitter for updates and news about the development on cmum http://www.twitter.com/dukereborn/
 
 ## Donations
-If you like cmum and all the work I have put into it, consider donating a buck or two :) All donations are welcome through paypal to account dukereborn@gmail.com
-
-## Last words
-Please use a modern browser like Safari, Google Chrome or Firefox. If it looks like hell in Internet Explorer, well that's just the way it will be.
+If you like cmum and all the work I have put into it, consider donating a buck or two. All donations are welcome through paypal to account dukereborn@gmail.com
 
 ## License
 Released under the [MIT license](http://makesites.org/licenses/MIT)

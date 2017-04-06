@@ -1,31 +1,23 @@
-<!DOCTYPE html>
 <?php
 require("functions/admincheck.php");
 require("functions/cmum.php");
 
-$counters=explode(";",counter());
-
 if(isset($_POST["value"]) && $_POST["value"]=="baddadm") {
 	$status=addadmin($_POST["user"],$_POST["pass"],$_POST["name"],$_POST["admlvl"],$_POST["ugroup"]);
 		if($status=="0") {
-			$counters=explode(";",counter());
 			$notice="toastr.success('Admin successfully created');";
-		} elseif($status=="1") {
-			$notice="toastr.error('You must enter a username and a password'); $('#modalNewAdmin').modal({ show: true });";
-		} elseif($status=="2") {
-			$notice="toastr.error('Admin already exists'); $('#modalNewAdmin').modal({ show: true });";
-		} elseif($status=="3") {
-			$notice="toastr.error('You must select a group'); $('#modalNewAdmin').modal({ show: true });";
+		} else {
+			$notice="toastr.error('Something went wrong, please try again')";
 		}
 }
 
-if(isset($_GET["action"]) && stripslashes($_GET["action"])=="edit" && isset($_GET["uid"]) && $_GET["uid"]<>"") {
+if(isset($_GET["action"]) && stripslashes($_GET["action"])=="edit" && isset($_GET["aid"]) && $_GET["aid"]<>"") {
 	$mysqli=new mysqli($dbhost,$dbuser,$dbpass,$dbname);
 	if(mysqli_connect_errno()) {
 		errorpage("MYSQL DATABASE ERROR",mysqli_connect_error(),$charset,CMUM_TITLE,$_SERVER["REQUEST_URI"],CMUM_VERSION,CMUM_BUILD,CMUM_MOD);
 		exit;
 	}
-		$sql=$mysqli->query("SELECT id,user,name,admlvl,ugroup FROM admins WHERE id='".$mysqli->real_escape_string($_GET["uid"])."'");
+		$sql=$mysqli->query("SELECT id,user,name,admlvl,ugroup FROM admins WHERE id='".$mysqli->real_escape_string($_GET["aid"])."'");
 		$ea_res=$sql->fetch_array();
 			$ea_id=$ea_res["id"];
 			$ea_user=$ea_res["user"];
@@ -33,63 +25,40 @@ if(isset($_GET["action"]) && stripslashes($_GET["action"])=="edit" && isset($_GE
 			$ea_admlvl=$ea_res["admlvl"];
 			$ea_ugroup=$ea_res["ugroup"];
 	mysqli_close($mysqli);
-	$notice="$('#modalEditAdmin').modal({ show: true });";
+	$notice="$('#modalEditAdmin').modal('show');";
 }
 if(isset($_POST["value"]) && $_POST["value"]=="beditadm") {
-	$status=editadmin($_POST["uid"],$_POST["user"],$_POST["name"],$_POST["admlvl"],$_POST["ugroup"]);
+	$status=editadmin($_POST["aid"],$_POST["user"],$_POST["name"],$_POST["admlvl"],$_POST["ugroup"]);
 		if($status=="0") {
 			$notice="toastr.success('Changes successfully saved');";
 		} elseif($status=="1") {
-			$ea_id=$_POST["uid"];
+			$ea_id=$_POST["aid"];
 			$ea_user=$_POST["user"];
 			$ea_name=$_POST["name"];
 			$ea_admlvl=$_POST["admlvl"];
 			$ea_ugroup=$_POST["ugroup"];
-			$notice="toastr.error('You must select a group'); $('#modalEditAdmin').modal({ show: true });";
+			$notice="toastr.error('You must select a group'); $('#modalEditAdmin').modal('show');";
 		}
 }
 
-if(isset($_GET["action"]) && stripslashes($_GET["action"])=="delete" && isset($_GET["uid"]) && $_GET["uid"]<>"") {
-	$mysqli=new mysqli($dbhost,$dbuser,$dbpass,$dbname);
-	if(mysqli_connect_errno()) {
-		errorpage("MYSQL DATABASE ERROR",mysqli_connect_error(),$charset,CMUM_TITLE,$_SERVER["REQUEST_URI"],CMUM_VERSION,CMUM_BUILD,CMUM_MOD);
-		exit;
-	}
-		$sql=$mysqli->query("SELECT id,user FROM admins WHERE id='".$mysqli->real_escape_string($_GET["uid"])."'");
-		$ea_res=$sql->fetch_array();
-			$ea_id=$ea_res["id"];
-			$ea_user=$ea_res["user"];
-	mysqli_close($mysqli);
-	$notice="$('#modalDelAdmin').modal({ show: true });";	
-}
-if(isset($_POST["bdeladm"]) && $_POST["bdeladm"]=="Delete") {
-	$status=deleteadmin($_POST["uid"]);
-		if($status=="0") {
-			$notice="toastr.success('Admin successfully deleted');";
-		} else {
-			$notice="toastr.error('Unexpected error');";
-		}
-	$counters=explode(";",counter());	
-}
-
-if(isset($_GET["action"]) && stripslashes($_GET["action"])=="chpass" && isset($_GET["uid"]) && $_GET["uid"]<>"") {
-	$ea_id=$_GET["uid"];
-	$notice="$('#modalChpassAdmin').modal({ show: true });";
+if(isset($_GET["action"]) && stripslashes($_GET["action"])=="chpass" && isset($_GET["aid"]) && $_GET["aid"]<>"") {
+	$ea_id=$_GET["aid"];
+	$notice="$('#modalChpassAdmin').modal('show');";
 }
 if(isset($_POST["value"]) && $_POST["value"]=="bchpassadm") {
-	$status=chpassadmin($_POST["uid"],$_POST["pass1"],$_POST["pass2"]);
+	$status=chpassadmin($_POST["aid"],$_POST["pass1"],$_POST["pass2"]);
 		if($status=="0") {
 			$notice="toastr.success('Password successfully changed');";
 		} elseif($status=="1") {
-			$ea_id=$_POST["uid"];
+			$ea_id=$_POST["aid"];
 			$ea_pass1=$_POST["pass1"];
 			$ea_pass2=$_POST["pass2"];
-			$notice="toastr.error('You must fill in both fields'); $('#modalChpassAdmin').modal({ show: true });";
+			$notice="toastr.error('You must fill in both fields'); $('#modalChpassAdmin').modal('show');";
 		} elseif($status=="2") {
-			$ea_id=$_POST["uid"];
+			$ea_id=$_POST["aid"];
 			$ea_pass1=$_POST["pass1"];
 			$ea_pass2=$_POST["pass2"];
-			$notice="toastr.error('Passwords dont match'); $('#modalChpassAdmin').modal({ show: true });";
+			$notice="toastr.error('Passwords dont match'); $('#modalChpassAdmin').modal('show');";
 		}
 }
 
@@ -106,7 +75,10 @@ if(mysqli_connect_errno()) {
 			$tblcond="";
 		}
 mysqli_close($mysqli);
+
+$counters=explode(";",counter());
 ?>
+<!DOCTYPE html>
 <html>
 	<head>
 		<meta charset="<?php print($charset); ?>">
@@ -136,10 +108,10 @@ mysqli_close($mysqli);
 							<li><?php if($_SESSION[$secretkey."fetchcsp"]=="1") { print(dashcheckcspconn($cspconnstatus)); } ?><a href="dashboard.php"><i class="batch home"></i><br>Dashboard</a></li>
 							<li><span class="label label-info pull-right"><?php print($counters[0]); ?></span><a href="users.php"><i class="batch users"></i><br>Users</a></li>
 								<?php
-									if($_SESSION[$secretkey."userlvl"]=="0") {
+									if($_SESSION[$secretkey."admlvl"]=="0") {
 										print("<li><span class=\"label label-info pull-right\">".$counters[1]."</span><a href=\"groups.php\"><i class=\"batch database\"></i><br>Groups</a></li>");
 										print("<li><span class=\"label label-info pull-right\">".$counters[2]."</span><a href=\"profiles.php\"><i class=\"batch tables\"></i><br>Profiles</a></li>");
-										print("<li><span class=\"label label-info pull-right\">".$counters[3]."</span><a href=\"admins.php\" class=\"active\"><i class=\"batch star\"></i><br>Admins</a></li>");
+										print("<li><span class=\"label label-info pull-right\" id=\"numadmins\">".$counters[3]."</span><a href=\"admins.php\" class=\"active\"><i class=\"batch star\"></i><br>Admins</a></li>");
 										print("<li><a href=\"tools.php\"><i class=\"batch console\"></i><br>Tools</a></li>");
 										print("<li><a href=\"settings.php\"><i class=\"batch settings\"></i><br>Settings</a></li>");
 									}
@@ -176,7 +148,7 @@ mysqli_close($mysqli);
 											}
 												$sql=$mysqli->query("SELECT * FROM admins ORDER BY user");
 												while($res=$sql->fetch_array()) {
-													print("<tr>");
+													print("<tr id=admin-".$res["id"].">");
 														print("<td>".$res["user"]."</td>");
 														print("<td>".$res["name"]."</td>");
 															if($res["admlvl"]=="0") {
@@ -198,9 +170,9 @@ mysqli_close($mysqli);
 																print("<button data-toggle=\"dropdown\" class=\"btn btn-small\">Actions <span class=\"caret\"></span></button>");
 																print("<ul class=\"dropdown-menu\">");
 																	if($res["enabled"]=="1") {
-																		print("<li><a href=\"admins.php?action=edit&uid=".$res["id"]."\">Edit</a><a href=\"admins.php?action=chpass&uid=".$res["id"]."\">Change password</a><a id=\"aadmenabled-".$res["id"]."\" href=\"javascript:void(0);\" onclick=\"disableadmin('".$res["id"]."');\">Disable</a><a href=\"admins.php?action=delete&uid=".$res["id"]."\">Delete</a></li>");
+																		print("<li><a href=\"admins.php?action=edit&aid=".$res["id"]."\">Edit</a><a href=\"admins.php?action=chpass&aid=".$res["id"]."\">Change password</a><a id=\"aadmenabled-".$res["id"]."\" href=\"javascript:void(0);\" onclick=\"disableadmin('".$res["id"]."');\">Disable</a><a href=\"javascript:void(0);\" onclick=\"getdeleteadmin('".$res["id"]."','".$res["user"]."');\">Delete</a></li>");
 																	} else {
-																		print("<li><a href=\"admins.php?action=edit&uid=".$res["id"]."\">Edit</a><a href=\"admins.php?action=chpass&uid=".$res["id"]."\">Change password</a><a id=\"aadmenabled-".$res["id"]."\" href=\"javascript:void(0);\" onclick=\"enableadmin('".$res["id"]."');\">Enable</a><a href=\"admins.php?action=delete&uid=".$res["id"]."\">Delete</a></li>");
+																		print("<li><a href=\"admins.php?action=edit&aid=".$res["id"]."\">Edit</a><a href=\"admins.php?action=chpass&aid=".$res["id"]."\">Change password</a><a id=\"aadmenabled-".$res["id"]."\" href=\"javascript:void(0);\" onclick=\"enableadmin('".$res["id"]."');\">Enable</a><a href=\"javascript:void(0);\" onclick=\"getdeleteadmin('".$res["id"]."','".$res["user"]."');\">Delete</a></li>");
 																	}
 																print("</ul>");
 															print("</div>");
@@ -221,6 +193,7 @@ mysqli_close($mysqli);
 			require("includes/modal-editadmin.php");
 			require("includes/modal-deladmin.php");
 			require("includes/modal-chpassadmin.php");
+			require("includes/modal-logout.php");
 			require("includes/footer.php");
 		?>
 		<script src="js/jquery.js"></script>

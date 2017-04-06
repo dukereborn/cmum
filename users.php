@@ -1,34 +1,13 @@
-<!DOCTYPE html>
 <?php
 require("functions/logincheck.php");
 require("functions/cmum.php");
 
-if(isset($_GET["action"]) && stripslashes($_GET["action"])=="delete" && isset($_GET["uid"]) && $_GET["uid"]<>"") {
-	$mysqli=new mysqli($dbhost,$dbuser,$dbpass,$dbname);
-	if(mysqli_connect_errno()) {
-		errorpage("MYSQL DATABASE ERROR",mysqli_connect_error(),$charset,CMUM_TITLE,$_SERVER["REQUEST_URI"],CMUM_VERSION,CMUM_BUILD,CMUM_MOD);
-		exit;
-	}
-		$sql=$mysqli->query("SELECT id,user,usrgroup FROM users WHERE id='".$mysqli->real_escape_string($_GET["uid"])."'");
-		$eu_res=$sql->fetch_array();
-			if($_SESSION[$secretkey."userlvl"]=="2" && $_SESSION[$secretkey."usergrp"]<>$eu_res["usrgroup"]) {
-				$notice="toastr.error('This user does not belong to you');";
-			} else {
-				$eu_id=$eu_res["id"];
-				$eu_user=$eu_res["user"];
-				$notice="$('#modalDelUser').modal({ show: true });";
-			}
-	mysqli_close($mysqli);	
+if(isset($_GET["error"]) && $_GET["error"]=="1") {
+	$notice="toastr.error('This user does not belong to you');";
 }
-if(isset($_POST["bdelusr"]) && $_POST["bdelusr"]=="Delete") {
-	$status=deleteuser($_POST["uid"]);
-		if($status=="0") {
-			$notice="toastr.success('User successfully deleted');";
-		}
-	$counters=explode(";",counter());	
+if(isset($_GET["edit"]) && $_GET["edit"]=="1") {
+	$notice="toastr.success('Changes saved');";
 }
-
-$counters=explode(";",counter());
 
 $mysqli=new mysqli($dbhost,$dbuser,$dbpass,$dbname);
 if(mysqli_connect_errno()) {
@@ -44,13 +23,10 @@ if(mysqli_connect_errno()) {
 		}
 mysqli_close($mysqli);
 
-if(isset($_GET["error"]) && $_GET["error"]=="1") {
-	$notice="toastr.error('This user does not belong to you');";
-}
-if(isset($_GET["edit"]) && $_GET["edit"]=="1") {
-	$notice="toastr.success('Changes saved');";
-}
+$emailsettings=checkemailsettings();
+$counters=explode(";",counter());
 ?>
+<!DOCTYPE html>
 <html>
 	<head>
 		<meta charset="<?php print($charset); ?>">
@@ -78,9 +54,9 @@ if(isset($_GET["edit"]) && $_GET["edit"]=="1") {
 					<div class="span12">
 						<ul>
 							<li><?php if($_SESSION[$secretkey."fetchcsp"]=="1") { print(dashcheckcspconn($cspconnstatus)); } ?><a href="dashboard.php"><i class="batch home"></i><br>Dashboard</a></li>
-							<li><span class="label label-info pull-right"><?php print($counters[0]); ?></span><a href="users.php" class="active"><i class="batch users"></i><br>Users</a></li>
+							<li><span class="label label-info pull-right" id="numusers"><?php print($counters[0]); ?></span><a href="users.php" class="active"><i class="batch users"></i><br>Users</a></li>
 								<?php
-									if($_SESSION[$secretkey."userlvl"]=="0") {
+									if($_SESSION[$secretkey."admlvl"]=="0") {
 										print("<li><span class=\"label label-info pull-right\">".$counters[1]."</span><a href=\"groups.php\"><i class=\"batch database\"></i><br>Groups</a></li>");
 										print("<li><span class=\"label label-info pull-right\">".$counters[2]."</span><a href=\"profiles.php\"><i class=\"batch tables\"></i><br>Profiles</a></li>");
 										print("<li><span class=\"label label-info pull-right\">".$counters[3]."</span><a href=\"admins.php\"><i class=\"batch star\"></i><br>Admins</a></li>");
@@ -144,26 +120,26 @@ if(isset($_GET["edit"]) && $_GET["edit"]=="1") {
 												errorpage("MYSQL DATABASE ERROR",mysqli_connect_error(),$charset,CMUM_TITLE,$_SERVER["REQUEST_URI"],CMUM_VERSION,CMUM_BUILD,CMUM_MOD);
 												exit;
 											}
-											if($_SESSION[$secretkey."userlvl"]=="0" || $_SESSION[$secretkey."userlvl"]=="1") {
+											if($_SESSION[$secretkey."admlvl"]=="0" || $_SESSION[$secretkey."admlvl"]=="1") {
 												if(isset($_POST["searchfor"]) && $_POST["searchfor"]<>"") {
 													$searchstring=$mysqli->real_escape_string(trim($_POST["searchfor"]));
 													$sql=$mysqli->query("SELECT * FROM users WHERE (user LIKE '%".$searchstring."%' OR password LIKE '%".$searchstring."%' OR displayname LIKE '%".$searchstring."%' OR ipmask LIKE '%".$searchstring."%' OR mapexclude LIKE '%".$searchstring."%' OR comment LIKE '%".$searchstring."%' OR email LIKE '%".$searchstring."%' OR boxtype LIKE '%".$searchstring."%' OR macaddress LIKE '%".$searchstring."%' OR serialnumber LIKE '%".$searchstring."%') ORDER BY ".$setres["usrorderby"]." ".$setres["usrorder"]);
 												} else {
-													$sql=$mysqli->query("SELECT id,user,password,displayname,usrgroup,admin,enabled,startdate,expiredate,addedby FROM users ORDER BY ".$setres["usrorderby"]." ".$setres["usrorder"]);
+													$sql=$mysqli->query("SELECT id,user,password,displayname,usrgroup,admin,enabled,email,startdate,expiredate,addedby FROM users ORDER BY ".$setres["usrorderby"]." ".$setres["usrorder"]);
 												}	
-											} elseif($_SESSION[$secretkey."userlvl"]=="2" && $_SESSION[$secretkey."usergrp"]<>"0") {
+											} elseif($_SESSION[$secretkey."admlvl"]=="2" && $_SESSION[$secretkey."admgrp"]<>"0") {
 												if(isset($_POST["searchfor"]) && $_POST["searchfor"]<>"") {
 													$searchstring=$mysqli->real_escape_string(trim($_POST["searchfor"]));
-													$sql=$mysqli->query("SELECT * FROM users WHERE (user LIKE '%".$searchstring."%' OR password LIKE '%".$searchstring."%' OR displayname LIKE '%".$searchstring."%' OR ipmask LIKE '%".$searchstring."%' OR mapexclude LIKE '%".$searchstring."%' OR comment LIKE '%".$searchstring."%' OR email LIKE '%".$searchstring."%' OR boxtype LIKE '%".$searchstring."%' OR macaddress LIKE '%".$searchstring."%' OR serialnumber LIKE '%".$searchstring."%') AND usrgroup='".$_SESSION[$secretkey."usergrp"]."' ORDER BY ".$setres["usrorderby"]." ".$setres["usrorder"]);
+													$sql=$mysqli->query("SELECT * FROM users WHERE (user LIKE '%".$searchstring."%' OR password LIKE '%".$searchstring."%' OR displayname LIKE '%".$searchstring."%' OR ipmask LIKE '%".$searchstring."%' OR mapexclude LIKE '%".$searchstring."%' OR comment LIKE '%".$searchstring."%' OR email LIKE '%".$searchstring."%' OR boxtype LIKE '%".$searchstring."%' OR macaddress LIKE '%".$searchstring."%' OR serialnumber LIKE '%".$searchstring."%') AND usrgroup='".$_SESSION[$secretkey."admgrp"]."' ORDER BY ".$setres["usrorderby"]." ".$setres["usrorder"]);
 												} else {
-													$sql=$mysqli->query("SELECT id,user,password,displayname,usrgroup,admin,enabled,startdate,expiredate,addedby FROM users WHERE usrgroup='".$mysqli->real_escape_string($_SESSION[$secretkey."usergrp"])."' ORDER BY ".$setres["usrorderby"]." ".$setres["usrorder"]);	
+													$sql=$mysqli->query("SELECT id,user,password,displayname,usrgroup,admin,enabled,email,startdate,expiredate,addedby FROM users WHERE usrgroup='".$mysqli->real_escape_string($_SESSION[$secretkey."admgrp"])."' ORDER BY ".$setres["usrorderby"]." ".$setres["usrorder"]);	
 												}
 											} else {
 												$sql="";
 											}
 												while($res=$sql->fetch_array()) {
 													$usrexp=checkstartexpire($res["startdate"],$res["expiredate"],$res["enabled"]);
-													print("<tr>");
+													print("<tr id=user-".$res["id"].">");
 														if($res["admin"]=="1") {
 															print("<td>".$res["user"]." <span class=\"label label-warning\">A</span></td>");	
 														} else {
@@ -181,13 +157,13 @@ if(isset($_GET["edit"]) && $_GET["edit"]=="1") {
 														}
 														print("<td>".idtogrp($res["usrgroup"])."</td>");
 															if($usrexp=="0") {
-																print("<td><a id=\"usrlnkenabled-".$res["id"]."\" href=\"javascript:void(0);\" onclick=\"enableuser('".$res["id"]."','".$_SESSION[$secretkey."userlvl"]."','".$_SESSION[$secretkey."usergrp"]."','".$_SESSION[$secretkey."userid"]."');\"><div id=\"usrenabled-".$res["id"]."\"><span class=\"label label-important\">Disabled</span></div></a></td>");
+																print("<td><a id=\"usrlnkenabled-".$res["id"]."\" href=\"javascript:void(0);\" onclick=\"enableuser('".$res["id"]."');\"><div id=\"usrenabled-".$res["id"]."\"><span class=\"label label-important\">Disabled</span></div></a></td>");
 															} elseif($usrexp=="1") {
-																print("<td><a id=\"usrlnkenabled-".$res["id"]."\" href=\"javascript:void(0);\" onclick=\"disableuser('".$res["id"]."','".$_SESSION[$secretkey."userlvl"]."','".$_SESSION[$secretkey."usergrp"]."','".$_SESSION[$secretkey."userid"]."');\"><div id=\"usrenabled-".$res["id"]."\"><span class=\"label label-success\">Enabled</span></div></a></td>");
+																print("<td><a id=\"usrlnkenabled-".$res["id"]."\" href=\"javascript:void(0);\" onclick=\"disableuser('".$res["id"]."');\"><div id=\"usrenabled-".$res["id"]."\"><span class=\"label label-success\">Enabled</span></div></a></td>");
 															} elseif($usrexp=="2") {
-																print("<td><a id=\"usrlnkenabled-".$res["id"]."\" href=\"javascript:void(0);\" onclick=\"enableuser('".$res["id"]."','".$_SESSION[$secretkey."userlvl"]."','".$_SESSION[$secretkey."usergrp"]."','".$_SESSION[$secretkey."userid"]."');\"><div id=\"usrenabled-".$res["id"]."\"><span class=\"label label-warning\">Not Started</span></div></a></td>");
+																print("<td><a id=\"usrlnkenabled-".$res["id"]."\" href=\"javascript:void(0);\" onclick=\"enableuser('".$res["id"]."');\"><div id=\"usrenabled-".$res["id"]."\"><span class=\"label label-warning\">Not Started</span></div></a></td>");
 															} elseif($usrexp=="3") {
-																print("<td><a id=\"usrlnkenabled-".$res["id"]."\" href=\"javascript:void(0);\" onclick=\"enableuser('".$res["id"]."','".$_SESSION[$secretkey."userlvl"]."','".$_SESSION[$secretkey."usergrp"]."','".$_SESSION[$secretkey."userid"]."');\"><div id=\"usrenabled-".$res["id"]."\"><span class=\"label label-warning\">Expired</span></div></a></td>");
+																print("<td><a id=\"usrlnkenabled-".$res["id"]."\" href=\"javascript:void(0);\" onclick=\"enableuser('".$res["id"]."');\"><div id=\"usrenabled-".$res["id"]."\"><span class=\"label label-warning\">Expired</span></div></a></td>");
 															} else {
 																print("<td></td>");
 															}
@@ -211,10 +187,15 @@ if(isset($_GET["edit"]) && $_GET["edit"]=="1") {
 																	} else {
 																		$cspmenu="";
 																	}
-																	if($res["enabled"]=="1" && $usrexp=="0" || $res["enabled"]=="" && $usrexp=="0") {
-																		print("<li class=\"ausrenabled-".$res["id"]."\"><a href=\"edituser.php?uid=".$res["id"]."\">Edit</a><a id=\"ausrenabled-".$res["id"]."\" href=\"javascript:void(0);\" onclick=\"disableuser('".$res["id"]."','".$_SESSION[$secretkey."userlvl"]."','".$_SESSION[$secretkey."usergrp"]."','".$_SESSION[$secretkey."userid"]."');\">Disable</a>".$cspmenu."<a href=\"users.php?action=delete&uid=".$res["id"]."\">Delete</a></li>");
+																	if($emailsettings=="0" && $res["email"]<>"") {
+																		$emailmenu="<a href=\"javascript:void(0);\" onclick=\"loadsendemail('".$res["email"]."');\">Send email</a>";
 																	} else {
-																		print("<li><a href=\"edituser.php?uid=".$res["id"]."\">Edit</a><a id=\"ausrenabled-".$res["id"]."\" href=\"javascript:void(0);\" onclick=\"enableuser('".$res["id"]."','".$_SESSION[$secretkey."userlvl"]."','".$_SESSION[$secretkey."usergrp"]."','".$_SESSION[$secretkey."userid"]."');\">Enable</a>".$cspmenu."<a href=\"users.php?action=delete&uid=".$res["id"]."\">Delete</a></li>");
+																		$emailmenu="";
+																	}
+																	if($usrexp=="1") {
+																		print("<li class=\"ausrenabled-".$res["id"]."\"><a href=\"edituser.php?uid=".$res["id"]."\">Edit</a><a id=\"ausrenabled-".$res["id"]."\" href=\"javascript:void(0);\" onclick=\"disableuser('".$res["id"]."');\">Disable</a>".$emailmenu.$cspmenu."<a href=\"javascript:void(0);\" onclick=\"getdeleteuser('".$res["id"]."','".$res["user"]."');\">Delete</a></li>");
+																	} else {
+																		print("<li><a href=\"edituser.php?uid=".$res["id"]."\">Edit</a><a id=\"ausrenabled-".$res["id"]."\" href=\"javascript:void(0);\" onclick=\"enableuser('".$res["id"]."');\">Enable</a>".$emailmenu.$cspmenu."<a href=\"javascript:void(0);\" onclick=\"getdeleteuser('".$res["id"]."','".$res["user"]."');\">Delete</a></li>");
 																	}
 																print("</ul>");
 															print("</div>");
@@ -236,6 +217,8 @@ if(isset($_GET["edit"]) && $_GET["edit"]=="1") {
 			require("includes/modal-cspsendosd.php");
 			require("includes/modal-cspuserinfo.php");
 			require("includes/modal-cspuseripinfo.php");
+			require("includes/modal-sendemail.php");
+			require("includes/modal-logout.php");
 			require("includes/footer.php");
 		?>
 		<script src="js/jquery.js"></script>

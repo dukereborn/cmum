@@ -1,8 +1,6 @@
-<!DOCTYPE html>
 <?php
 if(empty($_POST["mysql_host"]) || empty($_POST["mysql_name"]) || empty($_POST["mysql_user"]) || empty($_POST["mysql_pass"]) || empty($_POST["inst_charset"]) || empty($_POST["inst_timezone"]) || empty($_POST["inst_seckey"])) {
-	header("Location: index.php");
-	exit;
+	exit(header("Location: /index.php"));
 }
 
 require("../includes/settings.php");
@@ -12,6 +10,7 @@ if(isset($_POST["dlconfig"]) && $_POST["dlconfig"]=="Download config") {
 	downloadconfig($_POST["mysql_host"],$_POST["mysql_name"],$_POST["mysql_user"],$_POST["mysql_pass"],$_POST["inst_charset"],$_POST["inst_timezone"],$_POST["inst_seckey"]);
 }
 ?>
+<!DOCTYPE html>
 <html>
 	<head>
 		<meta charset="utf-8">

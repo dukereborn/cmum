@@ -16,6 +16,11 @@
 // 14 = get csp user ip info
 // 15 = enable group
 // 16 = disable group
+// 17 = delete user
+// 18 = delete group
+// 19 = delete profile
+// 20 = delete admin
+// 21 = send email to singel user
 
 require("../config.php");
 require("cmum.php");
@@ -55,13 +60,13 @@ if(isset($_POST["function"]) && $_POST["function"]=="5" && $_POST["cspvalue"]<>"
 echo $rowcheck;
 }
 
-if(isset($_POST["function"]) && $_POST["function"]=="6" && $_POST["uid"]<>"") {	
-	$status=enableuser($_POST["uid"],$_POST["admlvl"],$_POST["admgrp"],$_POST["admid"]);
+if(isset($_POST["function"]) && $_POST["function"]=="6" && $_POST["uid"]<>"") {
+	$status=enableuser($_POST["uid"]);
 echo $status;
 }
 
-if(isset($_POST["function"]) && $_POST["function"]=="7" && $_POST["uid"]<>"") {	
-	$status=disableuser($_POST["uid"],$_POST["admlvl"],$_POST["admgrp"],$_POST["admid"]);
+if(isset($_POST["function"]) && $_POST["function"]=="7" && $_POST["uid"]<>"") {
+	$status=disableuser($_POST["uid"]);
 echo $status;
 }
 
@@ -107,5 +112,30 @@ echo $status;
 
 if(isset($_POST["function"]) && $_POST["function"]=="16" && $_POST["gid"]<>"") {	
 	$status=disablegroup($_POST["gid"]);
+echo $status;
+}
+
+if(isset($_POST["function"]) && $_POST["function"]=="17" && $_POST["uid"]<>"") {	
+	$status=deleteuser($_POST["uid"]);
+echo $status;
+}
+
+if(isset($_POST["function"]) && $_POST["function"]=="18" && $_POST["gid"]<>"") {	
+	$status=deletegroup($_POST["gid"]);
+echo $status;
+}
+
+if(isset($_POST["function"]) && $_POST["function"]=="19" && $_POST["pid"]<>"") {	
+	$status=deleteprofile($_POST["pid"]);
+echo $status;
+}
+
+if(isset($_POST["function"]) && $_POST["function"]=="20" && $_POST["aid"]<>"") {	
+	$status=deleteadmin($_POST["aid"]);
+echo $status;
+}
+
+if(isset($_POST["function"]) && $_POST["function"]=="21" && $_POST["email_to"]<>"" && $_POST["email_subject"]<>"" && $_POST["email_body"]<>"") {	
+	$status=sendemail($_POST["email_to"],$_POST["email_subject"],$_POST["email_body"]);
 echo $status;
 }

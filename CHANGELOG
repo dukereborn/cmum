@@ -6,6 +6,20 @@ CSP MySQL User Manager Changelog
 [-] Bug fixed
 
 
+3.3.0 [2017-04-06]
+[+] Set secret key as genxml key during installation
+[+] Email sending
+[+] Setting to disable invalid character check
+[#] Improved security on ajax functions
+[#] Changed default random string length to 12 characters
+[#] Improved admin-/group-/profile-/user delete handling
+[#] Changed api for ip lookup on connected users
+[-] Enable/disable button in userlist shows wrong state
+[-] Various header issues
+[-] Date issue with newer mysql versions
+[-] Some data was ignored when importing users from csv
+
+
 3.2.0 [2015-06-27]
 [+] Enable/disable groups
 [+] Ability to override and force database upgrade
