@@ -6,7 +6,7 @@ CSP MySQL User Manager Changelog
 [-] Bug fixed
 
 
-3.3.0 [not yet released]
+3.3.0 [2017-04-06]
 [+] Set secret key as genxml key during installation
 [+] Email sending
 [+] Setting to disable invalid character check
