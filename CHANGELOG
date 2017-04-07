@@ -6,6 +6,11 @@ CSP MySQL User Manager Changelog
 [-] Bug fixed
 
 
+3.3.1 [2017-04-07]
+[-] Fixed header issues when installing cmum in subfolder
+[-] Fixed error in upgrade script
+
+
 3.3.0 [2017-04-06]
 [+] Set secret key as genxml key during installation
 [+] Email sending
