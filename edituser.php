@@ -10,7 +10,7 @@ if(isset($_POST["uid"]) && $_POST["uid"]<>"") {
 	}
 	$status=edituser($_POST["uid"],$_POST["user"],$_POST["password"],$_POST["displayname"],$_POST["email"],$_POST["ipmask"],$_POST["maxconn"],$_POST["ecmrate"],$_POST["customvalues"],$_POST["usrgroup"],$_POST["admin"],$_POST["enabled"],$_POST["mapexclude"],$_POST["debug"],$_POST["startdate"],$_POST["expiredate"],$profiles,$_POST["boxtype"],$_POST["macaddress"],$_POST["serialnumber"],$_POST["comment"]);
 		if($status=="0") {
-			exit(header("Location: /users.php?edit=1"));
+			exit(header("Location: users.php?edit=1"));
 		} elseif($status=="1") {
 			$notice="toastr.error('You must enter a username and a password');";
 		} elseif($status=="2") {
@@ -19,7 +19,7 @@ if(isset($_POST["uid"]) && $_POST["uid"]<>"") {
 }
 
 if(!isset($_GET["uid"]) || $_GET["uid"]=="") {
-	exit(header("Location: /users.php"));
+	exit(header("Location: users.php"));
 }
 
 $mysqli=new mysqli($dbhost,$dbuser,$dbpass,$dbname);
@@ -43,7 +43,7 @@ if(mysqli_connect_errno()) {
 mysqli_close($mysqli);
 
 if($_SESSION[$secretkey."admlvl"]=="2" && $_SESSION[$secretkey."admgrp"]<>$usrres["usrgroup"]) {
-	exit(header("Location: /users.php?error=1"));
+	exit(header("Location: users.php?error=1"));
 }
 
 $counters=explode(";",counter());

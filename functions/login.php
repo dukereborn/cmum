@@ -65,5 +65,5 @@ function logout() {
 		@session_start();
 			session_unset(); 
 			session_destroy();
-		exit(header("Location: /index.php?logout=1"));
+		exit(header("Location: index.php?logout=1"));
 }

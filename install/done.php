@@ -1,6 +1,6 @@
 <?php
 if(empty($_POST["mysql_host"]) || empty($_POST["mysql_name"]) || empty($_POST["mysql_user"]) || empty($_POST["mysql_pass"]) || empty($_POST["inst_charset"]) || empty($_POST["inst_timezone"]) || empty($_POST["inst_seckey"])) {
-	exit(header("Location: /index.php"));
+	exit(header("Location: index.php"));
 }
 
 require("../includes/settings.php");
