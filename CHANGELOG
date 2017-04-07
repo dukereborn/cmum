@@ -7,6 +7,7 @@ CSP MySQL User Manager Changelog
 
 
 3.3.1 [2017-04-07]
+[-] Fixed header issues when installing cmum in subfolder
 
 
 3.3.0 [2017-04-06]
