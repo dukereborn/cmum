@@ -2275,12 +2275,17 @@ function genxml($genxmlkey,$reqip,$option) {
 					} else {
 						$expiredate=xmloutformat("expire-date",formatdate($setres["genxmldateformat"],$usrdata["expiredate"]));
 					}
+					if(in_array("noecmrate",$opts)) {
+						$ecmrate="";
+					} else {
+						$ecmrate=xmloutformat("ecm-rate",$usrdata["ecmrate"]);
+					}
 					if(in_array("nocustomvalues",$opts)) {
 						$customvalues="";
 					} else {
 						$customvalues=$usrdata["customvalues"];
 					}
-					$xmlout.="<user ".$username.$password.$displayname.$ipmask.$profiles.$maxconn.$admin.$enabled.$mapexclude.$debug.$email.$startdate.$expiredate.$customvalues."/>\n";
+					$xmlout.="<user ".$username.$password.$displayname.$ipmask.$profiles.$maxconn.$admin.$enabled.$mapexclude.$debug.$email.$startdate.$expiredate.$ecmrate.$customvalues."/>\n";
 				}
 				$xmlout.="</xml-user-manager>";
 			}
