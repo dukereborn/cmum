@@ -1,0 +1,1 @@
+UPDATE `settings` SET `cmumversion`='3.3.2' WHERE `id`=1;
